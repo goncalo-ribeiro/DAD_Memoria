@@ -14,3 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/editUserData', 'HomeController@edit')->name('editUserData');
+Route::post('/editUserData', 'HomeController@updateData')->name('updateData');
+Route::put('/editUserData', 'HomeController@updatePassword')->name('updatePassword');
