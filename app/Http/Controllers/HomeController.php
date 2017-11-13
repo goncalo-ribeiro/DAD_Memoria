@@ -28,7 +28,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view('user.dashboard');
     }
 
     public function edit()
@@ -49,10 +49,10 @@ class HomeController extends Controller
         if($user->name != $request->name || $user->nickname != $request->nickname || $user->email != $request->email){
             $user->fill($request->all());
             $user->save();
-            return redirect()->route('home')->with('success', 'User data updated successfully');
+            return redirect()->route('dashboard')->with('success', 'User data updated successfully');
         }
 
-        return redirect()->route('home');
+        return redirect()->route('dashboard');
 
         
     }
@@ -64,11 +64,17 @@ class HomeController extends Controller
             if (Hash::check($request->oldPassword, $user->password)) {
                 $user->password = bcrypt($request->newPassword);
                 $user->save();
-                return redirect()->route('home')->with('success', 'Password updated successfully');
+                return redirect()->route('dashboard')->with('success', 'Password updated successfully');
             }
             return redirect()->back()->withErrors(array('oldPassword' => 'The password entered is incorrect'));
         }
         
-        return redirect()->route('home');
+        return redirect()->route('dashboard');
+    }
+
+    public function deleteAccount(){
+        //futuramente apagar recursivamente os dados do utilizador
+        Auth::user()->delete();
+        return redirect()->route('lobby')->with('success', 'Account deleted successfully');;
     }
 }

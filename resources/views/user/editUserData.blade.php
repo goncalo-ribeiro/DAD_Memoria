@@ -49,10 +49,11 @@
                                     @endif
                                 </div>
 
-                                <button type="submit" class="btn btn-primary side-offset">Save</button>
-                                <a class="btn btn-default" href="{{route('home')}}">Cancel</a>
-                                <a class="btn btn-warning" href='javascript:showPassword()' style="float:right;">Change
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <a class="btn btn-default" href="{{route('dashboard')}}">Cancel</a>
+                                <a class="btn btn-warning" href="javascript:showPassword()" style="float:right;">Change
                                     Password</a>
+                                <a class="btn btn-danger" onclick="return confirm('Are you sure you want to delete your account?')" href="{{route('deleteAccount')}}" style="float:right; margin-right: 10px;">Delete Account</a>
                             </div>
                         </form>
                         <form action="{{route('updatePassword')}}" method="post" class="form-group"
