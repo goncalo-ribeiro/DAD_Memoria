@@ -1,4 +1,4 @@
-<div id="app">
+<div>
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
@@ -20,7 +20,12 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    &nbsp;
+                    <li>
+                        <router-link to="/memoria">Jogar</router-link>
+                    </li>
+                    <li>
+                        <router-link to="/example">Example</router-link>
+                    </li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->

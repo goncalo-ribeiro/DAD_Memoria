@@ -11,11 +11,13 @@
         <link rel="stylesheet" href="{{ URL::asset('css/app.css') }}">
     </head>
     <body>
-        @include('layouts.app')
-        @if(session('success'))
-            @include('shared.success')
-        @endif
-        @yield('content')
+        <div id="app">
+            @include('layouts.app')
+            @if(session('success'))
+                @include('shared.success')
+            @endif
+            @yield('content')
+        </div>
         <script src="{{ asset('js/app.js') }}"></script>
         @yield('pagescript') 
     </body>
