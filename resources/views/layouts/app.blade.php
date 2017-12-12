@@ -24,6 +24,9 @@
                         <router-link to="/memoria">Jogar</router-link>
                     </li>
                     <li>
+                        <router-link to="/statistics">Statistics</router-link>
+                    </li>
+                    <li>
                         <router-link to="/example">Example</router-link>
                     </li>
                 </ul>
