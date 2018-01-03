@@ -2,18 +2,17 @@
     <div>
         <div class="container">
             <h3 class="text-center">{{ title }}</h3>
-            <lobby :games="lobbyGames" @join-click="join"></lobby>
-            <!--
+            <lobby :games="lobbyGames" @join-click="join" @create-click="createGame"></lobby>
             <template v-for="game in activeGames">
                 <game :game="game" @piece-click="play" @close-game="close"></game>
             </template>
-            -->
         </div>
     </div>
 </template>
 
 <script type="text/javascript">
     import Lobby from './lobby.vue';
+    import Game from './game.vue';
 
     export default {
         data: function(){
@@ -25,19 +24,69 @@
             }
         },
         sockets:{
-
-        },
+            connect(){
+                console.log('socket connected');
+                this.socketId = this.$socket.id;
+            },
+            discconnect(){
+                console.log('socket disconnected');
+                this.socketId = "";
+            },
+            my_active_games_changed(){
+                this.loadActiveGames();
+            },
+            lobby_changed(){
+                // For this to work, websocket server must emit a message
+                // named "lobby_changed"
+                this.loadLobby();
+            },
+            lobby_games(data){
+                this.lobbyGames=data;
+                console.log(data);
+            },
+            active_games(data){
+                this.activeGames=data;
+                console.log(data);
+            }
+        },        
         methods: {
-            join(){
-
+            loadLobby(){
+                /// send message to server to load the list of games on the lobby
+                this.$socket.emit('get_games_lobby');
+            },
+            loadActiveGames(){
+                /// send message to server to load the list of games that player is playing
+                this.$socket.emit('get_active_games');
+            },
+            createGame(){
+                this.$socket.emit('create_game', { playerName: "xQsme", gameSize: 4, linhas: 8, colunas: 10});   
+            },
+            join(game){
+                if (this.currentPlayer == "") {
+                    alert('Current Player is Empty - Cannot Create a Game');
+                    return;
+                }
+                else {
+                    this.$socket.emit('join_game', { 
+                        playerName: this.currentPlayer,
+                        game: game
+                     });
+                }
+            },
+            play(id, index){
+                console.log("received click, emiting to socket");
+                this.$socket.emit('play', {id: id, index: index});
+            },
+            closeGame(game){
+                this.$socket.emit('close', {id: game});
             }
         },
         components: {
             'lobby': Lobby,
-            //'game': GameTicTocToe,
+            'game': Game,
         },
         mounted() {
-            //this.loadLobby();
+            this.loadLobby();
         }
     }
 </script>

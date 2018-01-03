@@ -23,7 +23,7 @@
                         </table>
                     </div>
                     <div class="col-xs-2">
-                        <button class="btn btn-success">Novo Jogo</button>
+                        <button class="btn btn-success" v-on:click="createGame">Novo Jogo</button>
                     </div>
                 </div>
             </div>
@@ -34,6 +34,11 @@
 <script>
 export default {
     props: ['games'],
+    methods:{
+        createGame(){
+                this.$emit('create-click');
+            },
+    },
     mounted() {
         console.log('Component container mounted.')
     }

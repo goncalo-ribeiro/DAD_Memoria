@@ -2,16 +2,9 @@
     <div class="container">
         <div class="row">
             <div class="panel-body">
-                <div class="col-sm-6"><TotalGames></TotalGames></div>
-                <div class="col-sm-3"><ListTopPlayers></ListTopPlayers></div>
-        
-                <!--We cant use blade-->
-                <!--more info here: https://stackoverflow.com/questions/42951976/how-can-i-use-auth-on-vue-component-vue-js-2-->
-                <div>
-                    <UserStatistics></UserStatistics>
-                </div>
-                
-                
+                <TotalGames></TotalGames>
+                <ListTopPlayers></ListTopPlayers>
+                <UserStatistics></UserStatistics>
             </div>
         </div>
     </div>
@@ -19,10 +12,10 @@
 
 <script type="text/javascript">
     "use strict";
-    import TotalGames from './statistics/TotalGames.vue';
-    import ListTopPlayers from './statistics/ListTopPlayers.vue';
+    import TotalGames from './statistics/totalGames.vue';
+    import ListTopPlayers from './statistics/listTopPlayers.vue';
 
-    import UserStatistics from './statistics/UserStatistics.vue';
+    import UserStatistics from './statistics/userStatistics.vue';
 
     export default {
         data: function(){
