@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-define('YOUR_SERVER_URL', 'http://memoria.dev');
+define('YOUR_SERVER_URL', 'http://memoria.dad');
 // Check "oauth_clients" table for next 2 values:
 define('CLIENT_ID', '2');
 define('CLIENT_SECRET','9KEShoB9f5xIgt89buuOVMN7ZDisfRqKE0uV9rdj');

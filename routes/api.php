@@ -18,5 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::post('login', 'LoginControllerAPI@login');
 Route::post('logout','LoginControllerAPI@logout');
+Route::middleware('auth:api')->post('updatePassword','UpdatePasswordAPI@updatePassword');
 Route::middleware('auth:api')->get('teste', function () {return response()->json(['msg'=>'Só um teste'], 200);});
 //Route::get('teste', function () {return response()->json(['msg'=>'Só um teste'], 200);});
