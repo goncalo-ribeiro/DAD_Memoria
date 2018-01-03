@@ -58,8 +58,9 @@
                 /// send message to server to load the list of games that player is playing
                 this.$socket.emit('get_active_games');
             },
-            createGame(){
-                this.$socket.emit('create_game', { playerName: "xQsme", gameSize: 4, linhas: 8, colunas: 10});   
+            createGame(data){
+                console.log(data);
+                this.$socket.emit('create_game', data);   
             },
             join(game){
                 if (this.currentPlayer == "") {

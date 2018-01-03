@@ -1,8 +1,9 @@
 <template>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Game Lobby</div>
+            <newGameForm v-if="form" @create-click="createGame"></newGameForm>
+            <div v-if="!form" class="panel panel-default">
+                <div  class="panel-heading">Game Lobby</div>
                 <div class="panel-body">
                     <div class="col-xs-10">
                         <table class="table table-striped" style="text-align:center;">
@@ -23,7 +24,7 @@
                         </table>
                     </div>
                     <div class="col-xs-2">
-                        <button class="btn btn-success" v-on:click="createGame">Novo Jogo</button>
+                        <button class="btn btn-success" v-on:click="showForm">Novo Jogo</button>
                     </div>
                 </div>
             </div>
@@ -32,12 +33,26 @@
 </template>
 
 <script>
+import newGameForm from './newGameForm.vue';
+
 export default {
     props: ['games'],
+    data: function(){
+        return {
+            form: false,
+        }
+    },
     methods:{
-        createGame(){
-                this.$emit('create-click');
-            },
+        showForm(){
+            this.form=!this.form;
+        },
+        createGame(data){
+                this.$emit('create-click', data);
+                this.form=false;
+        },
+    },
+    components: {
+        'newGameForm': newGameForm,
     },
     mounted() {
         console.log('Component container mounted.')
