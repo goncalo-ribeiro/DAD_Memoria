@@ -1,16 +1,17 @@
 <template>
+
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
+                <div v-if="loggedIn == false" class="panel panel-default">
                     <div class="panel-heading">Login</div>
 
                     <div class="panel-body">
                         <div class="form-group">
-                            <label for="login" class="col-md-4 control-label">E-Mail</label>
+                            <label for="login" class="col-md-4 control-label">Nickname</label>
 
                             <div class="col-md-6">
-                                <input v-model.trim="email" id="login" type="string" class="form-control" name="login" value="" required autofocus>
+                                <input v-model.trim="nickname" id="login" type="string" class="form-control" name="login" value="" required autofocus>
 
                             </div>
                         </div>
@@ -25,7 +26,7 @@
 
                                 <div v-show="loginError">
                                     <span class="help-block">
-                                        <strong>O email ou a password estão mal, tente outra vez</strong>
+                                        <strong>O nickname ou a password estão mal, tente outra vez</strong>
                                     </span>
                                 </div>                                
 
@@ -39,13 +40,24 @@
                                 <button type="submit" class="btn btn-primary" @click="login">
                                     Login
                                 </button>
-
-                                <a class="btn btn-link" href="">
-                                    Forgot Your Password?
-                                </a>
                             </div>
                         </div>
                     
+                    </div>
+                </div>
+
+                <div v-if="loggedIn" class="panel panel-default">
+                    <div class="panel-heading">You are logged in</div>
+                    <div class="panel-body">
+                        
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                Do you want to logout?
+                                <button type="submit" class="btn btn-primary" @click="logout">
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -57,16 +69,16 @@
     export default {
         data: function(){
             return {
-                email: '',
+                nickname: 'admin',
                 password: '',
-                accessToken: '',
-                loginError: false
+                loginError: false,
+                loggedIn: false
             }
         },
         methods: {
             login: function(){
-                if (this.email != "" && this.password != "") {
-                    console.log(this.email + "\t" + this.password)
+                if (this.nickname != "" && this.password != "") {
+                    console.log(this.nickname + "\t" + this.password)
 
                     axios({
                         method: 'post',
@@ -76,21 +88,41 @@
                             'Content-Type' : 'application/json'
                         },
                         data: {
-                            email: this.email,
+                            nickname: this.nickname,
                             password: this.password
                         }
                     }).then(response=>{
-                        this.accessToken = response.data.accessToken;
+                        this.$root.$data['accessToken'] = response.data.access_token;
                         console.log(response);
-                        this.loginError = false;   
-                        alert("efetuou o login com sucesso!") 
+                        this.loginError = false;
+                        this.loggedIn = true;
+                        this.$root.$data['loggedIn'] = true; 
+                        if (this.nickname == 'admin' || this.nickname == 'admin@mail.dad') {
+                            console.log('admin');
+                            this.$root.$data['admin'] = true;
+                        }
+                        else{
+                            this.$root.$data['admin'] = false;   
+                        }
+                        //alert("efetuou o login com sucesso!");
+                        //this.$emit('logged', this.accessToken);
                         
                     })
                     .catch(error=>{
                         console.log(error);
+                        this.nickname = '';
+                        this.password = '';
                         this.loginError = true;
+                        //alert("credenciais erradas tente outra vez!") 
                     });
                 }
+            },
+            logout: function(){
+                this.$root.$data['accessToken'] = '';
+                this.loggedIn = false;
+                this.$root.$data['loggedIn'] = false; 
+                this.$root.$data['admin'] = false;
+                this.password = '';
             }
         },
         mounted() {

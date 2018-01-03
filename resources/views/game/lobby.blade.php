@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('content')
-    <transition name="slide-fade">
+    <transition>
         <keep-alive>
         	
             <router-view></router-view>

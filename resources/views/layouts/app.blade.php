@@ -29,6 +29,9 @@
                     <li>
                         <router-link to="/example">Example</router-link>
                     </li>
+                    <li v-if="admin" li>
+                        <router-link to="/example">Admin</router-link>
+                    </li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -36,7 +39,14 @@
                     <!-- Authentication Links -->
                     @guest
                         <li>
-                            <router-link to="/login">Login</router-link>
+                            <router-link to="/login">
+                                <div v-if="!loggedIn">
+                                    Login    
+                                </div>
+                                <div v-if="loggedIn">
+                                    Logout    
+                                </div>
+                            </router-link>
                         </li>
                         {{--
                         <li><a href="{{ route('login') }}">Login</a></li>
