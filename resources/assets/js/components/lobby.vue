@@ -14,11 +14,11 @@
                                 <th>Created At</th>
                             </thead>
                             <tbody>
-                                <tr v-for="game in games"  :key="game.gameID">
+                                <tr v-for="game in games">
                                     <td>{{ game.gameID }}</td>
-                                    <td>{{ game.numberOfPlayers }}</td>
-                                    <td>{{ game.owner.nickname }}</td>
-                                    <td>{{ game.created_at }}</td>
+                                    <td>{{ game.players.length }}/{{ game.gameSize }}</td>
+                                    <td>{{ game.players[0].id }}</td>
+                                    <td>NO FUCKING CLUE</td>
                                 </tr>
                             </tbody>
                         </table>

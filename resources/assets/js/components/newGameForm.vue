@@ -1,19 +1,25 @@
 <template>
     <div class="row">
         <div class="panel panel-default">
-            <div class="panel-heading">New Game</div>
-            <div class="panel-body">
-                <label for="players">Players: </label>
+            <div class="panel-heading">New Game 
+                <span style="float:right">
+                <label for="settings">Default Settings: </label>
+                <input v-model="defaultSettings" type="checkbox" name="settings" v-on:click="changeDefault" checked>
+                </span>
+            </div>
+            <div class="panel-body form-horizontal">
+                    
+                <label for="gameName" class="col-md-4 control-label">Game Name: </label>
+                <input type="text" v-model="gameName" class="col-md-6 input-group">
+                <label for="players" class="control-label">Players: </label>
                 <select v-on:change="changeSize" v-model="size" name="players">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
                 </select>
-                <label for="settings">Default Settings: </label>
-                <input v-model="defaultSettings" type="checkbox" name="settings" v-on:click="changeDefault" checked>
                 <span v-if="!defaultSettings">
-                    <label for="linhas">Linhas: </label>
+                    <label for="linhas" class="control-label">Linhas: </label>
                     <select v-on:change="changeTotal" v-model="linhas" name="linhas">
                         <option value="4">4</option>
                         <option value="5">5</option>
@@ -21,7 +27,7 @@
                         <option value="7">7</option>
                         <option value="8">8</option>
                     </select>
-                    <label for="colunas">Colunas: </label>
+                    <label for="colunas" class="control-label">Colunas: </label>
                     <select v-on:change="changeTotal" v-model="colunas" name="colunas">
                         <option value="4">4</option>
                         <option value="5">5</option>
@@ -49,6 +55,7 @@ export default {
         return {
             showError: false,
             error: '',
+            gameName: '',
             size: 1,
             defaultSettings: true,
             linhas: 4,
@@ -58,7 +65,7 @@ export default {
     methods:{
         submeter(){
             if(this.showError==false){
-                this.$emit('create-click', {size: this.size, linhas: this.linhas, colunas: this.colunas});
+                this.$emit('create-click', {name: this.gameName, playerId: 1, size: this.size, linhas: this.linhas, colunas: this.colunas});
             }
         },
         changeSize(){
