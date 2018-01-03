@@ -30,7 +30,7 @@
                         <router-link to="/example">Example</router-link>
                     </li>
                     <li v-if="admin" li>
-                        <router-link to="/example">Admin</router-link>
+                        <router-link to="/admin">Admin</router-link>
                     </li>
                 </ul>
 
