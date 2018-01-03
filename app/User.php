@@ -32,4 +32,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Game');
     }
+
+    public function findForPassport($nickname) {
+        return $this->where('nickname', $nickname)->first();
+    }
 }

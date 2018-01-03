@@ -39,6 +39,9 @@ const router = new VueRouter({
 const app = new Vue({
     router,
     data:{
-        
+        accessToken: '',
+        admin: false,
+        loggedIn: false,
+        accessToken: '',
     }
 }).$mount('#app');
