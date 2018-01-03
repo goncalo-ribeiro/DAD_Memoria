@@ -45795,13 +45795,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // named "lobby_changed"
             this.loadLobby();
         },
-        lobby_games: function lobby_games(data) {
-            this.lobbyGames = data;
-            console.log(data);
+        lobby_games_changed: function lobby_games_changed(data) {
+            this.lobbyGames = data.lobbyGames;
         },
-        active_games: function active_games(data) {
-            this.activeGames = data;
-            console.log(data);
+        active_games_changed: function active_games_changed(data) {
+            this.activeGames = data.activeGames;
         }
     },
     methods: {
@@ -45814,7 +45812,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$socket.emit('get_active_games');
         },
         createGame: function createGame(data) {
-            console.log(data);
             this.$socket.emit('create_game', data);
         },
         join: function join(game) {
@@ -46895,6 +46892,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['game'],
@@ -46910,6 +46909,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        newLine: function newLine(key) {
+            return key % this.game.colunas === 0 && key !== 0;
+        },
         player2: function player2() {
             if (this.game.player2 != "") return true;
             return false;
@@ -46923,8 +46925,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         pieceImageURL: function pieceImageURL(piece) {
-            if (piece[show]) {
-                var imgSrc = String(piece[piece]);
+            if (true) {
+                var imgSrc = String(piece["piece"]);
                 return 'img/' + imgSrc + '.png';
             } else {
                 return 'img/hidden.png';
@@ -46941,56 +46943,59 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "gameseparator" }, [
-    _c("div", [
-      _c("h2", { staticClass: "text-center" }, [
-        _vm._v("Game " + _vm._s(_vm.game.gameID))
-      ]),
-      _vm._v(" "),
-      _c("br")
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "game-zone-content" }, [
-      _c("div", { staticClass: "alert", class: _vm.alerttype }, [
-        _c("h2", [_vm._v("Current Player: " + _vm._s(_vm.game.player1))]),
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+      _c("div", { staticClass: "panel panel-default" }, [
+        _c("div", { staticClass: "panel-heading" }, [
+          _vm._v("Game " + _vm._s(_vm.game.gameID))
+        ]),
         _vm._v(" "),
-        this.game.winner
-          ? _c("strong", [
-              _vm._v(_vm._s(_vm.message) + "     "),
-              _c(
-                "a",
-                {
+        _c("div", { staticClass: "panel-body" }, [
+          _c("div", { staticClass: "alert", class: _vm.alerttype }, [
+            _c("h2", [
+              _vm._v("Current Player: " + _vm._s(_vm.game.playerTurn))
+            ]),
+            _vm._v(" "),
+            this.game.winner
+              ? _c("strong", [
+                  _vm._v(_vm._s(_vm.message) + "     "),
+                  _c(
+                    "a",
+                    {
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.closeGame($event)
+                        }
+                      }
+                    },
+                    [_vm._v("Close Game")]
+                  )
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "board", staticStyle: { "text-align": "center" } },
+            _vm._l(_vm.game.board, function(piece, key) {
+              return _c("span", [
+                _vm.newLine(key) ? _c("br") : _vm._e(),
+                _vm._v(" "),
+                _c("img", {
+                  staticStyle: { width: "9.5%" },
+                  attrs: { src: _vm.pieceImageURL(piece) },
                   on: {
                     click: function($event) {
-                      $event.preventDefault()
-                      _vm.closeGame($event)
+                      _vm.clickPiece(key)
                     }
                   }
-                },
-                [_vm._v("Close Game")]
-              )
-            ])
-          : _vm._e()
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "board" },
-        _vm._l(_vm.game.board, function(piece, key) {
-          return _c("div", [
-            _c("img", {
-              attrs: { src: _vm.pieceImageURL(piece) },
-              on: {
-                click: function($event) {
-                  _vm.clickPiece(key)
-                }
-              }
+                })
+              ])
             })
-          ])
-        })
-      ),
-      _vm._v(" "),
-      _c("hr")
+          )
+        ])
+      ])
     ])
   ])
 }
@@ -47028,7 +47033,7 @@ var render = function() {
           return [
             _c("game", {
               attrs: { game: game },
-              on: { "piece-click": _vm.play, "close-game": _vm.close }
+              on: { "piece-click": _vm.play, "close-game": _vm.closeGame }
             })
           ]
         })

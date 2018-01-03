@@ -4,7 +4,7 @@
             <h3 class="text-center">{{ title }}</h3>
             <lobby :games="lobbyGames" @join-click="join" @create-click="createGame"></lobby>
             <template v-for="game in activeGames">
-                <game :game="game" @piece-click="play" @close-game="close"></game>
+                <game :game="game" @piece-click="play" @close-game="closeGame"></game>
             </template>
         </div>
     </div>
@@ -40,13 +40,12 @@
                 // named "lobby_changed"
                 this.loadLobby();
             },
-            lobby_games(data){
-                this.lobbyGames=data;
-                console.log(data);
+            lobby_games_changed(data){
+                this.lobbyGames=data.lobbyGames;
+                
             },
-            active_games(data){
-                this.activeGames=data;
-                console.log(data);
+            active_games_changed(data){
+                this.activeGames=data.activeGames;
             }
         },        
         methods: {
@@ -59,7 +58,6 @@
                 this.$socket.emit('get_active_games');
             },
             createGame(data){
-                console.log(data);
                 this.$socket.emit('create_game', data);   
             },
             join(game){
