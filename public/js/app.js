@@ -1072,7 +1072,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-module.exports = __webpack_require__(61);
+module.exports = __webpack_require__(64);
 
 
 /***/ }),
@@ -1106,7 +1106,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
 var example = Vue.component('example', __webpack_require__(40));
 var memoria = Vue.component('memoria', __webpack_require__(43));
 var statistics = Vue.component('statistics', __webpack_require__(49));
-var login = Vue.component('login', __webpack_require__(71));
+var login = Vue.component('login', __webpack_require__(61));
 
 var routes = [{ path: '/', redirect: '/memoria' }, { path: '/example', component: example }, { path: '/statistics', component: statistics }, { path: '/memoria', component: memoria }, { path: '/login', component: login }];
 
@@ -46357,29 +46357,14 @@ if (false) {
 
 /***/ }),
 /* 61 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(72)
+var __vue_script__ = __webpack_require__(62)
 /* template */
-var __vue_template__ = __webpack_require__(73)
+var __vue_template__ = __webpack_require__(63)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -46419,11 +46404,23 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 72 */
+/* 62 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -46486,7 +46483,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             email: '',
             password: '',
             accessToken: '',
-            loginError: false
+            loginError: false,
+            loggedIn: false
         };
     },
     methods: {
@@ -46511,12 +46509,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this.accessToken = response.data.accessToken;
                     console.log(response);
                     _this.loginError = false;
-                    alert("efetuou o login com sucesso!");
+                    _this.loggedIn = true;
+                    //alert("efetuou o login com sucesso!");
+                    //this.$emit('logged', this.accessToken);
                 }).catch(function (error) {
                     console.log(error);
+                    _this.email = '';
+                    _this.password = '';
                     _this.loginError = true;
+                    //alert("credenciais erradas tente outra vez!") 
                 });
             }
+        },
+        logout: function logout() {
+            this.accessToken = '';
+            this.loggedIn = false;
         }
     },
     mounted: function mounted() {
@@ -46525,7 +46532,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 73 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -46535,146 +46542,197 @@ var render = function() {
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-        _c("div", { staticClass: "panel panel-default" }, [
-          _c("div", { staticClass: "panel-heading" }, [_vm._v("Login")]),
-          _vm._v(" "),
-          _c("div", { staticClass: "panel-body" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c(
-                "label",
-                {
-                  staticClass: "col-md-4 control-label",
-                  attrs: { for: "login" }
-                },
-                [_vm._v("E-Mail")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model.trim",
-                      value: _vm.email,
-                      expression: "email",
-                      modifiers: { trim: true }
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    id: "login",
-                    type: "string",
-                    name: "login",
-                    value: "",
-                    required: "",
-                    autofocus: ""
-                  },
-                  domProps: { value: _vm.email },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.email = $event.target.value.trim()
-                    },
-                    blur: function($event) {
-                      _vm.$forceUpdate()
-                    }
-                  }
-                })
-              ])
-            ]),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.loggedIn == false,
+                expression: "loggedIn == false"
+              }
+            ],
+            staticClass: "panel panel-default"
+          },
+          [
+            _c("div", { staticClass: "panel-heading" }, [_vm._v("Login")]),
             _vm._v(" "),
-            _c("br"),
-            _c("br"),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c(
-                "label",
-                {
-                  staticClass: "col-md-4 control-label",
-                  attrs: { for: "password" }
-                },
-                [_vm._v("Password")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model.trim",
-                      value: _vm.password,
-                      expression: "password",
-                      modifiers: { trim: true }
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    id: "password",
-                    type: "password",
-                    name: "password",
-                    required: ""
-                  },
-                  domProps: { value: _vm.password },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.password = $event.target.value.trim()
-                    },
-                    blur: function($event) {
-                      _vm.$forceUpdate()
-                    }
-                  }
-                }),
-                _vm._v(" "),
+            _c("div", { staticClass: "panel-body" }, [
+              _c("div", { staticClass: "form-group" }, [
                 _c(
-                  "div",
+                  "label",
                   {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.loginError,
-                        expression: "loginError"
-                      }
-                    ]
+                    staticClass: "col-md-4 control-label",
+                    attrs: { for: "login" }
                   },
-                  [_vm._m(0, false, false)]
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("br"),
-            _c("br"),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("div", { staticClass: "col-md-8 col-md-offset-4" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-primary",
-                    attrs: { type: "submit" },
-                    on: { click: _vm.login }
-                  },
-                  [
-                    _vm._v(
-                      "\n                                Login\n                            "
-                    )
-                  ]
+                  [_vm._v("E-Mail")]
                 ),
                 _vm._v(" "),
-                _c("a", { staticClass: "btn btn-link", attrs: { href: "" } }, [
-                  _vm._v(
-                    "\n                                Forgot Your Password?\n                            "
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model.trim",
+                        value: _vm.email,
+                        expression: "email",
+                        modifiers: { trim: true }
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      id: "login",
+                      type: "string",
+                      name: "login",
+                      value: "",
+                      required: "",
+                      autofocus: ""
+                    },
+                    domProps: { value: _vm.email },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.email = $event.target.value.trim()
+                      },
+                      blur: function($event) {
+                        _vm.$forceUpdate()
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("br"),
+              _c("br"),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "col-md-4 control-label",
+                    attrs: { for: "password" }
+                  },
+                  [_vm._v("Password")]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model.trim",
+                        value: _vm.password,
+                        expression: "password",
+                        modifiers: { trim: true }
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      id: "password",
+                      type: "password",
+                      name: "password",
+                      required: ""
+                    },
+                    domProps: { value: _vm.password },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.password = $event.target.value.trim()
+                      },
+                      blur: function($event) {
+                        _vm.$forceUpdate()
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.loginError,
+                          expression: "loginError"
+                        }
+                      ]
+                    },
+                    [_vm._m(0, false, false)]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("br"),
+              _c("br"),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("div", { staticClass: "col-md-8 col-md-offset-4" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "submit" },
+                      on: { click: _vm.login }
+                    },
+                    [
+                      _vm._v(
+                        "\n                                Login\n                            "
+                      )
+                    ]
                   )
                 ])
               ])
             ])
-          ])
-        ])
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.loggedIn,
+                expression: "loggedIn"
+              }
+            ],
+            staticClass: "panel panel-default"
+          },
+          [
+            _c("div", { staticClass: "panel-heading" }, [
+              _vm._v("You are logged in")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "panel-body" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("div", { staticClass: "col-md-8" }, [
+                  _vm._v(
+                    "\n                            Do you want to logout?\n                            "
+                  ),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "submit" },
+                      on: { click: _vm.logout }
+                    },
+                    [
+                      _vm._v(
+                        "\n                                Logout\n                            "
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ])
+          ]
+        )
       ])
     ])
   ])
@@ -46697,6 +46755,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-eb1453bc", module.exports)
   }
 }
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
