@@ -2,7 +2,7 @@
     <div>
         <div class="container">
             <h3 class="text-center">{{ title }}</h3>
-            <lobby :games="lobbyGames" @join-click="join" @create-click="createGame"></lobby>
+            <lobby :games="lobbyGames" @join-game="join" @create-click="createGame"></lobby>
             <template v-for="game in activeGames">
                 <game :game="game" @piece-click="play" @close-game="closeGame"></game>
             </template>
@@ -46,6 +46,7 @@
             },
             active_games_changed(data){
                 this.activeGames=data.activeGames;
+                console.log(data.activeGames);
             }
         },        
         methods: {
@@ -60,17 +61,12 @@
             createGame(data){
                 this.$socket.emit('create_game', data);   
             },
-            join(game){
-                if (this.currentPlayer == "") {
-                    alert('Current Player is Empty - Cannot Create a Game');
-                    return;
-                }
-                else {
-                    this.$socket.emit('join_game', { 
-                        playerName: this.currentPlayer,
-                        game: game
-                     });
-                }
+            join(data){
+                this.$socket.emit('join_game', { 
+                    playerId: 2,
+                    playerName: 'Rick Sanchez',
+                    gameId: data.gameId
+                 });
             },
             play(id, index){
                 this.$socket.emit('play', {id: id, index: index});

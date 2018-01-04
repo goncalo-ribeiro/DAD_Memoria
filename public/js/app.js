@@ -45801,6 +45801,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         active_games_changed: function active_games_changed(data) {
             this.activeGames = data.activeGames;
+            console.log(data.activeGames);
         }
     },
     methods: {
@@ -45815,16 +45816,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         createGame: function createGame(data) {
             this.$socket.emit('create_game', data);
         },
-        join: function join(game) {
-            if (this.currentPlayer == "") {
-                alert('Current Player is Empty - Cannot Create a Game');
-                return;
-            } else {
-                this.$socket.emit('join_game', {
-                    playerName: this.currentPlayer,
-                    game: game
-                });
-            }
+        join: function join(data) {
+            this.$socket.emit('join_game', {
+                playerId: 2,
+                playerName: 'Rick Sanchez',
+                gameId: data.gameId
+            });
         },
         play: function play(id, index) {
             this.$socket.emit('play', { id: id, index: index });
@@ -45933,6 +45930,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -45950,6 +45948,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         createGame: function createGame(data) {
             this.$emit('create-click', data);
             this.form = false;
+        },
+        joinGame: function joinGame(game) {
+            this.$emit('join-game', { gameId: game });
         }
     },
     components: {
@@ -46035,7 +46036,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         submeter: function submeter() {
             if (this.showError == false) {
-                this.$emit('create-click', { name: this.gameName, playerId: 1, size: this.size, linhas: this.linhas, colunas: this.colunas });
+                this.$emit('create-click', { name: this.gameName, playerId: 1, playerName: 'xQsme', size: this.size, linhas: this.linhas, colunas: this.colunas });
             }
         },
         changeSize: function changeSize() {
@@ -46391,7 +46392,22 @@ var render = function() {
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(game.players[0].id))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v("NO FUCKING CLUE")])
+                            _c("td", [_vm._v("NO FUCKING CLUE")]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-xs btn-success",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.joinGame(game.gameID)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Join")]
+                              )
+                            ])
                           ])
                         })
                       )
@@ -46506,13 +46522,13 @@ var content = __webpack_require__(54);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(56)("8511c514", content, false);
+var update = __webpack_require__(56)("7715a1fe", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./game.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./game.vue");
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./game.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./game.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -46933,20 +46949,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         gameEnded: function gameEnded() {
             return this.game.gameEnded;
         },
-        isTurn: function isTurn(player, key) {
-            return player.id === key + 1;
+        isTurn: function isTurn(key) {
+            return this.game.playerTurn === key + 1;
         },
-        isTurnString: function isTurnString(player, key) {
-            return player.id === key + 1 ? "True" : "False";
+        isTurnString: function isTurnString(key) {
+            return this.game.playerTurn === key + 1 ? "True" : "False";
         },
         newLine: function newLine(key) {
             return key % this.game.colunas === 0 && key !== 0;
         },
         closeGame: function closeGame() {
-            this.$emit('close', this.game.gameID);
+            this.$emit('close-game', this.game.gameID);
         },
         clickPiece: function clickPiece(index) {
-            console.log(index);
             this.$emit('piece-click', this.game.gameID, index);
         },
 
@@ -47009,19 +47024,15 @@ var render = function() {
               _c(
                 "tbody",
                 _vm._l(_vm.game.players, function(player, key) {
-                  return _c(
-                    "tr",
-                    { class: { success: _vm.isTurn(player, key) } },
-                    [
-                      _c("td", [_vm._v(_vm._s(player.id))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v("No name yet!")]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(_vm.isTurnString(player, key)))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(player.score))])
-                    ]
-                  )
+                  return _c("tr", { class: { success: _vm.isTurn(key) } }, [
+                    _c("td", [_vm._v(_vm._s(player.id))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(player.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.isTurnString(key)))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(player.score))])
+                  ])
                 })
               )
             ]
@@ -47093,7 +47104,7 @@ var render = function() {
         _vm._v(" "),
         _c("lobby", {
           attrs: { games: _vm.lobbyGames },
-          on: { "join-click": _vm.join, "create-click": _vm.createGame }
+          on: { "join-game": _vm.join, "create-click": _vm.createGame }
         }),
         _vm._v(" "),
         _vm._l(_vm.activeGames, function(game) {

@@ -15,10 +15,10 @@
                                 <th>Score</th>
                             </thead>
                             <tbody>
-                                <tr v-bind:class="{ success: isTurn(player, key) }" v-for="(player, key) in game.players">
+                                <tr v-bind:class="{ success: isTurn(key) }" v-for="(player, key) in game.players">
                                     <td>{{ player.id }}</td>
-                                    <td>No name yet!</td>
-                                    <td>{{ isTurnString(player, key) }}</td>
+                                    <td>{{ player.name }}</td>
+                                    <td>{{ isTurnString(key) }}</td>
                                     <td>{{ player.score }}</td>
                                 </tr>
                             </tbody>
@@ -56,20 +56,19 @@
             gameEnded(){
                 return this.game.gameEnded;
             },
-            isTurn(player, key){
-                return player.id === key+1;
+            isTurn(key){
+                return this.game.playerTurn === key+1;
             },
-            isTurnString(player, key){
-                return player.id === key+1 ? "True" : "False";
+            isTurnString(key){
+                return this.game.playerTurn === key+1 ? "True" : "False";
             },
             newLine(key){
                 return key%this.game.colunas === 0 && key !== 0;
             },
             closeGame (){
-                this.$emit('close', this.game.gameID);
+                this.$emit('close-game', this.game.gameID);
             },
             clickPiece(index){
-                console.log(index);
                 this.$emit('piece-click', this.game.gameID, index);
             },
             pieceImageURL: function (piece) {

@@ -21,6 +21,7 @@
                                     <td>{{ game.players.length }}/{{ game.gameSize }}</td>
                                     <td>{{ game.players[0].id }}</td>
                                     <td>NO FUCKING CLUE</td>
+                                    <td><button class="btn btn-xs btn-success" v-on:click="joinGame(game.gameID)">Join</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -52,6 +53,9 @@ export default {
                 this.$emit('create-click', data);
                 this.form=false;
         },
+        joinGame(game){
+            this.$emit('join-game', {gameId: game});
+        }
     },
     components: {
         'newGameForm': newGameForm,
