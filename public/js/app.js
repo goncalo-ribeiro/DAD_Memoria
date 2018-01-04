@@ -1194,7 +1194,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(18);
-module.exports = __webpack_require__(95);
+module.exports = __webpack_require__(101);
 
 
 /***/ }),
@@ -1237,7 +1237,7 @@ var example = Vue.component('example', __webpack_require__(61));
 var memoria = Vue.component('memoria', __webpack_require__(64));
 var statistics = Vue.component('statistics', __webpack_require__(80));
 var login = Vue.component('login', __webpack_require__(92));
-var admin = Vue.component('admin', __webpack_require__(104));
+var admin = Vue.component('admin', __webpack_require__(95));
 
 var routes = [{ path: '/', redirect: '/memoria' }, { path: '/example', component: example }, { path: '/statistics', component: statistics }, { path: '/memoria', component: memoria }, { path: '/login', component: login }, { path: '/admin', component: admin }];
 
@@ -47872,6 +47872,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -47916,8 +47920,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     //this.$emit('logged', this.accessToken);
                 }).catch(function (error) {
                     console.log(error);
-                    _this.nickname = '';
-                    _this.password = '';
                     _this.loginError = true;
                     //alert("credenciais erradas tente outra vez!") 
                 });
@@ -48092,10 +48094,20 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "panel-body" }, [
                 _c("div", { staticClass: "form-group" }, [
-                  _c("div", { staticClass: "col-md-8" }, [
-                    _vm._v(
-                      "\n                            Do you want to logout?\n                            "
-                    ),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "col-md-4 control-label",
+                      attrs: { for: "login" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Do you want to logout?\n                        "
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-6" }, [
                     _c(
                       "button",
                       {
@@ -48141,28 +48153,14 @@ if (false) {
 
 /***/ }),
 /* 95 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 96 */,
-/* 97 */,
-/* 98 */,
-/* 99 */,
-/* 100 */,
-/* 101 */,
-/* 102 */,
-/* 103 */,
-/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(105)
+var __vue_script__ = __webpack_require__(96)
 /* template */
-var __vue_template__ = __webpack_require__(106)
+var __vue_template__ = __webpack_require__(100)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -48202,7 +48200,105 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 105 */
+/* 96 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__admin_adminConfig_vue__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__admin_adminConfig_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__admin_adminConfig_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('Component admin mounted.');
+    },
+
+    components: {
+        'config': __WEBPACK_IMPORTED_MODULE_0__admin_adminConfig_vue___default.a
+    }
+});
+
+/***/ }),
+/* 97 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(98)
+/* template */
+var __vue_template__ = __webpack_require__(99)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\admin\\adminConfig.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7349761d", Component.options)
+  } else {
+    hotAPI.reload("data-v-7349761d", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 98 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -48230,62 +48326,495 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            oldPassword: '',
+            newPassword: '',
+            passwordError: false,
+            passwordErrorMessage: '',
+
+            email: '',
+            emailError: false,
+            emailErrorMessage: ''
+        };
+    },
+    methods: {
+        updatePassword: function updatePassword() {
+            var _this = this;
+
+            if (this.oldPassword != "" && this.newPassword != "") {
+                console.log(this.oldPassword + "\t" + this.newPassword);
+                console.log(this.$root.$data['accessToken']);
+
+                axios({
+                    method: 'post',
+                    url: '/api/updatePassword',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                    },
+                    data: {
+                        oldPassword: this.oldPassword,
+                        newPassword: this.newPassword
+                    }
+                }).then(function (response) {
+                    console.log(response);
+
+                    _this.passwordErrorMessage = '';
+                    _this.passwordError = false;
+
+                    alert(response.data.message);
+                    //this.$emit('logged', this.accessToken);
+                }).catch(function (error) {
+                    console.log(error);
+                    console.log(error.response);
+
+                    _this.passwordErrorMessage = error.response.data.message;
+                    _this.passwordError = true;
+                });
+            }
+        },
+        updateEmail: function updateEmail() {
+            var _this2 = this;
+
+            if (this.email != "") {
+                console.log(this.email);
+                console.log(this.$root.$data['accessToken']);
+
+                if (this.checkEmail(this.email)) {
+                    axios({
+                        method: 'post',
+                        url: '/api/updateEmail',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                        },
+                        data: {
+                            email: this.email
+                        }
+                    }).then(function (response) {
+                        _this2.emailErrorMessage = '';
+                        _this2.emailError = false;
+
+                        console.log(response);
+
+                        alert(response.data.message);
+                        //this.$emit('logged', this.accessToken);
+                    }).catch(function (error) {
+                        console.log(error);
+                        console.log(error.response);
+
+                        _this2.emailErrorMessage = error.response.data.message;
+                        _this2.emailError = true;
+                    });
+                } else {
+                    console.log('checkEmail = false');
+                    this.emailErrorMessage = 'Erro, formato de email inválido';
+                    this.emailError = true;
+                }
+            }
+        },
+        checkEmail: function checkEmail(email) {
+            return true;
+            var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+            if (!reg.test(email)) return false;
+            return true;
+        },
+        resetEmail: function resetEmail() {
+            if (confirm('Tem a certeza que deseja fazer um reset à password?')) {
+                console.log('reset');
+            } else {
+                console.log('no reset');
+            }
+        }
+    },
     mounted: function mounted() {
-        console.log('Component admin mounted.');
+        console.log('Component config mounted.');
     }
 });
 
 /***/ }),
-/* 106 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0, false, false)
+  return _c("div", [
+    _c("div", { staticClass: "form-group" }, [
+      _c(
+        "label",
+        {
+          staticClass: "col-md-4 control-label",
+          attrs: { for: "oldPassword" }
+        },
+        [_vm._v("Password Antiga")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model.trim",
+              value: _vm.oldPassword,
+              expression: "oldPassword",
+              modifiers: { trim: true }
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            id: "oldPassword",
+            type: "password",
+            name: "oldPassword",
+            value: "",
+            required: "",
+            autofocus: ""
+          },
+          domProps: { value: _vm.oldPassword },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.oldPassword = $event.target.value.trim()
+            },
+            blur: function($event) {
+              _vm.$forceUpdate()
+            }
+          }
+        })
+      ])
+    ]),
+    _vm._v(" "),
+    _c("br"),
+    _c("br"),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c(
+        "label",
+        {
+          staticClass: "col-md-4 control-label",
+          attrs: { for: "newPassword" }
+        },
+        [_vm._v("New Password")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model.trim",
+              value: _vm.newPassword,
+              expression: "newPassword",
+              modifiers: { trim: true }
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            id: "newPassword",
+            type: "password",
+            name: "newPassword",
+            required: ""
+          },
+          domProps: { value: _vm.newPassword },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.newPassword = $event.target.value.trim()
+            },
+            blur: function($event) {
+              _vm.$forceUpdate()
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.passwordError,
+                expression: "passwordError"
+              }
+            ]
+          },
+          [
+            _c("span", { staticClass: "help-block" }, [
+              _c("strong", [_vm._v(_vm._s(_vm.passwordErrorMessage))])
+            ])
+          ]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("br"),
+    _c("br"),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("div", { staticClass: "col-md-8 col-md-offset-4" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary",
+            attrs: { type: "submit" },
+            on: { click: _vm.updatePassword }
+          },
+          [_vm._v("\n                Atualizar Password\n            ")]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("br"),
+    _c("br"),
+    _vm._v(" "),
+    _c("hr"),
+    _vm._v(" "),
+    _c("br"),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c(
+        "label",
+        { staticClass: "col-md-4 control-label", attrs: { for: "email" } },
+        [_vm._v("Novo Email")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model.trim",
+              value: _vm.email,
+              expression: "email",
+              modifiers: { trim: true }
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            id: "email",
+            type: "text",
+            name: "email",
+            value: "",
+            autofocus: ""
+          },
+          domProps: { value: _vm.email },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.email = $event.target.value.trim()
+            },
+            blur: function($event) {
+              _vm.$forceUpdate()
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.emailError,
+                expression: "emailError"
+              }
+            ]
+          },
+          [
+            _c("span", { staticClass: "help-block" }, [
+              _c("strong", [_vm._v(_vm._s(_vm.emailErrorMessage))])
+            ])
+          ]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("br"),
+    _c("br"),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("div", { staticClass: "col-md-8 col-md-offset-4" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary",
+            attrs: { type: "submit" },
+            on: { click: _vm.updateEmail }
+          },
+          [_vm._v("\n                Atualizar Email\n            ")]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("br"),
+    _c("br"),
+    _vm._v(" "),
+    _c("hr"),
+    _vm._v(" "),
+    _c("br"),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c(
+        "label",
+        { staticClass: "col-md-4 control-label", attrs: { for: "reset" } },
+        [_vm._v("Esqueceu-se da password?")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-6" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-warning",
+            attrs: { id: "reset", type: "submit" },
+            on: { click: _vm.resetEmail }
+          },
+          [_vm._v("\n                Reset da password\n            ")]
+        )
+      ])
+    ])
+  ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-          _c("div", { staticClass: "panel panel-default" }, [
-            _c("div", { staticClass: "panel-heading" }, [
-              _vm._v(
-                "\n                    Administração\n                    "
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7349761d", module.exports)
+  }
+}
+
+/***/ }),
+/* 100 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-heading" }, [
+            _vm._v("\n                    Administração\n                    "),
+            _c("ul", { staticClass: "list-inline pull-right" }, [
+              _c(
+                "li",
+                { staticClass: "list-inline-item" },
+                [
+                  _c("router-link", { attrs: { to: "/example" } }, [
+                    _vm._v("Admin")
+                  ])
+                ],
+                1
               ),
-              _c("ul", { staticClass: "list-inline pull-right" }, [
-                _c("li", { staticClass: "list-inline-item" }, [
-                  _vm._v("Admin")
-                ]),
-                _vm._v(" "),
-                _c("li", { staticClass: "list-inline-item" }, [
-                  _vm._v("Utilizadores")
-                ]),
-                _vm._v(" "),
-                _c("li", { staticClass: "list-inline-item" }, [
-                  _vm._v("Imagens")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "panel-body" }, [
-              _vm._v(
-                "\n                    I'm an admin component!\n                "
+              _vm._v(" "),
+              _c(
+                "li",
+                { staticClass: "list-inline-item" },
+                [
+                  _c("router-link", { attrs: { to: "/example" } }, [
+                    _vm._v("Utilizadores")
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "li",
+                { staticClass: "list-inline-item" },
+                [
+                  _c("router-link", { attrs: { to: "/example" } }, [
+                    _vm._v("Imagens do jogo")
+                  ])
+                ],
+                1
               )
             ])
-          ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [_c("config")], 1)
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -48294,6 +48823,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-1b84f1f0", module.exports)
   }
 }
+
+/***/ }),
+/* 101 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
