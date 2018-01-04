@@ -42,6 +42,7 @@ class UsersTableSeeder extends Seeder
             'reason_reactivated' => null,
             'created_at' => $createdAt,
             'updated_at' => $updatedAt,
+            'remember_token' => str_random(10),
         ];
     }
 }

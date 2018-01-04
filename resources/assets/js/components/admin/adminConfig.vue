@@ -75,6 +75,11 @@
                 <button id="reset" type="submit" class="btn btn-warning" @click="resetEmail">
                     Reset da password
                 </button>
+                <div v-show="passwordResetError">
+                    <span class="help-block">
+                        <strong>{{passwordResetErrorMessage}}</strong>
+                    </span>
+                </div> 
             </div>
         </div>
     </div>
@@ -93,6 +98,9 @@
                 email: '',
                 emailError: false,
                 emailErrorMessage: '',
+
+                passwordResetError: false,
+                passwordResetErrorMessage : '',
             }
         },
         methods: {
@@ -103,7 +111,7 @@
 
                     axios({
                         method: 'post',
-                        url: '/api/updatePassword',
+                        url: '/api/admin/password',
                         headers: {
                             'Accept' : 'application/json',
                             'Content-Type' : 'application/json',
@@ -140,7 +148,7 @@
                     if (this.checkEmail(this.email)) {
                         axios({
                             method: 'post',
-                            url: '/api/updateEmail',
+                            url: '/api/admin/email',
                             headers: {
                                 'Accept' : 'application/json',
                                 'Content-Type' : 'application/json',
@@ -181,11 +189,58 @@
                 return true;
             },
             resetEmail: function(){
-                if (confirm('Tem a certeza que deseja fazer um reset à password?')) {
-                    console.log('reset');
-                } else {
-                    console.log('no reset');
-                }
+                var user;
+
+                axios({
+                    method: 'get',
+                    url: '/api/user',
+                    headers: {
+                        'Accept' : 'application/json',
+                        'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                    }
+                }).then(response=>{
+                    console.log(response);
+
+                    user = response.data;
+
+                    if (confirm('Tem a certeza que deseja fazer um reset à password?\nSerá enviado um link de reset para o email ' + user.email)) {
+                        console.log('reset');
+                        axios({
+                            method: 'post',
+                            url: '/api/admin/password/reset',
+                            headers: {
+                                'Accept' : 'application/json',
+                                'Content-Type' : 'application/json',
+                                'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                            },
+                            data: {
+                                email: user.email,
+                            }
+                        }).then(response=>{
+                            console.log(response);
+
+                            alert(response.data.message);
+                            //this.$emit('logged', this.accessToken);
+                            
+                        })
+                        .catch(error=>{
+                            console.log(error);
+                            console.log(error.response);
+       
+                            this.passwordResetErrorMessage = error.response.data.message;
+                            this.passwordResetError = true;
+                        });
+                    } else {
+                        console.log('reset canceled!');
+                    }                    
+                    
+                })
+                .catch(error=>{
+                    console.log(error);
+                    console.log(error.response);
+                });
+
+
             }
         },
         mounted() {

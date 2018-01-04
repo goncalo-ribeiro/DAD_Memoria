@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 define('YOUR_SERVER_URL', 'http://memoria.dad');
 // Check "oauth_clients" table for next 2 values:
 define('CLIENT_ID', '2');
-define('CLIENT_SECRET','9KEShoB9f5xIgt89buuOVMN7ZDisfRqKE0uV9rdj');
+define('CLIENT_SECRET','I4S8zEyMUqvLADtd3EsqqfAeV8vNIW1o5uIwVlQ6');
 class LoginControllerAPI extends Controller
 {
     public function login(Request $request)
