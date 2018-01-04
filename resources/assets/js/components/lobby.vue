@@ -9,6 +9,7 @@
                         <table class="table table-striped" style="text-align:center;">
                             <thead>
                                 <th>ID</th>
+                                <th>Name</th>
                                 <th>Players</th>
                                 <th>Created By</th>
                                 <th>Created At</th>
@@ -16,9 +17,11 @@
                             <tbody>
                                 <tr v-for="game in games">
                                     <td>{{ game.gameID }}</td>
+                                    <td>{{ game.name }}</td>
                                     <td>{{ game.players.length }}/{{ game.gameSize }}</td>
                                     <td>{{ game.players[0].id }}</td>
                                     <td>NO FUCKING CLUE</td>
+                                    <td><button class="btn btn-xs btn-success" v-on:click="joinGame(game.gameID)">Join</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -50,6 +53,9 @@ export default {
                 this.$emit('create-click', data);
                 this.form=false;
         },
+        joinGame(game){
+            this.$emit('join-game', {gameId: game});
+        }
     },
     components: {
         'newGameForm': newGameForm,
