@@ -6,14 +6,20 @@
                     <div class="panel-heading">
                         Administração
                         <ul class="list-inline pull-right">
-                            <li class="list-inline-item">Admin</li>
-                            <li class="list-inline-item">Utilizadores</li>
-                            <li class="list-inline-item">Imagens</li>
+                            <li class="list-inline-item">
+                                <router-link to="/example">Admin</router-link>
+                            </li>
+                            <li class="list-inline-item">
+                                <router-link to="/example">Utilizadores</router-link>
+                            </li>
+                            <li class="list-inline-item">
+                                <router-link to="/example">Imagens do jogo</router-link>
+                            </li>
                         </ul>
                     </div>
 
                     <div class="panel-body">
-                        I'm an admin component!
+                        <config></config>
                     </div>
                 </div>
             </div>
@@ -22,9 +28,14 @@
 </template>
 
 <script>
+    import config from './admin/adminConfig.vue';
+
     export default {
         mounted() {
             console.log('Component admin mounted.')
-        }
+        },
+        components: {
+            'config': config,
+        },
     }
 </script>

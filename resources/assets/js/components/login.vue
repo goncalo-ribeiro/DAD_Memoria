@@ -50,9 +50,13 @@
                     <div class="panel-heading">You are logged in</div>
                     <div class="panel-body">
                         
+
                         <div class="form-group">
-                            <div class="col-md-8">
+                            <label for="login" class="col-md-4 control-label">
                                 Do you want to logout?
+                            </label>
+
+                            <div class="col-md-6">
                                 <button type="submit" class="btn btn-primary" @click="logout">
                                     Logout
                                 </button>
@@ -110,8 +114,6 @@
                     })
                     .catch(error=>{
                         console.log(error);
-                        this.nickname = '';
-                        this.password = '';
                         this.loginError = true;
                         //alert("credenciais erradas tente outra vez!") 
                     });
