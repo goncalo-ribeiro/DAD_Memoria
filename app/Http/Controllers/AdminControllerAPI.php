@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class AdminAPI extends Controller
+class AdminControllerAPI extends Controller
 {
 
     public function updatePassword(Request $request)
