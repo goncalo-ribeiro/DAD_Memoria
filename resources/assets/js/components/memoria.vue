@@ -73,7 +73,6 @@
                 }
             },
             play(id, index){
-                console.log("received click, emiting to socket");
                 this.$socket.emit('play', {id: id, index: index});
             },
             closeGame(game){
