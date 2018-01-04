@@ -13,6 +13,7 @@
                                 <th>Name</th>
                                 <th>Turn</th>
                                 <th>Score</th>
+                                <th>Timeout</th>
                             </thead>
                             <tbody>
                                 <tr v-bind:class="{ success: isTurn(key) }" v-for="(player, key) in game.players">
@@ -20,6 +21,7 @@
                                     <td>{{ player.name }}</td>
                                     <td>{{ isTurnString(key) }}</td>
                                     <td>{{ player.score }}</td>
+                                    <td>{{ timeout(key) }}</td>
                                 </tr>
                             </tbody>
                     </table>
@@ -53,6 +55,9 @@
             },
         },
         methods: {
+            timeout(key){
+                return this.isTurn(key) && this.game.timeout !== null && this.game.timeout !== undefined ? Math.ceil((this.game.timeout._idleStart + this.game.timeout._idleTimeout - Date.now()) / 1000) + 's' : '30s';
+            },
             pending(){
                 if(this.game.gameEnded){
                     return 'Ended';
