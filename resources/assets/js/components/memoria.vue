@@ -36,8 +36,6 @@
                 this.loadActiveGames();
             },
             lobby_changed(){
-                // For this to work, websocket server must emit a message
-                // named "lobby_changed"
                 this.loadLobby();
             },
             lobby_games_changed(data){
@@ -46,16 +44,13 @@
             },
             active_games_changed(data){
                 this.activeGames=data.activeGames;
-                console.log(data.activeGames);
             }
         },        
         methods: {
             loadLobby(){
-                /// send message to server to load the list of games on the lobby
                 this.$socket.emit('get_games_lobby');
             },
             loadActiveGames(){
-                /// send message to server to load the list of games that player is playing
                 this.$socket.emit('get_active_games');
             },
             createGame(data){

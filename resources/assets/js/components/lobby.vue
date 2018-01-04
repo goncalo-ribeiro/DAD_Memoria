@@ -20,7 +20,7 @@
                                     <td>{{ game.name }}</td>
                                     <td>{{ game.players.length }}/{{ game.gameSize }}</td>
                                     <td>{{ game.players[0].id }}</td>
-                                    <td>NO FUCKING CLUE</td>
+                                    <td>{{ game.created }}</td>
                                     <td><button class="btn btn-xs btn-success" v-on:click="joinGame(game.gameID)">Join</button></td>
                                 </tr>
                             </tbody>

@@ -45792,8 +45792,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.loadActiveGames();
         },
         lobby_changed: function lobby_changed() {
-            // For this to work, websocket server must emit a message
-            // named "lobby_changed"
             this.loadLobby();
         },
         lobby_games_changed: function lobby_games_changed(data) {
@@ -45801,16 +45799,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         active_games_changed: function active_games_changed(data) {
             this.activeGames = data.activeGames;
-            console.log(data.activeGames);
         }
     },
     methods: {
         loadLobby: function loadLobby() {
-            /// send message to server to load the list of games on the lobby
             this.$socket.emit('get_games_lobby');
         },
         loadActiveGames: function loadActiveGames() {
-            /// send message to server to load the list of games that player is playing
             this.$socket.emit('get_active_games');
         },
         createGame: function createGame(data) {
@@ -46392,7 +46387,7 @@ var render = function() {
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(game.players[0].id))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v("NO FUCKING CLUE")]),
+                            _c("td", [_vm._v(_vm._s(game.created))]),
                             _vm._v(" "),
                             _c("td", [
                               _c(
@@ -46946,6 +46941,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        pending: function pending() {
+            if (this.game.gameEnded) {
+                return 'Ended';
+            }
+            return this.game.gameStarted ? 'Started' : 'Waiting Players ' + this.game.players.length + '/' + this.game.gameSize;
+        },
         gameEnded: function gameEnded() {
             return this.game.gameEnded;
         },
@@ -46953,7 +46954,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.game.playerTurn === key + 1;
         },
         isTurnString: function isTurnString(key) {
-            return this.game.playerTurn === key + 1 ? "True" : "False";
+            return this.game.playerTurn === key + 1 ? 'True' : 'False';
         },
         newLine: function newLine(key) {
             return key % this.game.colunas === 0 && key !== 0;
@@ -46966,9 +46967,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         pieceImageURL: function pieceImageURL(piece) {
-            if (piece["show"]) {
-                var imgSrc = String(piece["piece"]);
-                return 'img/' + imgSrc + '.png';
+            if (piece.show) {
+                return 'img/' + piece.piece + '.png';
             } else {
                 return 'img/hidden.png';
             }
@@ -46988,7 +46988,9 @@ var render = function() {
     _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
       _c("div", { staticClass: "panel panel-default" }, [
         _c("div", { staticClass: "panel-heading" }, [
-          _vm._v("Game " + _vm._s(_vm.game.gameID))
+          _vm._v(
+            "Game " + _vm._s(_vm.game.gameID) + " - " + _vm._s(_vm.pending())
+          )
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "panel-body" }, [

@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div  class="panel-heading">Game {{game.gameID}}</div>
+                <div  class="panel-heading">Game {{game.gameID}} - {{pending()}}</div>
                 <div class="panel-body">
                     <div class="alert" :class="alerttype">
                         <strong v-if="this.game.winner">{{ message }} &nbsp;&nbsp;&nbsp;&nbsp;<a v-on:click.prevent="closeGame">Close Game</a></strong>
@@ -53,6 +53,12 @@
             },
         },
         methods: {
+            pending(){
+                if(this.game.gameEnded){
+                    return 'Ended';
+                }
+                return this.game.gameStarted ? 'Started' : 'Waiting Players ' + this.game.players.length + '/' + this.game.gameSize;
+            },
             gameEnded(){
                 return this.game.gameEnded;
             },
@@ -60,7 +66,7 @@
                 return this.game.playerTurn === key+1;
             },
             isTurnString(key){
-                return this.game.playerTurn === key+1 ? "True" : "False";
+                return this.game.playerTurn === key+1 ? 'True' : 'False';
             },
             newLine(key){
                 return key%this.game.colunas === 0 && key !== 0;
@@ -72,9 +78,8 @@
                 this.$emit('piece-click', this.game.gameID, index);
             },
             pieceImageURL: function (piece) {
-                if(piece["show"]){
-                    var imgSrc = String(piece["piece"]);
-                    return 'img/' + imgSrc + '.png';
+                if(piece.show){
+                    return 'img/' + piece.piece + '.png';
                 }else{
                     return 'img/hidden.png';
                 }
