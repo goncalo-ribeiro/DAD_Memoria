@@ -11,7 +11,9 @@ class AdminControllerAPI extends Controller
 
     public function updatePassword(Request $request)
     {
-        $user = Auth::user();
+
+
+        $user = $request->user();
 
         if ($user->admin != 1) {
             return response()->json(['message'=>'Erro, você não é um administrador'], 400);

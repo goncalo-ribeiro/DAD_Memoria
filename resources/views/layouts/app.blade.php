@@ -12,8 +12,8 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                <a class="navbar-brand">
+                    <router-link to="/">{{ config('app.name', 'Laravel') }}</router-link>
                 </a>
             </div>
 
@@ -29,8 +29,24 @@
                     <li>
                         <router-link to="/example">Example</router-link>
                     </li>
-                    <li v-if="admin" li>
-                        <router-link to="/admin">Admin</router-link>
+                    <li v-if="admin" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
+                            Administração<span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                               <li>
+                                    <router-link to="/admin">Admin</router-link>
+                                </li>
+                                <li>
+                                    <router-link to="/users">Utilizadores</router-link>
+                                </li>
+                                <li>
+                                    <router-link to="/example">Imagens do jogo</router-link>
+                                </li>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
 
@@ -40,7 +56,7 @@
                     @guest
                         <li>
                             <router-link to="/login">
-                                <div v-if="!loggedIn">
+                                <div v-if="loggedIn == false">
                                     Login    
                                 </div>
                                 <div v-if="loggedIn">

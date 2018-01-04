@@ -3,22 +3,13 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Auth\AuthManager;
 
 class IsAdmin
 {
-    private $auth;
-
-    public function __construct(AuthManager $auth)
-    {
-        $this->auth = $auth;
-    }
-
-
-
     public function handle($request, Closure $next)
     {
-        return response()->json(['msg'=>$this], 400);
+        //return $request->user();
+        return response()->json(['msg'=>$request], 400);
 
          if (Auth::user() &&  Auth::user()->admin == 1) {
                 return $next($request);

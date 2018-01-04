@@ -16,9 +16,14 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::middleware('auth:api')->get('/user/admin', function (Request $request) {
+    return $request->user();
+});
 
 Route::post('login', 'LoginControllerAPI@login');
 Route::post('logout','LoginControllerAPI@logout');
+
+Route::middleware('auth:api')->get('users', 'UserControllerAPI@getUsers');
 
 Route::middleware('auth:api')->post('admin/password','AdminControllerAPI@updatePassword');
 Route::middleware('auth:api')->post('admin/password/reset','ResetPasswordControllerAPI@sendResetLinkEmail');

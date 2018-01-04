@@ -1,88 +1,102 @@
 <template>
-    <div>
-        <div class="form-group">
-            <label for="oldPassword" class="col-md-4 control-label">Password Antiga</label>
+     <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Administração
+                    </div>
 
-            <div class="col-md-6">
-                <input v-model.trim="oldPassword" id="oldPassword" type="password" class="form-control" name="oldPassword" value="" required autofocus>
-            </div>
-        </div>
-        <br><br>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="oldPassword" class="col-md-4 control-label">Password Antiga</label>
 
-        <div class="form-group">
-            <label for="newPassword" class="col-md-4 control-label">New Password</label>
+                            <div class="col-md-6">
+                                <input v-model.trim="oldPassword" id="oldPassword" type="password" class="form-control" name="oldPassword" value="" required autofocus>
+                            </div>
+                        </div>
+                        <br><br>
 
-            <div class="col-md-6">
-                <input v-model.trim="newPassword" id="newPassword" type="password" class="form-control" name="newPassword" required>
+                        <div class="form-group">
+                            <label for="newPassword" class="col-md-4 control-label">New Password</label>
 
-                <div v-show="passwordError">
-                    <span class="help-block">
-                        <strong>{{passwordErrorMessage}}</strong>
-                    </span>
-                </div>       
-            </div>
-        </div>  
+                            <div class="col-md-6">
+                                <input v-model.trim="newPassword" id="newPassword" type="password" class="form-control" name="newPassword" required>
 
-        <br><br>
+                                <div v-show="passwordError">
+                                    <span class="help-block">
+                                        <strong>{{passwordErrorMessage}}</strong>
+                                    </span>
+                                </div>       
+                            </div>
+                        </div>  
 
-        <div class="form-group">
-            <div class="col-md-8 col-md-offset-4">
-                <button type="submit" class="btn btn-primary" @click="updatePassword">
-                    Atualizar Password
-                </button>
-            </div>
-        </div>  
-        
-        <br><br>
-        
-        <hr />
+                        <br><br>
 
-        <br>
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-4">
+                                <button type="submit" class="btn btn-primary" @click="updatePassword">
+                                    Atualizar Password
+                                </button>
+                            </div>
+                        </div>  
+                        
+                        <br><br>
+                        
+                        <hr />
 
-        <div class="form-group">
-            <label for="email" class="col-md-4 control-label">Novo Email</label>
+                        <br>
 
-            <div class="col-md-6">
-                <input v-model.trim="email" id="email" type="text" class="form-control" name="email" value="" autofocus>
-                
-                <div v-show="emailError">
-                    <span class="help-block">
-                        <strong>{{emailErrorMessage}}</strong>
-                    </span>
-                </div>                 
-            </div>
-        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-md-4 control-label">Novo Email</label>
 
-        <br><br>
-        
-        <div class="form-group">
-            <div class="col-md-8 col-md-offset-4">
-                <button type="submit" class="btn btn-primary" @click="updateEmail">
-                    Atualizar Email
-                </button>
-            </div>
-        </div> 
+                            <div class="col-md-6">
+                                <input v-model.trim="email" id="email" type="text" class="form-control" name="email" value="" autofocus>
+                                
+                                <div v-show="emailError">
+                                    <span class="help-block">
+                                        <strong>{{emailErrorMessage}}</strong>
+                                    </span>
+                                </div>                 
+                            </div>
+                        </div>
 
-        <br><br>
-        
-        <hr/>
+                        <br><br>
+                        
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-4">
+                                <button type="submit" class="btn btn-primary" @click="updateEmail">
+                                    Atualizar Email
+                                </button>
+                            </div>
+                        </div> 
 
-        <br>
+                        <br><br>
+                        
+                        <hr/>
 
-        <div class="form-group">
-            <label for="reset" class="col-md-4 control-label">Esqueceu-se da password?</label>
-            <div class="col-md-6">
-                <button id="reset" type="submit" class="btn btn-warning" @click="resetEmail">
-                    Reset da password
-                </button>
-                <div v-show="passwordResetError">
-                    <span class="help-block">
-                        <strong>{{passwordResetErrorMessage}}</strong>
-                    </span>
-                </div> 
+                        <br>
+
+                        <div class="form-group">
+                            <label for="reset" class="col-md-4 control-label">Esqueceu-se da password?</label>
+                            <div class="col-md-6">
+                                <button id="reset" type="submit" class="btn btn-warning" @click="resetEmail">
+                                    Reset da password
+                                </button>
+                                <div v-show="passwordResetError">
+                                    <span class="help-block">
+                                        <strong>{{passwordResetErrorMessage}}</strong>
+                                    </span>
+                                </div> 
+                            </div>
+                        </div>
+                        <br><br>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 </template>
 
 <script>
