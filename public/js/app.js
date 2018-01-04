@@ -45799,6 +45799,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         active_games_changed: function active_games_changed(data) {
             this.activeGames = data.activeGames;
+            console.log(data.activeGames);
         }
     },
     methods: {
@@ -46925,6 +46926,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['game'],
@@ -46941,6 +46944,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        timeout: function timeout(key) {
+            return this.isTurn(key) && this.game.timeout !== null && this.game.timeout !== undefined ? Math.ceil((this.game.timeout._idleStart + this.game.timeout._idleTimeout - Date.now()) / 1000) + 's' : '30s';
+        },
         pending: function pending() {
             if (this.game.gameEnded) {
                 return 'Ended';
@@ -47033,7 +47039,9 @@ var render = function() {
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(_vm.isTurnString(key)))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(player.score))])
+                    _c("td", [_vm._v(_vm._s(player.score))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.timeout(key)))])
                   ])
                 })
               )
@@ -47076,7 +47084,9 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("th", [_vm._v("Turn")]),
       _vm._v(" "),
-      _c("th", [_vm._v("Score")])
+      _c("th", [_vm._v("Score")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Timeout")])
     ])
   }
 ]

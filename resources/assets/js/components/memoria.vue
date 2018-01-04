@@ -40,10 +40,10 @@
             },
             lobby_games_changed(data){
                 this.lobbyGames=data.lobbyGames;
-                
             },
             active_games_changed(data){
                 this.activeGames=data.activeGames;
+                console.log(data.activeGames);
             }
         },        
         methods: {
