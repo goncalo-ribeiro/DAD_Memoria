@@ -46949,6 +46949,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        canKick: function canKick() {
+            return this.game.gameSize > 1 && this.game.players.length > 1;
+        },
         danger: function danger(key) {
             return this.game.playerTurn == key + 1 && this.game.lastPlay !== null && Math.ceil((this.game.lastPlay + 29000 - this.currentTime) / 1000) <= 5;
         },
@@ -46956,12 +46959,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.currentTime = new Date().getTime();
             if (this.game.lastPlay !== null && this.currentTime !== null && this.game.lastPlay + 29000 - this.currentTime < 0) {
                 clearInterval(this.interval);
+                this.interval = null;
                 this.$emit('kick-player', { gameId: this.game.gameID, player: this.game.players[this.game.playerTurn - 1] });
                 console.log(this.game.players[this.game.playerTurn - 1]);
             }
         },
         timeout: function timeout(key) {
-            if (this.currentTime === null) {
+            if (this.interval === null) {
                 this.newTime();
                 this.interval = setInterval(this.newTime, 1000);
             }
@@ -46980,6 +46984,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         gameEnded: function gameEnded() {
             if (this.game.gameEnded) {
                 clearInterval(this.interval);
+                this.interval = null;
             }
             return this.game.gameEnded;
         },
@@ -47059,7 +47064,17 @@ var render = function() {
               staticStyle: { "text-align": "center" }
             },
             [
-              _vm._m(0),
+              _c("thead", [
+                _c("th", [_vm._v("ID")]),
+                _vm._v(" "),
+                _c("th", [_vm._v("Name")]),
+                _vm._v(" "),
+                _c("th", [_vm._v("Turn")]),
+                _vm._v(" "),
+                _c("th", [_vm._v("Score")]),
+                _vm._v(" "),
+                _vm.canKick() ? _c("th", [_vm._v("Timeout")]) : _vm._e()
+              ]),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -47081,7 +47096,9 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(player.score))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(_vm.timeout(key)))])
+                      _vm.canKick()
+                        ? _c("td", [_vm._v(_vm._s(_vm.timeout(key)))])
+                        : _vm._e()
                     ]
                   )
                 })
@@ -47113,24 +47130,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("th", [_vm._v("ID")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Name")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Turn")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Score")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Timeout")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

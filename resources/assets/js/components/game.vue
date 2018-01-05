@@ -13,7 +13,7 @@
                                 <th>Name</th>
                                 <th>Turn</th>
                                 <th>Score</th>
-                                <th>Timeout</th>
+                                <th v-if="canKick()">Timeout</th>
                             </thead>
                             <tbody>
                                 <tr v-bind:class="{ success: isTurn(key), danger: danger(key) }" v-for="(player, key) in game.players">
@@ -21,7 +21,7 @@
                                     <td>{{ player.name }}</td>
                                     <td>{{ isTurnString(key) }}</td>
                                     <td>{{ player.score }}</td>
-                                    <td>{{ timeout(key) }}</td>
+                                    <td v-if="canKick()">{{ timeout(key) }}</td>
                                 </tr>
                             </tbody>
                     </table>
@@ -57,6 +57,9 @@
             },
         },
         methods: {
+            canKick(){
+                return this.game.gameSize > 1 && this.game.players.length > 1;
+            },
             danger(key){
                 return this.game.playerTurn == key+1 && this.game.lastPlay !== null && Math.ceil((this.game.lastPlay+29000 - this.currentTime) / 1000) <= 5;
             },
@@ -64,12 +67,13 @@
                 this.currentTime=new Date().getTime();
                 if(this.game.lastPlay !== null && this.currentTime !== null && this.game.lastPlay+29000 - this.currentTime < 0){
                     clearInterval(this.interval);
+                    this.interval=null;
                     this.$emit('kick-player', {gameId: this.game.gameID, player: this.game.players[this.game.playerTurn-1]});
                     console.log(this.game.players[this.game.playerTurn-1]);
                 }
             },
             timeout(key){
-                if(this.currentTime===null){
+                if(this.interval===null){
                     this.newTime();
                     this.interval=setInterval(this.newTime, 1000);
                 }
@@ -88,6 +92,7 @@
             gameEnded(){
                 if(this.game.gameEnded){
                     clearInterval(this.interval);
+                    this.interval=null;
                 }
                 return this.game.gameEnded;
             },
