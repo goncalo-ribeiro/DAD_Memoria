@@ -21,7 +21,7 @@
                                     <td>{{ player.name }}</td>
                                     <td>{{ isTurnString(key) }}</td>
                                     <td>{{ player.score }}</td>
-                                    <td>{{ timeout(key) }}</td>
+                                    <td>{{ timeout }}</td>
                                 </tr>
                             </tbody>
                     </table>
@@ -48,6 +48,9 @@
             }
         },
         computed: {
+            timeout(){
+                return this.game.lastPlay !== null ? Math.ceil((this.game.lastPlay+30000 - new Date().getTime()) / 1000) + 's' : '30s';
+            },
             message(){
                 if(this.game.winner != ''){
                     return 'Winner: ' + this.game.winner;
@@ -55,9 +58,6 @@
             },
         },
         methods: {
-            timeout(key){
-                return this.isTurn(key) && this.game.timeout !== null && this.game.timeout !== undefined ? Math.ceil((this.game.timeout._idleStart + this.game.timeout._idleTimeout - Date.now()) / 1000) + 's' : '30s';
-            },
             pending(){
                 if(this.game.gameEnded){
                     return 'Ended';
