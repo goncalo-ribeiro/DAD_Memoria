@@ -4,7 +4,7 @@
             <h3 class="text-center">{{ title }}</h3>
             <lobby :games="lobbyGames" @join-game="join" @create-click="createGame"></lobby>
             <template v-for="game in activeGames">
-                <game :game="game" @piece-click="play" @close-game="closeGame"></game>
+                <game :game="game" @piece-click="play" @close-game="closeGame" @kick-player="kickPlayer"></game>
             </template>
         </div>
     </div>
@@ -46,6 +46,9 @@
             }
         },        
         methods: {
+            kickPlayer(data){
+                this.$socket.emit('kick_player', data);
+            },
             loadLobby(){
                 this.$socket.emit('get_games_lobby');
             },

@@ -1119,7 +1119,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(79);
+module.exports = __webpack_require__(82);
 
 
 /***/ }),
@@ -1161,8 +1161,8 @@ var example = Vue.component('example', __webpack_require__(42));
 var memoria = Vue.component('memoria', __webpack_require__(45));
 var statistics = Vue.component('statistics', __webpack_require__(61));
 var login = Vue.component('login', __webpack_require__(73));
-var admin = Vue.component('admin', __webpack_require__(88));
-var users = Vue.component('users', __webpack_require__(91));
+var admin = Vue.component('admin', __webpack_require__(76));
+var users = Vue.component('users', __webpack_require__(79));
 
 var routes = [{ path: '/', redirect: '/memoria' }, { path: '/example', component: example }, { path: '/statistics', component: statistics }, { path: '/memoria', component: memoria }, { path: '/login', component: login }, { path: '/admin', component: admin }, { path: '/users', component: users }];
 
@@ -45803,6 +45803,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        kickPlayer: function kickPlayer(data) {
+            this.$socket.emit('kick_player', data);
+        },
         loadLobby: function loadLobby() {
             this.$socket.emit('get_games_lobby');
         },
@@ -46518,13 +46521,13 @@ var content = __webpack_require__(54);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(56)("8511c514", content, false);
+var update = __webpack_require__(56)("7715a1fe", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./game.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./game.vue");
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./game.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./game.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -46933,13 +46936,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: ['game'],
     data: function data() {
         return {
-            alerttype: {}
+            alerttype: {},
+            currentTime: null,
+            interval: null
         };
     },
     computed: {
-        timeout: function timeout() {
-            return this.game.lastPlay !== null ? Math.ceil((this.game.lastPlay + 30000 - new Date().getTime()) / 1000) + 's' : '30s';
-        },
         message: function message() {
             if (this.game.winner != '') {
                 return 'Winner: ' + this.game.winner;
@@ -46947,6 +46949,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        danger: function danger(key) {
+            return this.game.playerTurn == key + 1 && this.game.lastPlay !== null && Math.ceil((this.game.lastPlay + 29000 - this.currentTime) / 1000) <= 5;
+        },
+        newTime: function newTime() {
+            this.currentTime = new Date().getTime();
+            if (this.game.lastPlay !== null && this.currentTime !== null && this.game.lastPlay + 29000 - this.currentTime < 0) {
+                clearInterval(this.interval);
+                this.$emit('kick-player', { gameId: this.game.gameID, player: this.game.players[this.game.playerTurn - 1] });
+                console.log(this.game.players[this.game.playerTurn - 1]);
+            }
+        },
+        timeout: function timeout(key) {
+            if (this.currentTime === null) {
+                this.newTime();
+                this.interval = setInterval(this.newTime, 1000);
+            }
+            var time = this.game.playerTurn == key + 1 && this.game.lastPlay !== null ? Math.ceil((this.game.lastPlay + 29000 - this.currentTime) / 1000) : 30;
+            if (time < 0) {
+                return '0s';
+            }
+            return time + 's';
+        },
         pending: function pending() {
             if (this.game.gameEnded) {
                 return 'Ended';
@@ -46954,6 +46978,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.game.gameStarted ? 'Started' : 'Waiting Players ' + this.game.players.length + '/' + this.game.gameSize;
         },
         gameEnded: function gameEnded() {
+            if (this.game.gameEnded) {
+                clearInterval(this.interval);
+            }
             return this.game.gameEnded;
         },
         isTurn: function isTurn(key) {
@@ -46995,7 +47022,12 @@ var render = function() {
       _c("div", { staticClass: "panel panel-default" }, [
         _c("div", { staticClass: "panel-heading" }, [
           _vm._v(
-            "Game " + _vm._s(_vm.game.gameID) + " - " + _vm._s(_vm.pending())
+            "Game " +
+              _vm._s(_vm.game.gameID) +
+              " (" +
+              _vm._s(_vm.game.name) +
+              ") - " +
+              _vm._s(_vm.pending())
           )
         ]),
         _vm._v(" "),
@@ -47032,17 +47064,26 @@ var render = function() {
               _c(
                 "tbody",
                 _vm._l(_vm.game.players, function(player, key) {
-                  return _c("tr", { class: { success: _vm.isTurn(key) } }, [
-                    _c("td", [_vm._v(_vm._s(player.id))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(player.name))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(_vm.isTurnString(key)))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(player.score))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(_vm.timeout))])
-                  ])
+                  return _c(
+                    "tr",
+                    {
+                      class: {
+                        success: _vm.isTurn(key),
+                        danger: _vm.danger(key)
+                      }
+                    },
+                    [
+                      _c("td", [_vm._v(_vm._s(player.id))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(player.name))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.isTurnString(key)))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(player.score))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.timeout(key)))])
+                    ]
+                  )
                 })
               )
             ]
@@ -47123,7 +47164,11 @@ var render = function() {
           return [
             _c("game", {
               attrs: { game: game },
-              on: { "piece-click": _vm.play, "close-game": _vm.closeGame }
+              on: {
+                "piece-click": _vm.play,
+                "close-game": _vm.closeGame,
+                "kick-player": _vm.kickPlayer
+              }
             })
           ]
         })
@@ -48031,32 +48076,15 @@ if (false) {
 }
 
 /***/ }),
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 80 */,
-/* 81 */,
-/* 82 */,
-/* 83 */,
-/* 84 */,
-/* 85 */,
-/* 86 */,
-/* 87 */,
-/* 88 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(89)
+var __vue_script__ = __webpack_require__(77)
 /* template */
-var __vue_template__ = __webpack_require__(90)
+var __vue_template__ = __webpack_require__(78)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -48095,7 +48123,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 89 */
+/* 77 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -48360,7 +48388,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 90 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -48675,15 +48703,15 @@ if (false) {
 }
 
 /***/ }),
-/* 91 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(92)
+var __vue_script__ = __webpack_require__(80)
 /* template */
-var __vue_template__ = __webpack_require__(93)
+var __vue_template__ = __webpack_require__(81)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -48722,7 +48750,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 92 */
+/* 80 */
 /***/ (function(module, exports) {
 
 //
@@ -48792,7 +48820,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 93 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -48899,6 +48927,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-07295f83", module.exports)
   }
 }
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
