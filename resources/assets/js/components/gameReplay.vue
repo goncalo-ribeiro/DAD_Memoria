@@ -4,18 +4,8 @@
             <div class="panel panel-default">
                 <div  class="panel-heading">Game {{game.gameID}} ({{game.name}}) - {{pending()}}</div>
                 <div class="panel-body">
-                    <div class="alert" :class="alerttype" v-if="this.game.winner">
-                        <strong>{{ message }} &nbsp;&nbsp;&nbsp;&nbsp;<a v-on:click.prevent="closeGame">Close Game</a></strong>
-                    </div>
-                    <div v-if="canBot()">
-                        <label for="bot">Bot Dificulty</label>
-                        <select id="bot" v-model="bot">
-                            <option value="1">Dumb Bot</option>
-                            <option value="2">Smart Bot</option>
-                            <option value="3">Smartest Bot</option>
-                        </select>
-                        <button class="btn btn-sm btn-success" v-on:click="addBot">Add Bot</button>
-                        <br>
+                    <div class="alert" :class="alerttype">
+                        <strong v-if="this.game.winner">{{ message }} &nbsp;&nbsp;&nbsp;&nbsp;<a v-on:click.prevent="closeGame">Close Game</a></strong>
                     </div>
                     <table class="table table-striped" style="text-align:center;">
                             <thead>
@@ -56,8 +46,7 @@
                     
                 },
                 currentTime: null,
-                interval: null,
-                bot: 1
+                interval: null
             }
         },
         computed: {
@@ -68,19 +57,6 @@
             },
         },
         methods: {
-            addBot(){
-                this.$emit('add-bot', this.game.gameID, this.bot);
-            },
-            canBot(){
-                let hasBot=false;
-                for(let i =0; i<this.game.players.length; i++){
-                    if(this.game.players[i].bot){
-                        hasBot=true;
-                        break;
-                    }
-                }
-                return !this.game.gameStarted && !hasBot; //acrescentar condição de dono do jogo
-            },
             canKick(){
                 return this.game.gameSize > 1 && this.game.players.length > 1;
             },
@@ -136,7 +112,11 @@
                 this.$emit('piece-click', this.game.gameID, index);
             },
             pieceImageURL: function (piece) {
-                return 'img/' + piece + '.png';
+                if(piece.show){
+                    return 'img/' + piece.piece + '.png';
+                }else{
+                    return 'img/hidden.png';
+                }
             }
         },
     }

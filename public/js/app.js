@@ -45803,6 +45803,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        addBot: function addBot(id, bot) {
+            this.$socket.emit('add_bot', { id: id, bot: bot });
+        },
         kickPlayer: function kickPlayer(data) {
             this.$socket.emit('kick_player', data);
         },
@@ -46356,77 +46359,70 @@ var render = function() {
           ? _c("newGameForm", { on: { "create-click": _vm.createGame } })
           : _vm._e(),
         _vm._v(" "),
-        !_vm.form
-          ? _c("div", { staticClass: "panel panel-default" }, [
-              _c("div", { staticClass: "panel-heading" }, [
-                _vm._v("Game Lobby")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "panel-body" }, [
-                _c("div", { staticClass: "col-xs-10" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-heading" }, [_vm._v("Game Lobby")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _c("div", { staticClass: "col-xs-10" }, [
+              _c(
+                "table",
+                {
+                  staticClass: "table table-striped",
+                  staticStyle: { "text-align": "center" }
+                },
+                [
+                  _vm._m(0),
+                  _vm._v(" "),
                   _c(
-                    "table",
-                    {
-                      staticClass: "table table-striped",
-                      staticStyle: { "text-align": "center" }
-                    },
-                    [
-                      _vm._m(0),
-                      _vm._v(" "),
-                      _c(
-                        "tbody",
-                        _vm._l(_vm.games, function(game) {
-                          return _c("tr", [
-                            _c("td", [_vm._v(_vm._s(game.gameID))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(game.name))]),
-                            _vm._v(" "),
-                            _c("td", [
-                              _vm._v(
-                                _vm._s(game.players.length) +
-                                  "/" +
-                                  _vm._s(game.gameSize)
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(game.players[0].id))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(game.created))]),
-                            _vm._v(" "),
-                            _c("td", [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-xs btn-success",
-                                  on: {
-                                    click: function($event) {
-                                      _vm.joinGame(game.gameID)
-                                    }
-                                  }
-                                },
-                                [_vm._v("Join")]
-                              )
-                            ])
-                          ])
-                        })
-                      )
-                    ]
+                    "tbody",
+                    _vm._l(_vm.games, function(game) {
+                      return _c("tr", [
+                        _c("td", [_vm._v(_vm._s(game.gameID))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(game.name))]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            _vm._s(game.players.length) +
+                              "/" +
+                              _vm._s(game.gameSize)
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(game.players[0].id))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(game.created))]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-xs btn-success",
+                              on: {
+                                click: function($event) {
+                                  _vm.joinGame(game.gameID)
+                                }
+                              }
+                            },
+                            [_vm._v("Join")]
+                          )
+                        ])
+                      ])
+                    })
                   )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-xs-2" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-success",
-                      on: { click: _vm.showForm }
-                    },
-                    [_vm._v("Novo Jogo")]
-                  )
-                ])
-              ])
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-xs-2" }, [
+              _c(
+                "button",
+                { staticClass: "btn btn-success", on: { click: _vm.showForm } },
+                [_vm._v("Novo Jogo")]
+              )
             ])
-          : _vm._e()
+          ])
+        ])
       ],
       1
     )
@@ -46931,6 +46927,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['game'],
@@ -46938,7 +46944,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             alerttype: {},
             currentTime: null,
-            interval: null
+            interval: null,
+            bot: 1
         };
     },
     computed: {
@@ -46949,6 +46956,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        addBot: function addBot() {
+            this.$emit('add-bot', this.game.gameID, this.bot);
+        },
+        canBot: function canBot() {
+            var hasBot = false;
+            for (var i = 0; i < this.game.players.length; i++) {
+                if (this.game.players[i].bot) {
+                    hasBot = true;
+                    break;
+                }
+            }
+            return !this.game.gameStarted && !hasBot; //acrescentar condição de dono do jogo
+        },
         canKick: function canKick() {
             return this.game.gameSize > 1 && this.game.players.length > 1;
         },
@@ -47005,11 +47025,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         pieceImageURL: function pieceImageURL(piece) {
-            if (piece.show) {
-                return 'img/' + piece.piece + '.png';
-            } else {
-                return 'img/hidden.png';
-            }
+            return 'img/' + piece + '.png';
         }
     }
 });
@@ -47037,9 +47053,9 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "panel-body" }, [
-          _c("div", { staticClass: "alert", class: _vm.alerttype }, [
-            this.game.winner
-              ? _c("strong", [
+          this.game.winner
+            ? _c("div", { staticClass: "alert", class: _vm.alerttype }, [
+                _c("strong", [
                   _vm._v(_vm._s(_vm.message) + "     "),
                   _c(
                     "a",
@@ -47054,8 +47070,70 @@ var render = function() {
                     [_vm._v("Close Game")]
                   )
                 ])
-              : _vm._e()
-          ]),
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.canBot()
+            ? _c("div", [
+                _c("label", { attrs: { for: "bot" } }, [
+                  _vm._v("Bot Dificulty")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.bot,
+                        expression: "bot"
+                      }
+                    ],
+                    attrs: { id: "bot" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.bot = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "1" } }, [
+                      _vm._v("Dumb Bot")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "2" } }, [
+                      _vm._v("Smart Bot")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "3" } }, [
+                      _vm._v("Smartest Bot")
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-sm btn-success",
+                    on: { click: _vm.addBot }
+                  },
+                  [_vm._v("Add Bot")]
+                ),
+                _vm._v(" "),
+                _c("br")
+              ])
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "table",
@@ -47167,7 +47245,8 @@ var render = function() {
               on: {
                 "piece-click": _vm.play,
                 "close-game": _vm.closeGame,
-                "kick-player": _vm.kickPlayer
+                "kick-player": _vm.kickPlayer,
+                "add-bot": _vm.addBot
               }
             })
           ]
