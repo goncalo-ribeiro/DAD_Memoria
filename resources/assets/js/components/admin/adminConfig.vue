@@ -124,7 +124,7 @@
                     console.log(this.$root.$data['accessToken']);
 
                     axios({
-                        method: 'post',
+                        method: 'put',
                         url: '/api/admin/password',
                         headers: {
                             'Accept' : 'application/json',
@@ -161,7 +161,7 @@
 
                     if (this.checkEmail(this.email)) {
                         axios({
-                            method: 'post',
+                            method: 'put',
                             url: '/api/admin/email',
                             headers: {
                                 'Accept' : 'application/json',
@@ -197,7 +197,6 @@
                 }                
             },
             checkEmail: function(email) {
-                return true
                 var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                 if (!reg.test(email)) return false;
                 return true;
@@ -221,7 +220,7 @@
                         console.log('reset');
                         axios({
                             method: 'post',
-                            url: '/api/admin/password/reset',
+                            url: '/api/admin/password/email',
                             headers: {
                                 'Accept' : 'application/json',
                                 'Content-Type' : 'application/json',

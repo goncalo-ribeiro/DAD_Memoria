@@ -55,8 +55,9 @@ class UserControllerAPI extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return response()->json(null, 204);
+        return response()->json(['message'=>'O utilizador foi removido com sucesso'], 204);
     }
+
     public function emailAvailable(Request $request)
     {
         $totalEmail = 1;
@@ -66,5 +67,52 @@ class UserControllerAPI extends Controller
             $totalEmail = DB::table('users')->where('email', '=', $request->email)->count();
         }
         return response()->json($totalEmail == 0);
+    }
+
+
+    public function block(Request $request, $id)
+    {
+        $userAdmin = $request->user();
+
+        if ($userAdmin->admin != 1) {
+            return response()->json(['message'=>'Erro, você não é um administrador'], 400);
+        }
+
+        $request->validate([
+                'reason_blocked' => 'required|string'
+            ]);
+        $request->request->add(['blocked' => 1]);
+        $request->request->add(['reason_reactivated' => null]);
+        $user = User::findOrFail($id);
+
+        if ($user->blocked != 0) {
+            return response()->json(['message'=>'Erro, o utilizador ja se encontra bloqueado'], 400);   
+        }
+
+        $user->update($request->all());
+        return response()->json(['message'=>'O utilizador foi bloqueado com sucesso'], 200);
+    }
+
+    public function reactivate(Request $request, $id)
+    {
+        $userAdmin = $request->user();
+
+        if ($userAdmin->admin != 1) {
+            return response()->json(['message'=>'Erro, você não é um administrador'], 400);
+        }
+
+        $request->validate([
+                'reason_reactivated' => 'required|string'
+            ]);
+        $request->request->add(['blocked' => 0]);
+        $request->request->add(['reason_blocked' => null]);
+        $user = User::findOrFail($id);
+
+        if ($user->blocked == 0) {
+            return response()->json(['message'=>'Erro, o utilizador ja se encontra ativado'], 400);   
+        }
+
+        $user->update($request->all());
+        return response()->json(['message'=>'O utilizador foi reativado com sucesso'], 200);
     }
 }

@@ -39,7 +39,7 @@
 import newGameForm from './newGameForm.vue';
 
 export default {
-    props: ['games'],
+    props: ['games', 'user'],
     data: function(){
         return {
             form: false,

@@ -10,4 +10,8 @@ class GameController
     	$games = Game::where('status', 'pending')->get();
     	return view('game.lobby', compact('games'));
     }
+
+    public function reset($token){
+        return view('game.lobby')->with('token', $token);
+    }
 }

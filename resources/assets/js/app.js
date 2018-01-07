@@ -28,15 +28,17 @@ const statistics = Vue.component('statistics', require('./components/statistics.
 const login = Vue.component('login', require('./components/login.vue'));
 const admin = Vue.component('admin', require('./components/admin/adminConfig.vue'));
 const users = Vue.component('users', require('./components/admin/listUsers.vue'));
+const reset = Vue.component('reset', require('./components/admin/resetPassword.vue'));
 
 const routes = [
   { path: '/', redirect: '/memoria' },
   { path: '/example', component: example },
   { path: '/statistics', component: statistics },
-  { path: '/memoria', component: memoria },
+  { path: '/memoria', component: memoria},
   { path: '/login', component: login },
   { path: '/admin', component: admin },
-  { path: '/users', component: users }
+  { path: '/users', component: users },
+  { path: '/reset', component: reset },
 ];
 
 const router = new VueRouter({
@@ -50,5 +52,7 @@ const app = new Vue({
         admin: false,
         loggedIn: false,
         accessToken: '',
+        resetToken: token,
+        loggedUser: null,
     }
 }).$mount('#app');
