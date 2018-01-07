@@ -100,32 +100,50 @@
                         console.log(response);
                         this.loginError = false;
                         this.loggedIn = true;
-                        this.$root.$data['loggedIn'] = true; 
-                        if (this.nickname == 'admin' || this.nickname == 'admin@mail.dad') {
-                            console.log('admin');
-                            this.$root.$data['admin'] = true;
-                        }
-                        else{
-                            this.$root.$data['admin'] = false;   
-                        }
-                        //alert("efetuou o login com sucesso!");
-                        //this.$emit('logged', this.accessToken);
-                        
+                        this.$root.$data['loggedIn'] = true;
+
+                        this.setUpLoggedInUser();
                     })
                     .catch(error=>{
                         console.log(error);
                         this.loginError = true;
-                        //alert("credenciais erradas tente outra vez!") 
                     });
                 }
             },
             logout: function(){
                 this.$root.$data['accessToken'] = '';
-                this.loggedIn = false;
                 this.$root.$data['loggedIn'] = false; 
                 this.$root.$data['admin'] = false;
+                this.$root.$data['loggedUser'] = null;
+                this.loggedIn = false;
                 this.password = '';
-            }
+            },
+            setUpLoggedInUser: function(){
+                axios({
+                    method: 'get',
+                    url: '/api/user',
+                    headers: {
+                        'Authorization': 'Bearer ' + this.$root.$data['accessToken'],
+                        'Accept' : 'application/json',
+                        'Content-Type' : 'application/json'
+                    },
+                }).then(response=>{
+                    this.$root.$data['loggedUser'] = response.data;
+
+                    if (response.data.admin == 1) {
+                        console.log('admin');
+                        this.$root.$data['admin'] = true;
+                    }
+                    else{
+                        this.$root.$data['admin'] = false;   
+                    }
+
+                }).catch(error=>{
+                    console.log(error);
+                    console.log("erro ao buscar os dados do utilizador!");                           
+                });
+            },
+
         },
         mounted() {
             console.log('login example mounted.');

@@ -40,6 +40,10 @@ class AdminControllerAPI extends Controller
             return response()->json(['message'=>'Erro, você não é um administrador'], 400);
         }
 
+        $request->validate([
+                'email' => 'required|email'
+            ]);
+
         if($request->email != $user->email){
             $user->email = $request->email;
             $user->save();
