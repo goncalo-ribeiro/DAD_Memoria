@@ -47348,11 +47348,11 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("option", { attrs: { value: "2" } }, [
-                      _vm._v("Smart Bot")
+                      _vm._v("Medium Bot")
                     ]),
                     _vm._v(" "),
                     _c("option", { attrs: { value: "3" } }, [
-                      _vm._v("Smartest Bot")
+                      _vm._v("Smart Bot")
                     ])
                   ]
                 ),
