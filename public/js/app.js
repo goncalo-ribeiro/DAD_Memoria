@@ -49952,18 +49952,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -49972,14 +49960,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             password: '',
             password_confirmation: '',
 
-            emailError: false,
-            emailErrorMessage: '',
-
-            passwordError: false,
-            passwordErrorMessage: '',
-
-            passwordConfirmError: false,
-            passwordConfirmErrorMessage: '',
+            resetError: false,
+            resetErrorMessage: '',
 
             token: ''
         };
@@ -50005,23 +49987,75 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     password_confirmation: this.password_confirmation
                 }
             }).then(function (response) {
-                _this.$root.$data['accessToken'] = response.data.access_token;
-                console.log(response);
-                _this.loginError = false;
-                _this.loggedIn = true;
-                _this.$root.$data['loggedIn'] = true;
-                if (_this.nickname == 'admin' || _this.nickname == 'admin@mail.dad') {
-                    console.log('admin');
-                    _this.$root.$data['admin'] = true;
-                } else {
-                    _this.$root.$data['admin'] = false;
-                }
-                //alert("efetuou o login com sucesso!");
+
+                _this.login();
+
+                _this.resetError = false;
+                _this.resetErrorMessage = '';
+                _this.email;
+
+                _this.password = '';
+                _this.password_confirmation = '';
+
+                alert("efetuou o reset da password com sucesso!");
                 //this.$emit('logged', this.accessToken);
             }).catch(function (error) {
                 console.log(error);
-                _this.loginError = true;
-                //alert("credenciais erradas tente outra vez!") 
+                _this.resetError = true;
+                _this.resetErrorMessage = error.response.data.message;
+            });
+        },
+        login: function login() {
+            var _this2 = this;
+
+            if (this.email != "" && this.password != "") {
+                console.log(this.email + "\t" + this.password);
+
+                axios({
+                    method: 'post',
+                    url: '/api/login',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        nickname: this.email,
+                        password: this.password
+                    }
+                }).then(function (response) {
+                    _this2.$root.$data['accessToken'] = response.data.access_token;
+                    _this2.$root.$data['loggedIn'] = true;
+                    console.log(response);
+
+                    _this2.setUpLoggedInUser();
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+        setUpLoggedInUser: function setUpLoggedInUser() {
+            var _this3 = this;
+
+            axios({
+                method: 'get',
+                url: '/api/user',
+                headers: {
+                    'Authorization': 'Bearer ' + this.$root.$data['accessToken'],
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then(function (response) {
+                _this3.$root.$data['loggedUser'] = response.data;
+
+                if (response.data.admin == 1) {
+                    console.log('admin');
+                    _this3.$root.$data['admin'] = true;
+                } else {
+                    _this3.$root.$data['admin'] = false;
+                }
+            }).catch(function (error) {
+                console.log(error);
+                console.log("erro ao buscar os dados do utilizador!");
             });
         }
     },
@@ -50089,23 +50123,7 @@ var render = function() {
                       _vm.$forceUpdate()
                     }
                   }
-                }),
-                _vm._v(" "),
-                _c(
-                  "span",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.emailError,
-                        expression: "emailError"
-                      }
-                    ],
-                    staticClass: "help-block"
-                  },
-                  [_c("strong", [_vm._v(_vm._s(_vm.emailErrorMessage))])]
-                )
+                })
               ])
             ]),
             _vm._v(" "),
@@ -50152,23 +50170,7 @@ var render = function() {
                       _vm.$forceUpdate()
                     }
                   }
-                }),
-                _vm._v(" "),
-                _c(
-                  "span",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.passwordError,
-                        expression: "passwordError"
-                      }
-                    ],
-                    staticClass: "help-block"
-                  },
-                  [_c("strong", [_vm._v(_vm._s(_vm.passwordErrorMessage))])]
-                )
+                })
               ])
             ]),
             _vm._v(" "),
@@ -50187,12 +50189,33 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "col-md-6" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model.trim",
+                      value: _vm.password_confirmation,
+                      expression: "password_confirmation",
+                      modifiers: { trim: true }
+                    }
+                  ],
                   staticClass: "form-control",
                   attrs: {
                     id: "password-confirm",
                     type: "password",
                     name: "password_confirmation",
                     required: ""
+                  },
+                  domProps: { value: _vm.password_confirmation },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.password_confirmation = $event.target.value.trim()
+                    },
+                    blur: function($event) {
+                      _vm.$forceUpdate()
+                    }
                   }
                 }),
                 _vm._v(" "),
@@ -50203,17 +50226,13 @@ var render = function() {
                       {
                         name: "show",
                         rawName: "v-show",
-                        value: _vm.passwordConfirmError,
-                        expression: "passwordConfirmError"
+                        value: _vm.resetError,
+                        expression: "resetError"
                       }
                     ],
                     staticClass: "help-block"
                   },
-                  [
-                    _c("strong", [
-                      _vm._v(_vm._s(_vm.passwordConfirmErrorMessage))
-                    ])
-                  ]
+                  [_c("strong", [_vm._v(_vm._s(_vm.resetErrorMessage))])]
                 )
               ])
             ]),

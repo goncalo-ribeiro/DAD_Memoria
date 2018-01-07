@@ -33,7 +33,13 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Game');
     }
 
+    //o argumento $nickname devia ter outro nome, pois caso a função não encontre o utilizador com o nickname tenta faze-lo com email
+    //devia ser chamado de $loginCredential
     public function findForPassport($nickname) {
-        return $this->where('nickname', $nickname)->first();
+        $user = $this->where('nickname', $nickname)->first();
+        if (is_null($user)) {
+            $user = $this->where('email', $nickname)->first();
+        }
+        return $user;
     }
 }

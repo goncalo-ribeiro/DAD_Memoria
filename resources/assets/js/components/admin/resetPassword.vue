@@ -11,13 +11,7 @@
                             <label for="email" class="col-md-4 control-label">Endereço de email</label>
 
                             <div class="col-md-6">
-                                <input v-model.trim="email" id="email" type="email" class="form-control" name="email" required autofocus>
-
-                                
-                                <span v-show="emailError" class="help-block">
-                                    <strong>{{ emailErrorMessage }}</strong>
-                                </span>
-                                
+                                <input v-model.trim="email" id="email" type="email" class="form-control" name="email" required autofocus>                               
                             </div>
                         </div>
 
@@ -28,12 +22,6 @@
 
                             <div class="col-md-6">
                                 <input v-model.trim="password" id="password" type="password" class="form-control" name="password" required>
-
-                                
-                                <span v-show="passwordError" class="help-block">
-                                    <strong>{{ passwordErrorMessage }}</strong>
-                                </span>
-                                
                             </div>
                         </div>
 
@@ -42,10 +30,10 @@
                         <div class="form-group">
                             <label for="password-confirm" class="col-md-4 control-label">Confirme a Password</label>
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                <input v-model.trim="password_confirmation" id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
 
-                                <span v-show="passwordConfirmError" class="help-block">
-                                    <strong>{{ passwordConfirmErrorMessage }}</strong>
+                                <span v-show="resetError" class="help-block">
+                                    <strong>{{ resetErrorMessage }}</strong>
                                 </span>
                             </div>
                         </div>
@@ -74,14 +62,8 @@
                 password: '',
                 password_confirmation: '',
 
-                emailError: false,
-                emailErrorMessage: '',
-
-                passwordError: false,
-                passwordErrorMessage: '',
-                
-                passwordConfirmError: false,
-                passwordConfirmErrorMessage : '',
+                resetError: false,
+                resetErrorMessage: '',
 
                 token: '',
             }
@@ -105,28 +87,78 @@
                         password_confirmation: this.password_confirmation,
                     }
                 }).then(response=>{
-                    this.$root.$data['accessToken'] = response.data.access_token;
-                    console.log(response);
-                    this.loginError = false;
-                    this.loggedIn = true;
-                    this.$root.$data['loggedIn'] = true; 
-                    if (this.nickname == 'admin' || this.nickname == 'admin@mail.dad') {
+
+                    this.login();
+
+                    this.resetError = false;
+                    this.resetErrorMessage = '';
+                    this.email
+
+                    this.password = '';
+                    this.password_confirmation = '';
+
+                    alert("efetuou o reset da password com sucesso!");
+                    //this.$emit('logged', this.accessToken);
+                    
+                })
+                .catch(error=>{
+                    console.log(error);
+                    this.resetError = true;
+                    this.resetErrorMessage = error.response.data.message;
+                });
+
+            },
+            login: function(){
+                if (this.email != "" && this.password != "") {
+                    console.log(this.email + "\t" + this.password)
+
+                    axios({
+                        method: 'post',
+                        url: '/api/login',
+                        headers: {
+                            'Accept' : 'application/json',
+                            'Content-Type' : 'application/json'
+                        },
+                        data: {
+                            nickname: this.email,
+                            password: this.password
+                        }
+                    }).then(response=>{
+                        this.$root.$data['accessToken'] = response.data.access_token;
+                        this.$root.$data['loggedIn'] = true;
+                        console.log(response);
+                        
+                        this.setUpLoggedInUser();
+                    })
+                    .catch(error=>{
+                        console.log(error);
+                    });
+                }
+            },
+            setUpLoggedInUser: function(){
+                axios({
+                    method: 'get',
+                    url: '/api/user',
+                    headers: {
+                        'Authorization': 'Bearer ' + this.$root.$data['accessToken'],
+                        'Accept' : 'application/json',
+                        'Content-Type' : 'application/json'
+                    },
+                }).then(response=>{
+                    this.$root.$data['loggedUser'] = response.data;
+
+                    if (response.data.admin == 1) {
                         console.log('admin');
                         this.$root.$data['admin'] = true;
                     }
                     else{
                         this.$root.$data['admin'] = false;   
                     }
-                    //alert("efetuou o login com sucesso!");
-                    //this.$emit('logged', this.accessToken);
-                    
-                })
-                .catch(error=>{
-                    console.log(error);
-                    this.loginError = true;
-                    //alert("credenciais erradas tente outra vez!") 
-                });
 
+                }).catch(error=>{
+                    console.log(error);
+                    console.log("erro ao buscar os dados do utilizador!");                           
+                });
             },
         },   
         mounted() {

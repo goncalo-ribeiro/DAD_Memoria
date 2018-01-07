@@ -15,13 +15,9 @@
 
 @section('pagescript')
     <script>
-        
-        @if(isset($token))
-            var token = "{{ $token }}";
-            console.log(token);
-        @else
-            var token = 0;
-        @endif
+
+        //esta variável guarda o token de reset que é mandado pela função reset no GameController
+        var token = "{{ session()->get('token', 0) }}"
         
     </script>
 @endsection
