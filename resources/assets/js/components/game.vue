@@ -11,8 +11,8 @@
                         <label for="bot">Bot Dificulty</label>
                         <select id="bot" v-model="bot">
                             <option value="1">Dumb Bot</option>
-                            <option value="2">Smart Bot</option>
-                            <option value="3">Smartest Bot</option>
+                            <option value="2">Medium Bot</option>
+                            <option value="3">Smart Bot</option>
                         </select>
                         <button class="btn btn-sm btn-success" v-on:click="addBot">Add Bot</button>
                         <br>
