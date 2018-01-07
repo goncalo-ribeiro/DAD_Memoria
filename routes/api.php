@@ -30,9 +30,10 @@ Route::middleware('auth:api')->delete('users/{id}', 'UserControllerAPI@delete');
 
 Route::middleware('auth:api')->put('admin/password','AdminControllerAPI@updatePassword');
 Route::middleware('auth:api')->put('admin/email','AdminControllerAPI@updateEmail');
-
 Route::middleware('auth:api')->post('admin/password/email','ResetPasswordControllerAPI@sendResetLinkEmail');
 Route::post('admin/password/reset','ResetPasswordControllerAPI@reset');
+
+Route::get('images','ImageControllerAPI@getImages');
 
 // o middleware admin:api não funciona porque não consegue fazer retrieve do user logo nao consegue verificar se é admin
 // no entanto os metodos chamados pelas rotas acima verificam se o user logado é admin
