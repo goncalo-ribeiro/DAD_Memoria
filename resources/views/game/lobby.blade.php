@@ -6,7 +6,7 @@
     <transition>
         <keep-alive>
         	
-            <router-view></router-view>
+            <router-view :user="loggedUser"></router-view>
             
         </keep-alive>
     </transition>

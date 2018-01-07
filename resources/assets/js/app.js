@@ -34,7 +34,7 @@ const routes = [
   { path: '/', redirect: '/memoria' },
   { path: '/example', component: example },
   { path: '/statistics', component: statistics },
-  { path: '/memoria', component: memoria },
+  { path: '/memoria', component: memoria},
   { path: '/login', component: login },
   { path: '/admin', component: admin },
   { path: '/users', component: users },

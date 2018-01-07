@@ -2,9 +2,9 @@
     <div>
         <div class="container">
             <h3 class="text-center">{{ title }}</h3>
-            <lobby :games="lobbyGames" @join-game="join" @create-click="createGame"></lobby>
+            <lobby :user="user" :games="lobbyGames" @join-game="join" @create-click="createGame"></lobby>
             <template v-for="game in activeGames">
-                <game :game="game" @piece-click="play" @close-game="closeGame" @kick-player="kickPlayer" @add-bot="addBot"></game>
+                <game :user="user" :game="game" @piece-click="play" @close-game="closeGame" @kick-player="kickPlayer" @add-bot="addBot"></game>
             </template>
         </div>
     </div>
@@ -78,6 +78,9 @@
         components: {
             'lobby': Lobby,
             'game': Game,
+        },
+        props: {
+            user: Object,
         },
         mounted() {
             this.loadLobby();

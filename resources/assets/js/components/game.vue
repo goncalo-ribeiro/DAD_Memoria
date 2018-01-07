@@ -49,7 +49,7 @@
 
 <script type="text/javascript">
 	export default {
-        props: ['game'],
+        props: ['game', 'user'],
         data: function(){
 			return {
                 alerttype:{
