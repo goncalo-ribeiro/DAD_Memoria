@@ -1243,8 +1243,9 @@ var login = Vue.component('login', __webpack_require__(92));
 var admin = Vue.component('admin', __webpack_require__(95));
 var users = Vue.component('users', __webpack_require__(98));
 var reset = Vue.component('reset', __webpack_require__(110));
+var image = Vue.component('image', __webpack_require__(113));
 
-var routes = [{ path: '/', redirect: '/memoria' }, { path: '/example', component: example }, { path: '/statistics', component: statistics }, { path: '/memoria', component: memoria }, { path: '/login', component: login }, { path: '/admin', component: admin }, { path: '/users', component: users }, { path: '/reset', component: reset }];
+var routes = [{ path: '/', redirect: '/memoria' }, { path: '/example', component: example }, { path: '/statistics', component: statistics }, { path: '/memoria', component: memoria }, { path: '/login', component: login }, { path: '/admin', component: admin }, { path: '/users', component: users }, { path: '/reset', component: reset }, { path: '/images', component: image }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
   routes: routes
@@ -47555,12 +47556,19 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__statistics_totalGames_vue__ = __webpack_require__(82);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__statistics_totalGames_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__statistics_totalGames_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__statistics_listTopPlayers_vue__ = __webpack_require__(85);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__statistics_listTopPlayers_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__statistics_listTopPlayers_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__statistics_userStatistics_vue__ = __webpack_require__(88);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__statistics_userStatistics_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__statistics_userStatistics_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__statistics_TotalGames_vue__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__statistics_TotalGames_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__statistics_TotalGames_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__statistics_ListTopPlayers_vue__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__statistics_ListTopPlayers_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__statistics_ListTopPlayers_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__statistics_UserStatistics_vue__ = __webpack_require__(122);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__statistics_UserStatistics_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__statistics_UserStatistics_vue__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -47584,7 +47592,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            title: 'Jogo da Memória',
             globalStatistics: [],
             topPlayers: [],
             UserStatistics: []
@@ -47595,353 +47602,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         join: function join() {}
     },
     components: {
-        'TotalGames': __WEBPACK_IMPORTED_MODULE_0__statistics_totalGames_vue___default.a,
-        'ListTopPlayers': __WEBPACK_IMPORTED_MODULE_1__statistics_listTopPlayers_vue___default.a,
-        'UserStatistics': __WEBPACK_IMPORTED_MODULE_2__statistics_userStatistics_vue___default.a
+        'TotalGames': __WEBPACK_IMPORTED_MODULE_0__statistics_TotalGames_vue___default.a,
+        'ListTopPlayers': __WEBPACK_IMPORTED_MODULE_1__statistics_ListTopPlayers_vue___default.a,
+        'UserStatistics': __WEBPACK_IMPORTED_MODULE_2__statistics_UserStatistics_vue___default.a
     },
     mounted: function mounted() {
-        //goona retrieve data later!...Why;_;)
-        //why axious why;_;
+        var _this = this;
+
+        //Retrieves the data for the listTopPlayers component
+        axios({ method: 'get',
+            url: '/api/topplayers',
+            headers: {
+                'Accept': 'application/json'
+                //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+            }
+        }).then(function (response) {
+            _this.topPlayers = response.data;
+        });
+
+        //Retrieves the data for the totalGames component
+        axios({ method: 'get',
+            url: '/api/totalgames',
+            headers: {
+                'Accept': 'application/json'
+                //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+            }
+        }).then(function (response) {
+            _this.globalStatistics = response.data;
+            _this.$emit('loadGlobal', response.data);
+        });
     }
 });
 
 /***/ }),
-/* 82 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(83)
-/* template */
-var __vue_template__ = __webpack_require__(84)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\statistics\\totalGames.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1396b06f", Component.options)
-  } else {
-    hotAPI.reload("data-v-1396b06f", Component.options)
-' + '  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 83 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component TotalGames mounted.');
-    }
-});
-
-/***/ }),
-/* 84 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm._m(0, false, false)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6" }, [
-      _c("div", { staticClass: "panel panel-default" }, [
-        _c("div", { staticClass: "panel-heading" }, [
-          _vm._v("Global Statistics:")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "panel-body" }, [
-          _vm._v("\n            I'm Statistics component!\n        ")
-        ])
-      ])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1396b06f", module.exports)
-  }
-}
-
-/***/ }),
-/* 85 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(86)
-/* template */
-var __vue_template__ = __webpack_require__(87)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\statistics\\listTopPlayers.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-b457bf26", Component.options)
-  } else {
-    hotAPI.reload("data-v-b457bf26", Component.options)
-' + '  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 86 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component ListTopPlayers mounted.');
-    }
-});
-
-/***/ }),
-/* 87 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm._m(0, false, false)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6" }, [
-      _c("div", { staticClass: "panel panel-default" }, [
-        _c("div", { staticClass: "panel-heading" }, [_vm._v("Top Players:")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "panel-body" }, [
-          _vm._v(
-            "\n            I'm gonna be a ListT of the 3 TopPlayers!\n        "
-          )
-        ])
-      ])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-b457bf26", module.exports)
-  }
-}
-
-/***/ }),
-/* 88 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(89)
-/* template */
-var __vue_template__ = __webpack_require__(90)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\statistics\\userStatistics.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-31e66860", Component.options)
-  } else {
-    hotAPI.reload("data-v-31e66860", Component.options)
-' + '  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 89 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component UserStatistics mounted.');
-    }
-});
-
-/***/ }),
-/* 90 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm._m(0, false, false)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-      _c("div", { staticClass: "panel panel-default" }, [
-        _c("div", { staticClass: "panel-heading" }, [
-          _vm._v("User Statistics:")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "panel-body" }, [
-          _vm._v("\n            I'm an UserStatistics component!\n        ")
-        ])
-      ])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-31e66860", module.exports)
-  }
-}
-
-/***/ }),
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
 /* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -47951,18 +47653,23 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
-      _c(
-        "div",
-        { staticClass: "panel-body" },
-        [
-          _c("TotalGames"),
-          _vm._v(" "),
-          _c("ListTopPlayers"),
-          _vm._v(" "),
-          _c("UserStatistics")
-        ],
-        1
-      )
+      _c("div", { staticClass: "panel-body" }, [
+        _c(
+          "div",
+          { staticClass: "col-sm-6" },
+          [_c("TotalGames", { attrs: { totalGames: _vm.globalStatistics } })],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-sm-3" },
+          [_c("ListTopPlayers", { attrs: { players: _vm.topPlayers } })],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", [_c("UserStatistics")], 1)
+      ])
     ])
   ])
 }
@@ -50266,6 +49973,838 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-f98fa394", module.exports)
+  }
+}
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(114)
+/* template */
+var __vue_template__ = __webpack_require__(115)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\admin\\imageManagement.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-cc426bac", Component.options)
+  } else {
+    hotAPI.reload("data-v-cc426bac", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 114 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            images: [],
+
+            getImagesError: false,
+            getImagesErrorMessage: ''
+        };
+    },
+    methods: {
+        getImages: function getImages() {
+            var _this = this;
+
+            axios({
+                method: 'get',
+                url: 'api/images',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                }
+            }).then(function (response) {
+                console.log(response);
+                _this.images = response.data;
+
+                _this.getImagesError = false;
+                _this.getImagesErrorMessage = '';
+            }).catch(function (error) {
+                console.log(error);
+                console.log(error.response);
+
+                _this.getImagesError = true;
+                _this.getImagesErrorMessage = error.response.data.message;
+            });
+        },
+        imageURL: function imageURL(image) {
+            return 'img/' + image.path;
+        },
+        getTiles: function getTiles() {
+            return this.images.filter(function (image) {
+                return image.face == 'tile';
+            });
+        },
+        getHidden: function getHidden() {
+            return this.images.filter(function (image) {
+                return image.face == 'hidden';
+            });
+        }
+    },
+    mounted: function mounted() {
+        this.getImages();
+        console.log('Component imageManagement mounted.');
+    }
+});
+
+/***/ }),
+/* 115 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-10 col-lg-offset-1" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-heading" }, [
+            _vm._v("Gestão das imagens de jogo\n                        "),
+            _c("div", { staticClass: "nav navbar-nav navbar-right" }, [
+              _c(
+                "a",
+                {
+                  staticStyle: {
+                    cursor: "pointer",
+                    "vertical-align": "middle",
+                    "padding-right": "15px"
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.getImages()
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                                Atualizar Imagens\n                            "
+                  )
+                ]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _c("h3", [_vm._v("Imagens das faces das peças")]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "row" },
+              _vm._l(_vm.getTiles(), function(image, key) {
+                return _c(
+                  "div",
+                  { staticClass: "col-sm-3", staticStyle: { padding: "20px" } },
+                  [
+                    _c("img", {
+                      staticStyle: {
+                        display: "block",
+                        margin: "0 auto",
+                        width: "30%"
+                      },
+                      attrs: { src: _vm.imageURL(image) }
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticStyle: { padding: "5px" } }, [
+                      _c("p", { staticStyle: { "text-align": "center" } }, [
+                        _vm._v("Imagem " + _vm._s(image.id))
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticStyle: {
+                            display: "flex",
+                            "align-items": "center",
+                            "justify-content": "center"
+                          }
+                        },
+                        [
+                          image.active
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-primary btn-xs",
+                                  staticStyle: {
+                                    "margin-left": "2px",
+                                    "margin-right": ": 2px"
+                                  },
+                                  attrs: { type: "button" }
+                                },
+                                [_vm._v("Ativar")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          !image.active
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-warning btn-xs",
+                                  staticStyle: {
+                                    "margin-left": "2px",
+                                    "margin-right": ": 2px"
+                                  },
+                                  attrs: { type: "button" }
+                                },
+                                [_vm._v("Desativar")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger btn-xs",
+                              staticStyle: {
+                                "margin-left": "2px",
+                                "margin-right": ": 2px"
+                              },
+                              attrs: { type: "button" }
+                            },
+                            [_vm._v("Remover")]
+                          )
+                        ]
+                      )
+                    ])
+                  ]
+                )
+              })
+            ),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
+            _c("h2", [_vm._v("Imagens das faces escondidas")]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "board", staticStyle: { "text-align": "center" } },
+              _vm._l(_vm.getHidden(), function(image, key) {
+                return _c(
+                  "span",
+                  {
+                    staticStyle: {
+                      "padding-top": "20px",
+                      "padding-bottom": "20px",
+                      display: "inline-block"
+                    }
+                  },
+                  [
+                    _c("img", {
+                      staticStyle: { width: "40%" },
+                      attrs: { src: _vm.imageURL(image) }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticStyle: {
+                          padding: "20px",
+                          display: "inline-block"
+                        }
+                      },
+                      [
+                        _c("p", [_vm._v("Imagem " + _vm._s(image.id))]),
+                        _vm._v(" "),
+                        image.active
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-primary btn-xs",
+                                attrs: { type: "button" }
+                              },
+                              [_vm._v("Ativar")]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !image.active
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-warning btn-xs",
+                                attrs: { type: "button" }
+                              },
+                              [_vm._v("Desativar")]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger btn-xs",
+                            attrs: { type: "button" }
+                          },
+                          [_vm._v("Remover")]
+                        )
+                      ]
+                    )
+                  ]
+                )
+              })
+            )
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-cc426bac", module.exports)
+  }
+}
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(117)
+/* template */
+var __vue_template__ = __webpack_require__(118)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\statistics\\TotalGames.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-504506e2", Component.options)
+  } else {
+    hotAPI.reload("data-v-504506e2", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 117 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['totalGames'],
+    data: function data() {
+        return {};
+    },
+
+    methods: {
+        //Opens edit form
+        callDrawChart: function callDrawChart(records) {
+            google.charts.load("current", { packages: ["corechart"] });
+            google.charts.setOnLoadCallback(function () {
+
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Type');
+                data.addColumn('number', 'Games');
+
+                //Adds rows based in the amount given by the parent
+                records.forEach(function (record) {
+                    data.addRow([record.type, record.games]);
+                });
+
+                var options = {
+                    is3D: true
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                chart.draw(data, options);
+            });
+        }
+    },
+    mounted: function mounted() {
+        //Gives no data, becase at the time the dad didnt had the data
+        this.callDrawChart(this.totalGames);
+
+        //Everytime the new data is loaded callDrawChart will be called
+        this.$parent.$on('loadGlobal', this.callDrawChart);
+    }
+});
+
+/***/ }),
+/* 118 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0, false, false)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-6 col-md-offset-1" }, [
+          _c("div", { staticClass: "panel panel-default" }, [
+            _c("div", { staticClass: "panel-heading" }, [
+              _vm._v("Global Statistics:")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "panel-body" }, [
+              _c("div", {
+                staticStyle: { width: "100%", height: "100%" },
+                attrs: { id: "donutchart" }
+              })
+            ])
+          ])
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-504506e2", module.exports)
+  }
+}
+
+/***/ }),
+/* 119 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(120)
+/* template */
+var __vue_template__ = __webpack_require__(121)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\statistics\\ListTopPlayers.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1397dc8d", Component.options)
+  } else {
+    hotAPI.reload("data-v-1397dc8d", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 120 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['players'],
+    data: function data() {
+        return {};
+    },
+
+    methods: {
+        //Opens edit form
+        clickEdit: function clickEdit() {}
+
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 121 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-4 col-md-offset-1" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _vm._m(0, false, false),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _c("table", { staticClass: "table table-striped" }, [
+              _vm._m(1, false, false),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.players, function(player) {
+                  return _c("tr", { key: player.nick }, [
+                    _c("td", [_vm._v(_vm._s(player.nick))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(player.games))])
+                  ])
+                })
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "panel-heading" }, [
+      _c("h1", [_vm._v("Top Players:")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Nome")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Vitorias")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1397dc8d", module.exports)
+  }
+}
+
+/***/ }),
+/* 122 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(123)
+/* template */
+var __vue_template__ = __webpack_require__(124)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\statistics\\UserStatistics.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-c0abb700", Component.options)
+  } else {
+    hotAPI.reload("data-v-c0abb700", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 123 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('Component UserStatistics mounted.');
+    }
+});
+
+/***/ }),
+/* 124 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0, false, false)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+          _c("div", { staticClass: "panel panel-default" }, [
+            _c("div", { staticClass: "panel-heading" }, [
+              _vm._v("User Statistics:")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "panel-body" }, [
+              _vm._v(
+                "\n                    I'm an UserStatistics component!\n                "
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-c0abb700", module.exports)
   }
 }
 

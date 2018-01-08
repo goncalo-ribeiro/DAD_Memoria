@@ -43,7 +43,7 @@
                                     <router-link to="/users">Utilizadores</router-link>
                                 </li>
                                 <li>
-                                    <router-link to="/example">Imagens do jogo</router-link>
+                                    <router-link to="/images">Imagens do jogo</router-link>
                                 </li>
                             </li>
                         </ul>
