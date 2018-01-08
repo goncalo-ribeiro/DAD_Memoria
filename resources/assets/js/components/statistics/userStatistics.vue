@@ -1,24 +1,55 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
-                    <div class="panel-heading">User Statistics:</div>
-
-                    <div class="panel-body">
-                        I'm an UserStatistics component!
-                    </div>
-                </div>
-            </div>
-        </div>
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading">User Statistics:</div>
+        <div class="panel-body">
+            <div id="barchart" style="width: 100%; height: 150px;"></div>
+        </div>      
     </div>
+</div>
 </template>
 
 <script>
     "use strict";
     export default {
+        props: ['myStatistics'],
+            data: function () {
+                return {
+                
+                }
+            },
+        methods: {
+                //Opens edit form
+                callDrawChart: function(records){
+    
+                    google.charts.setOnLoadCallback(()=>{
+    
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'Type');
+                        data.addColumn('number', 'Games');
+                        
+                        //Adds rows based in the amount given by the parent
+                        records.forEach(function(record){
+                            data.addRow([record.type, record.games]);
+                        });
+
+                    
+                        var options = {
+                            legend: {position: 'none'}
+                        };
+
+                        var chart = new google.visualization.ColumnChart(document.getElementById('barchart'));
+                        chart.draw(data, options);
+                    });
+                
+                },
+            },
         mounted() {
-            console.log('Component UserStatistics mounted.');
+            //Gives no data, because at the time the dad didnt had the data
+            this.callDrawChart(this.myStatistics);
+
+            //Everytime the new data is loaded callDrawChart will be called
+            this.$parent.$on('loadUserStatistics', this.callDrawChart);
         }
     }
 </script>
