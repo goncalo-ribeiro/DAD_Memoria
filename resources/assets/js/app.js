@@ -29,6 +29,7 @@ const login = Vue.component('login', require('./components/login.vue'));
 const admin = Vue.component('admin', require('./components/admin/adminConfig.vue'));
 const users = Vue.component('users', require('./components/admin/listUsers.vue'));
 const reset = Vue.component('reset', require('./components/admin/resetPassword.vue'));
+const image = Vue.component('image', require('./components/admin/imageManagement.vue'));
 
 const routes = [
   { path: '/', redirect: '/memoria' },
@@ -39,6 +40,7 @@ const routes = [
   { path: '/admin', component: admin },
   { path: '/users', component: users },
   { path: '/reset', component: reset },
+  { path: '/images', component: image },
 ];
 
 const router = new VueRouter({
