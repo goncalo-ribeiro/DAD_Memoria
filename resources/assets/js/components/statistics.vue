@@ -50,7 +50,7 @@
 
             //Retrieves the data for the listTopPlayers component
             axios({method: 'get',
-                    url: '/api/topplayers',
+                    url: '/api/statistics/topplayers',
                     headers: {
                         'Accept' : 'application/json',
                         //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
@@ -64,7 +64,7 @@
 
             //Retrieves the data for the totalGames component
             axios({method: 'get',
-                    url: '/api/totalgames',
+                    url: '/api/statistics/totalgames',
                     headers: {
                         'Accept' : 'application/json',
                         //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
