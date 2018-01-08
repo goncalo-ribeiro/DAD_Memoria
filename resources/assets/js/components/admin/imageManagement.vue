@@ -15,6 +15,11 @@
                     <div class="panel-body">
 
                         <h3>Imagens das faces das peças</h3>
+                        <br>
+                        <input type="file" @change="processFile($event)">
+                        <br>
+                        <button type="button" @click="sendFile()" class="btn btn-primary btn-sm">Enviar</button>
+                        <br>
                         <div class="row">
                             <div v-for="(image, key) of getTiles()" class="col-sm-3" style="padding: 20px;">                                    
                                 <img v-bind:src="imageURL(image)" style="display: block; margin: 0 auto; width:30%">
@@ -80,6 +85,21 @@
             }
         },
         methods: {
+            sendFile: function(){
+                 const formData = new FormData();
+                formData.append( 'image', fileInput.files[0] );
+                formData.append( 'name', this.name );
+                this.axios.post( 'admin/blog/cover', formData )
+                .then( ( response ) => {
+                  this.message = `Cover (name: ${this.name}) has been added`;
+                  this.name = '';
+                  fileInput.value = null;
+                  this.covers.push( response.data );
+                } )
+                .catch( ( error ) => {
+                  this.message = error.error;
+                } );
+            },
             getImages: function(){
                 axios({
                     method: 'get',
