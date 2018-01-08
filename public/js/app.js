@@ -1119,7 +1119,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(85);
+module.exports = __webpack_require__(88);
 
 
 /***/ }),
@@ -1166,8 +1166,9 @@ var login = Vue.component('login', __webpack_require__(73));
 var admin = Vue.component('admin', __webpack_require__(76));
 var users = Vue.component('users', __webpack_require__(79));
 var reset = Vue.component('reset', __webpack_require__(82));
+var image = Vue.component('image', __webpack_require__(85));
 
-var routes = [{ path: '/', redirect: '/memoria' }, { path: '/example', component: example }, { path: '/statistics', component: statistics }, { path: '/memoria', component: memoria }, { path: '/login', component: login }, { path: '/admin', component: admin }, { path: '/users', component: users }, { path: '/reset', component: reset }];
+var routes = [{ path: '/', redirect: '/memoria' }, { path: '/example', component: example }, { path: '/statistics', component: statistics }, { path: '/memoria', component: memoria }, { path: '/login', component: login }, { path: '/admin', component: admin }, { path: '/users', component: users }, { path: '/reset', component: reset }, { path: '/images', component: image }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
   routes: routes
@@ -45651,10 +45652,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
         console.log('Component example mounted.');
+    },
+
+    data: function data() {
+        return {
+            someData: false
+        };
+    },
+    methods: {
+        processFile: function processFile(event) {
+            console.log(event);
+            console.log(event.target.files[0]);
+            this.someData = event.target.files[0];
+        }
     }
 });
 
@@ -45666,32 +45681,33 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-          _c("div", { staticClass: "panel panel-default" }, [
-            _c("div", { staticClass: "panel-heading" }, [
-              _vm._v("Example Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "panel-body" }, [
-              _vm._v(
-                "\n                    I'm an example component!\n                "
-              )
-            ])
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-heading" }, [
+            _vm._v("Example Component")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _vm._v(
+              "\n                    I'm an example component!\n                    "
+            ),
+            _c("input", {
+              attrs: { type: "file" },
+              on: {
+                change: function($event) {
+                  _vm.processFile($event)
+                }
+              }
+            })
           ])
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -47349,6 +47365,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -47360,7 +47383,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            title: 'Jogo da Memória',
             globalStatistics: [],
             topPlayers: [],
             UserStatistics: []
@@ -47376,8 +47398,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         'UserStatistics': __WEBPACK_IMPORTED_MODULE_2__statistics_userStatistics_vue___default.a
     },
     mounted: function mounted() {
-        //goona retrieve data later!...Why;_;)
-        //why axious why;_;
+        var _this = this;
+
+        //Retrieves the data for the listTopPlayers component
+        axios({ method: 'get',
+            url: '/api/statistics/topplayers',
+            headers: {
+                'Accept': 'application/json'
+                //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+            }
+        }).then(function (response) {
+            _this.topPlayers = response.data;
+        });
+
+        //Retrieves the data for the totalGames component
+        axios({ method: 'get',
+            url: '/api/statistics/totalgames',
+            headers: {
+                'Accept': 'application/json'
+                //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+            }
+        }).then(function (response) {
+            _this.globalStatistics = response.data;
+            _this.$emit('loadGlobal', response.data);
+        });
     }
 });
 
@@ -47446,12 +47490,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['totalGames'],
+    data: function data() {
+        return {};
+    },
+
+    methods: {
+        //Opens edit form
+        callDrawChart: function callDrawChart(records) {
+            google.charts.load("current", { packages: ["corechart"] });
+            google.charts.setOnLoadCallback(function () {
+
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Type');
+                data.addColumn('number', 'Games');
+
+                //Adds rows based in the amount given by the parent
+                records.forEach(function (record) {
+                    data.addRow([record.type, record.games]);
+                });
+
+                var options = {
+                    is3D: true
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                chart.draw(data, options);
+            });
+        }
+    },
     mounted: function mounted() {
-        console.log('Component TotalGames mounted.');
+        //Gives no data, becase at the time the dad didnt had the data
+        this.callDrawChart(this.totalGames);
+
+        //Everytime the new data is loaded callDrawChart will be called
+        this.$parent.$on('loadGlobal', this.callDrawChart);
     }
 });
 
@@ -47470,14 +47550,21 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6" }, [
-      _c("div", { staticClass: "panel panel-default" }, [
-        _c("div", { staticClass: "panel-heading" }, [
-          _vm._v("Global Statistics:")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "panel-body" }, [
-          _vm._v("\n            I'm Statistics component!\n        ")
+    return _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-6 col-md-offset-1" }, [
+          _c("div", { staticClass: "panel panel-default" }, [
+            _c("div", { staticClass: "panel-heading" }, [
+              _vm._v("Global Statistics:")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "panel-body" }, [
+              _c("div", {
+                staticStyle: { width: "100%", height: "100%" },
+                attrs: { id: "donutchart" }
+              })
+            ])
+          ])
         ])
       ])
     ])
@@ -47557,13 +47644,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component ListTopPlayers mounted.');
-    }
+    props: ['players'],
+    data: function data() {
+        return {};
+    },
+
+    methods: {
+        //Opens edit form
+        clickEdit: function clickEdit() {}
+
+    },
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -47574,22 +47686,51 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-4 col-md-offset-1" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _c("table", { staticClass: "table table-striped" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.players, function(player) {
+                  return _c("tr", { key: player.nick }, [
+                    _c("td", [_vm._v(_vm._s(player.nick))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(player.games))])
+                  ])
+                })
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6" }, [
-      _c("div", { staticClass: "panel panel-default" }, [
-        _c("div", { staticClass: "panel-heading" }, [_vm._v("Top Players:")]),
+    return _c("div", { staticClass: "panel-heading" }, [
+      _c("h1", [_vm._v("Top Players:")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Nome")]),
         _vm._v(" "),
-        _c("div", { staticClass: "panel-body" }, [
-          _vm._v(
-            "\n            I'm gonna be a ListT of the 3 TopPlayers!\n        "
-          )
-        ])
+        _c("th", [_vm._v("Vitorias")])
       ])
     ])
   }
@@ -47668,6 +47809,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -47692,14 +47837,20 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-      _c("div", { staticClass: "panel panel-default" }, [
-        _c("div", { staticClass: "panel-heading" }, [
-          _vm._v("User Statistics:")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "panel-body" }, [
-          _vm._v("\n            I'm an UserStatistics component!\n        ")
+    return _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+          _c("div", { staticClass: "panel panel-default" }, [
+            _c("div", { staticClass: "panel-heading" }, [
+              _vm._v("User Statistics:")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "panel-body" }, [
+              _vm._v(
+                "\n                    I'm an UserStatistics component!\n                "
+              )
+            ])
+          ])
         ])
       ])
     ])
@@ -47724,18 +47875,23 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
-      _c(
-        "div",
-        { staticClass: "panel-body" },
-        [
-          _c("TotalGames"),
-          _vm._v(" "),
-          _c("ListTopPlayers"),
-          _vm._v(" "),
-          _c("UserStatistics")
-        ],
-        1
-      )
+      _c("div", { staticClass: "panel-body" }, [
+        _c(
+          "div",
+          { staticClass: "col-sm-6" },
+          [_c("TotalGames", { attrs: { totalGames: _vm.globalStatistics } })],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-sm-3" },
+          [_c("ListTopPlayers", { attrs: { players: _vm.topPlayers } })],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", [_c("UserStatistics")], 1)
+      ])
     ])
   ])
 }
@@ -49707,18 +49863,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -49727,14 +49871,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             password: '',
             password_confirmation: '',
 
-            emailError: false,
-            emailErrorMessage: '',
-
-            passwordError: false,
-            passwordErrorMessage: '',
-
-            passwordConfirmError: false,
-            passwordConfirmErrorMessage: '',
+            resetError: false,
+            resetErrorMessage: '',
 
             token: ''
         };
@@ -49760,23 +49898,75 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     password_confirmation: this.password_confirmation
                 }
             }).then(function (response) {
-                _this.$root.$data['accessToken'] = response.data.access_token;
-                console.log(response);
-                _this.loginError = false;
-                _this.loggedIn = true;
-                _this.$root.$data['loggedIn'] = true;
-                if (_this.nickname == 'admin' || _this.nickname == 'admin@mail.dad') {
-                    console.log('admin');
-                    _this.$root.$data['admin'] = true;
-                } else {
-                    _this.$root.$data['admin'] = false;
-                }
-                //alert("efetuou o login com sucesso!");
+
+                _this.login();
+
+                _this.resetError = false;
+                _this.resetErrorMessage = '';
+                _this.email;
+
+                _this.password = '';
+                _this.password_confirmation = '';
+
+                alert("efetuou o reset da password com sucesso!");
                 //this.$emit('logged', this.accessToken);
             }).catch(function (error) {
                 console.log(error);
-                _this.loginError = true;
-                //alert("credenciais erradas tente outra vez!") 
+                _this.resetError = true;
+                _this.resetErrorMessage = error.response.data.message;
+            });
+        },
+        login: function login() {
+            var _this2 = this;
+
+            if (this.email != "" && this.password != "") {
+                console.log(this.email + "\t" + this.password);
+
+                axios({
+                    method: 'post',
+                    url: '/api/login',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        nickname: this.email,
+                        password: this.password
+                    }
+                }).then(function (response) {
+                    _this2.$root.$data['accessToken'] = response.data.access_token;
+                    _this2.$root.$data['loggedIn'] = true;
+                    console.log(response);
+
+                    _this2.setUpLoggedInUser();
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+        setUpLoggedInUser: function setUpLoggedInUser() {
+            var _this3 = this;
+
+            axios({
+                method: 'get',
+                url: '/api/user',
+                headers: {
+                    'Authorization': 'Bearer ' + this.$root.$data['accessToken'],
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then(function (response) {
+                _this3.$root.$data['loggedUser'] = response.data;
+
+                if (response.data.admin == 1) {
+                    console.log('admin');
+                    _this3.$root.$data['admin'] = true;
+                } else {
+                    _this3.$root.$data['admin'] = false;
+                }
+            }).catch(function (error) {
+                console.log(error);
+                console.log("erro ao buscar os dados do utilizador!");
             });
         }
     },
@@ -49844,23 +50034,7 @@ var render = function() {
                       _vm.$forceUpdate()
                     }
                   }
-                }),
-                _vm._v(" "),
-                _c(
-                  "span",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.emailError,
-                        expression: "emailError"
-                      }
-                    ],
-                    staticClass: "help-block"
-                  },
-                  [_c("strong", [_vm._v(_vm._s(_vm.emailErrorMessage))])]
-                )
+                })
               ])
             ]),
             _vm._v(" "),
@@ -49907,23 +50081,7 @@ var render = function() {
                       _vm.$forceUpdate()
                     }
                   }
-                }),
-                _vm._v(" "),
-                _c(
-                  "span",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.passwordError,
-                        expression: "passwordError"
-                      }
-                    ],
-                    staticClass: "help-block"
-                  },
-                  [_c("strong", [_vm._v(_vm._s(_vm.passwordErrorMessage))])]
-                )
+                })
               ])
             ]),
             _vm._v(" "),
@@ -49942,12 +50100,33 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "col-md-6" }, [
                 _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model.trim",
+                      value: _vm.password_confirmation,
+                      expression: "password_confirmation",
+                      modifiers: { trim: true }
+                    }
+                  ],
                   staticClass: "form-control",
                   attrs: {
                     id: "password-confirm",
                     type: "password",
                     name: "password_confirmation",
                     required: ""
+                  },
+                  domProps: { value: _vm.password_confirmation },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.password_confirmation = $event.target.value.trim()
+                    },
+                    blur: function($event) {
+                      _vm.$forceUpdate()
+                    }
                   }
                 }),
                 _vm._v(" "),
@@ -49958,17 +50137,13 @@ var render = function() {
                       {
                         name: "show",
                         rawName: "v-show",
-                        value: _vm.passwordConfirmError,
-                        expression: "passwordConfirmError"
+                        value: _vm.resetError,
+                        expression: "resetError"
                       }
                     ],
                     staticClass: "help-block"
                   },
-                  [
-                    _c("strong", [
-                      _vm._v(_vm._s(_vm.passwordConfirmErrorMessage))
-                    ])
-                  ]
+                  [_c("strong", [_vm._v(_vm._s(_vm.resetErrorMessage))])]
                 )
               ])
             ]),
@@ -50007,6 +50182,443 @@ if (false) {
 
 /***/ }),
 /* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(86)
+/* template */
+var __vue_template__ = __webpack_require__(87)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/admin/imageManagement.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-23fc40b7", Component.options)
+  } else {
+    hotAPI.reload("data-v-23fc40b7", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            images: [],
+
+            getImagesError: false,
+            getImagesErrorMessage: ''
+        };
+    },
+    methods: {
+        sendFile: function sendFile() {
+            var _this = this;
+
+            var formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+            formData.append('name', this.name);
+            this.axios.post('admin/blog/cover', formData).then(function (response) {
+                _this.message = 'Cover (name: ' + _this.name + ') has been added';
+                _this.name = '';
+                fileInput.value = null;
+                _this.covers.push(response.data);
+            }).catch(function (error) {
+                _this.message = error.error;
+            });
+        },
+        getImages: function getImages() {
+            var _this2 = this;
+
+            axios({
+                method: 'get',
+                url: 'api/images',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                }
+            }).then(function (response) {
+                console.log(response);
+                _this2.images = response.data;
+
+                _this2.getImagesError = false;
+                _this2.getImagesErrorMessage = '';
+            }).catch(function (error) {
+                console.log(error);
+                console.log(error.response);
+
+                _this2.getImagesError = true;
+                _this2.getImagesErrorMessage = error.response.data.message;
+            });
+        },
+        imageURL: function imageURL(image) {
+            return 'img/' + image.path;
+        },
+        getTiles: function getTiles() {
+            return this.images.filter(function (image) {
+                return image.face == 'tile';
+            });
+        },
+        getHidden: function getHidden() {
+            return this.images.filter(function (image) {
+                return image.face == 'hidden';
+            });
+        }
+    },
+    mounted: function mounted() {
+        this.getImages();
+        console.log('Component imageManagement mounted.');
+    }
+});
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-10 col-lg-offset-1" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-heading" }, [
+            _vm._v("Gestão das imagens de jogo\n                        "),
+            _c("div", { staticClass: "nav navbar-nav navbar-right" }, [
+              _c(
+                "a",
+                {
+                  staticStyle: {
+                    cursor: "pointer",
+                    "vertical-align": "middle",
+                    "padding-right": "15px"
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.getImages()
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                                Atualizar Imagens\n                            "
+                  )
+                ]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _c("h3", [_vm._v("Imagens das faces das peças")]),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _c("input", {
+              attrs: { type: "file" },
+              on: {
+                change: function($event) {
+                  _vm.processFile($event)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-sm",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    _vm.sendFile()
+                  }
+                }
+              },
+              [_vm._v("Enviar")]
+            ),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "row" },
+              _vm._l(_vm.getTiles(), function(image, key) {
+                return _c(
+                  "div",
+                  { staticClass: "col-sm-3", staticStyle: { padding: "20px" } },
+                  [
+                    _c("img", {
+                      staticStyle: {
+                        display: "block",
+                        margin: "0 auto",
+                        width: "30%"
+                      },
+                      attrs: { src: _vm.imageURL(image) }
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticStyle: { padding: "5px" } }, [
+                      _c("p", { staticStyle: { "text-align": "center" } }, [
+                        _vm._v("Imagem " + _vm._s(image.id))
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticStyle: {
+                            display: "flex",
+                            "align-items": "center",
+                            "justify-content": "center"
+                          }
+                        },
+                        [
+                          image.active
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-primary btn-xs",
+                                  staticStyle: {
+                                    "margin-left": "2px",
+                                    "margin-right": ": 2px"
+                                  },
+                                  attrs: { type: "button" }
+                                },
+                                [_vm._v("Ativar")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          !image.active
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-warning btn-xs",
+                                  staticStyle: {
+                                    "margin-left": "2px",
+                                    "margin-right": ": 2px"
+                                  },
+                                  attrs: { type: "button" }
+                                },
+                                [_vm._v("Desativar")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger btn-xs",
+                              staticStyle: {
+                                "margin-left": "2px",
+                                "margin-right": ": 2px"
+                              },
+                              attrs: { type: "button" }
+                            },
+                            [_vm._v("Remover")]
+                          )
+                        ]
+                      )
+                    ])
+                  ]
+                )
+              })
+            ),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
+            _c("h2", [_vm._v("Imagens das faces escondidas")]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "board", staticStyle: { "text-align": "center" } },
+              _vm._l(_vm.getHidden(), function(image, key) {
+                return _c(
+                  "span",
+                  {
+                    staticStyle: {
+                      "padding-top": "20px",
+                      "padding-bottom": "20px",
+                      display: "inline-block"
+                    }
+                  },
+                  [
+                    _c("img", {
+                      staticStyle: { width: "40%" },
+                      attrs: { src: _vm.imageURL(image) }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticStyle: {
+                          padding: "20px",
+                          display: "inline-block"
+                        }
+                      },
+                      [
+                        _c("p", [_vm._v("Imagem " + _vm._s(image.id))]),
+                        _vm._v(" "),
+                        image.active
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-primary btn-xs",
+                                attrs: { type: "button" }
+                              },
+                              [_vm._v("Ativar")]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !image.active
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-warning btn-xs",
+                                attrs: { type: "button" }
+                              },
+                              [_vm._v("Desativar")]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger btn-xs",
+                            attrs: { type: "button" }
+                          },
+                          [_vm._v("Remover")]
+                        )
+                      ]
+                    )
+                  ]
+                )
+              })
+            )
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-23fc40b7", module.exports)
+  }
+}
+
+/***/ }),
+/* 88 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
