@@ -13,8 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 //Statistics Routes
-Route::get('topplayers', 'StatisticsControllerAPI@getTopPlayers');
-Route::get('totalgames', 'StatisticsControllerAPI@getTotalGames');
+Route::get('statistics/topplayers', 'StatisticsControllerAPI@getTopPlayers');
+Route::get('statistics/totalgames', 'StatisticsControllerAPI@getTotalGames');
 
 //Other stuff
 Route::middleware('auth:api')->get('/user', function (Request $request) {
