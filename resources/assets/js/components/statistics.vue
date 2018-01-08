@@ -19,10 +19,10 @@
 
 <script type="text/javascript">
     "use strict";
-    import TotalGames from './statistics/TotalGames.vue';
-    import ListTopPlayers from './statistics/ListTopPlayers.vue';
+    import TotalGames from './statistics/totalGames.vue';
+    import ListTopPlayers from './statistics/listTopPlayers.vue';
 
-    import UserStatistics from './statistics/UserStatistics.vue';
+    import UserStatistics from './statistics/userStatistics.vue';
 
     export default {
         data: function(){
