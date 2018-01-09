@@ -26,10 +26,12 @@ const example = Vue.component('example', require('./components/example.vue'));
 const memoria = Vue.component('memoria', require('./components/memoria.vue'));
 const statistics = Vue.component('statistics', require('./components/statistics.vue'));
 const login = Vue.component('login', require('./components/login.vue'));
+const signup = Vue.component('signup', require('./components/signup.vue'));
 const admin = Vue.component('admin', require('./components/admin/adminConfig.vue'));
 const users = Vue.component('users', require('./components/admin/listUsers.vue'));
 const reset = Vue.component('reset', require('./components/admin/resetPassword.vue'));
 const image = Vue.component('image', require('./components/admin/imageManagement.vue'));
+const error = Vue.component('error', require('./components/error.vue'));
 
 const routes = [
   { path: '/', redirect: '/memoria' },
@@ -37,10 +39,12 @@ const routes = [
   { path: '/statistics', component: statistics },
   { path: '/memoria', component: memoria},
   { path: '/login', component: login },
+  { path: '/signup', component: signup },
   { path: '/admin', component: admin },
   { path: '/users', component: users },
   { path: '/reset', component: reset },
   { path: '/images', component: image },
+  { path: '/error', component: error },
 ];
 
 const router = new VueRouter({

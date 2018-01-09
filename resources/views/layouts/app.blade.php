@@ -29,7 +29,10 @@
                     <li>
                         <router-link to="/example">Example</router-link>
                     </li>
+                    <!--
                     <li v-if="admin" class="dropdown">
+                    -->
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                             Administração<span class="caret"></span>
                         </a>
@@ -45,6 +48,9 @@
                                 <li>
                                     <router-link to="/images">Imagens do jogo</router-link>
                                 </li>
+                                <li>
+                                    <router-link to="/example">Estatisticas</router-link>
+                                </li>
                             </li>
                         </ul>
                     </li>
@@ -54,11 +60,24 @@
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
                     <li v-if="!loggedIn">
-                        <router-link to="/login">
-                            <div>
-                                Login    
-                            </div>
-                        </router-link>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
+                            Autenticação <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <router-link to="/login">
+                                    <div>
+                                        Login    
+                                    </div>
+                                </router-link>
+                                <router-link to="/signup">
+                                    <div>
+                                        Registo   
+                                    </div>
+                                </router-link>
+                            </li>
+                        </ul>
                     </li>
                     <li v-else class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">

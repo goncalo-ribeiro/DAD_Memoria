@@ -7,7 +7,6 @@
 
                     <div class="panel-body">
                         I'm an example component!
-                        <input type="file" @change="processFile($event)">
                     </div>
                 </div>
             </div>
@@ -26,11 +25,6 @@
             }
         },
         methods: {
-            processFile: function(event) {
-                console.log(event);
-                console.log(event.target.files[0]);
-                this.someData = event.target.files[0]
-            }
         }
     }
 </script>

@@ -23,6 +23,7 @@ class User extends Resource
             'blocked' => $this->blocked,
             'reason_blocked' => $this->reason_blocked,
             'reason_reactivated' => $this->reason_reactivated,
+            'verified' => $this->verified,
         ];
     }
 }

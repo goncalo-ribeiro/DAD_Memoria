@@ -12,6 +12,7 @@ class GameController
     	return view('game.lobby', compact('games'));
     }
 
+/*
     public function reset(Request $request, $token){
         
         //$request->session()->put('token', $token);        este metodo foi substituido pelo flash em baixo porque guardava indefinidamente na sessão o token ao contrario do flash que apenas o guarda até o próximo pedido
@@ -22,4 +23,5 @@ class GameController
 
         return redirect('/');//->with('token', $token);
     }
+    */
 }

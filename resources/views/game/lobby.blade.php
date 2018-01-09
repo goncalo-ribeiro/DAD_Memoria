@@ -1,5 +1,9 @@
 @extends('master')
 
+@section('title')
+    Memoria
+@endsection
+
 @section('content')
 
 

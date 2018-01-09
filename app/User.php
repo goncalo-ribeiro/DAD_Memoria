@@ -25,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token'
+        'password', 'remember_token', 'email_token'
     ];
 
     public function games()
@@ -42,4 +42,12 @@ class User extends Authenticatable
         }
         return $user;
     }
+
+
+    /*spublic function games_user()
+    {
+        return $this->hasManyThrough('App\Game');
+        ->withPivot('game_user', 'game_id')
+    }*/
+
 }
