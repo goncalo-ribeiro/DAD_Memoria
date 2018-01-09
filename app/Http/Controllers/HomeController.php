@@ -18,7 +18,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+       // $this->middleware('auth');
     }
 
     /**
@@ -76,5 +76,31 @@ class HomeController extends Controller
         //futuramente apagar recursivamente os dados do utilizador
         Auth::user()->delete();
         return redirect()->route('lobby')->with('success', 'Account deleted successfully');;
+    }
+
+    public function reset(Request $request, $token){
+        
+        //$request->session()->put('token', $token);        este metodo foi substituido pelo flash em baixo porque guardava indefinidamente na sessão o token ao contrario do flash que apenas o guarda até o próximo pedido
+        
+        $request->session()->flash('token', "$token");
+        
+        //$request->session()->flush();          este metodo permite limpar as variaveis de sessão guardadas
+
+        return redirect('/');//->with('token', $token);
+    }
+
+    public function validateUser(Request $request, $id, $token)
+    {
+        $user = User::findOrFail($id);
+
+        if ($token == $user->email_token) {
+            $user->verified = 1;
+            $user->email_token = null;
+            $user->save();
+            $request->session()->flash('success', "O utilizador foi verificado com sucesso");
+            return redirect('/#login');
+        }
+
+        return redirect('/#error');//->with('token', $token);
     }
 }

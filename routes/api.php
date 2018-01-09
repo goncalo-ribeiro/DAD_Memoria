@@ -27,6 +27,7 @@ Route::middleware('auth:api')->get('/user/admin', function (Request $request) {
 Route::post('login', 'LoginControllerAPI@login');
 Route::post('logout','LoginControllerAPI@logout');
 
+Route::post('users', 'UserControllerAPI@store');
 Route::middleware('auth:api')->get('users', 'UserControllerAPI@getUsers');
 Route::middleware('auth:api')->put('users/block/{id}', 'UserControllerAPI@block');
 Route::middleware('auth:api')->put('users/reactivate/{id}', 'UserControllerAPI@reactivate');

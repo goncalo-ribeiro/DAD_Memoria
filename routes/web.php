@@ -13,12 +13,13 @@
 
 //Auth::routes();
 
+/*
 Route::get('/dashboard', 'HomeController@index')->name('dashboard');
 Route::get('/editUserData', 'HomeController@edit')->name('editUserData');
 Route::post('/editUserData', 'HomeController@updateData')->name('updateData');
 Route::put('/editUserData', 'HomeController@updatePassword')->name('updatePassword');
-Route::get('/deleteAccount', 'HomeController@deleteAccount')->name('deleteAccount');
+Route::get('/deleteAccount', 'HomeController@deleteAccount')->name('deleteAccount');*/
 
 Route::get('/', 'GameController@index')->name('lobby');
-Route::get('/password/reset/{token}', 'GameController@reset')->name('reset');
-
+Route::get('/password/reset/{token}', 'HomeController@reset')->name('reset');
+Route::get('/users/{id}/register/{token}', 'HomeController@validateUser');

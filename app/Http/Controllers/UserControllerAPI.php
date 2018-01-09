@@ -7,8 +7,10 @@ use Illuminate\Contracts\Support\Jsonable;
 
 use App\Http\Resources\User as UserResource;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 use App\User;
+use App\Mail\RegisterUser;
 use App\StoreUserRequest;
 use Hash;
 
@@ -26,16 +28,19 @@ class UserControllerAPI extends Controller
 
     public function store(Request $request)
     {
+        //'name', 'nickname', 'email', 'password', 'blocked'
         $request->validate([
                 'name' => 'required',
                 'email' => 'required|email|unique:users,email',
-                'age' => 'integer|between:18,75',
-                'password' => 'min:3'
+                'nickname' => 'required|unique:users,nickname',
+                'password' => 'required|confirmed|min:6',
             ]);
         $user = new User();
         $user->fill($request->all());
         $user->password = Hash::make($user->password);
+        $user->email_token = str_random(10);
         $user->save();
+        Mail::to($user)->send(new RegisterUser($user->email_token, $user));
         return response()->json(new UserResource($user), 201);
     }
 
