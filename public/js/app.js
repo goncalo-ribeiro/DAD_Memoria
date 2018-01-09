@@ -47603,6 +47603,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -47742,7 +47747,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         //Opens edit form
         callDrawChart: function callDrawChart(records) {
-            console.log("HAHHA");
+
             google.charts.setOnLoadCallback(function () {
 
                 var data = new google.visualization.DataTable();
@@ -47857,6 +47862,15 @@ var render = function() {
           "div",
           { staticClass: "col-sm-6 col-xs-offset-1" },
           [_c("UserGames")],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          { staticClass: "col-sm-8 col-xs-offset-2" },
+          [_c("UserVictorys")],
           1
         )
       ])

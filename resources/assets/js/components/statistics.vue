@@ -17,6 +17,11 @@
                       <UserGames></UserGames>
                     </div>
                 </div>
+                <div class="row">
+                     <div class="col-sm-8 col-xs-offset-2">
+                       <UserVictorys></UserVictorys>
+                    </div>
+                </div>
             </div>
                 <!--We cant use blade-->
                 <!--more info here: https://stackoverflow.com/questions/42951976/how-can-i-use-auth-on-vue-component-vue-js-2-->
