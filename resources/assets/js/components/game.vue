@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div  class="panel-heading">Game {{game.gameID}} ({{game.name}}) - {{pending()}}</div>
+                <div  class="panel-heading">Game {{game.gameID}} {{gameName()}} - {{pending()}}</div>
                 <div class="panel-body">
                     <div class="alert" :class="alerttype" v-if="this.game.winner">
                         <strong>{{ message }} &nbsp;&nbsp;&nbsp;&nbsp;<a v-on:click.prevent="closeGame">Close Game</a></strong>
@@ -68,6 +68,12 @@
             },
         },
         methods: {
+            gameName(){
+                if(this.game.name !== ''){
+                    return '(' + this.game.name + ')';
+                }
+                return '';
+            },
             addBot(){
                 this.$emit('add-bot', this.game.gameID, this.bot);
             },
@@ -89,7 +95,7 @@
             },
             newTime(){
                 this.currentTime=new Date().getTime();
-                if(this.game.lastPlay !== null && this.currentTime !== null && this.game.lastPlay+29000 - this.currentTime < 0){
+                if(this.game.lastPlay !== null && this.currentTime !== null && this.game.lastPlay+29000 - this.currentTime < 0  && !this.gameEnded){
                     clearInterval(this.interval);
                     this.interval=null;
                     this.$emit('kick-player', {gameId: this.game.gameID, player: this.game.players[this.game.playerTurn-1]});

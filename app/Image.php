@@ -8,7 +8,7 @@ class Image extends Model
 {
 
     protected $fillable = [
-        'id', 'face', 'active', 'path', 'blocked', 'reason_blocked', 'reason_reactivated'
+        'face', 'active', 'path'
     ];
 
 }

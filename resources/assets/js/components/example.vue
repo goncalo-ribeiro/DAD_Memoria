@@ -18,6 +18,13 @@
     export default {
         mounted() {
             console.log('Component example mounted.')
+        },
+        data: function(){
+            return {
+                someData: false,
+            }
+        },
+        methods: {
         }
     }
 </script>
