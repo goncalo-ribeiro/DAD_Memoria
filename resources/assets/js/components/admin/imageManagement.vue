@@ -40,9 +40,9 @@
                                     <p style="text-align:center">Imagem {{image.id}}</p>   
                                     <span style="display: flex; align-items: center; justify-content: center;">
                                         
-                                        <button style="margin-left: 2px; margin-right: : 2px;" v-if="image.active" type="button" class="btn btn-primary btn-xs">Ativar</button>
-                                        <button style="margin-left: 2px; margin-right: : 2px;" v-if="!image.active" type="button" class="btn btn-warning btn-xs">Desativar</button>
-                                        <button style="margin-left: 2px; margin-right: : 2px;" type="button" class="btn btn-danger btn-xs">Remover</button>
+                                        <button @click="ativarImagem(image)" style="margin-left: 2px; margin-right: : 2px;" v-if="!image.active" type="button" class="btn btn-primary btn-xs">Ativar</button>
+                                        <button @click="desativarImagem(image)" style="margin-left: 2px; margin-right: : 2px;" v-if="image.active" type="button" class="btn btn-warning btn-xs">Desativar</button>
+                                        <button @click="removerImagem(image)" style="margin-left: 2px; margin-right: : 2px;" type="button" class="btn btn-danger btn-xs">Remover</button>
                                     </span>                                     
                                 </div>
                             </div>
@@ -77,9 +77,9 @@
                                     <p style="text-align:center">Imagem {{image.id}}</p>   
                                     <span style="display: flex; align-items: center; justify-content: center;">
                                         
-                                        <button style="margin-left: 2px; margin-right: : 2px;" v-if="image.active" type="button" class="btn btn-primary btn-xs">Ativar</button>
-                                        <button style="margin-left: 2px; margin-right: : 2px;" v-if="!image.active" type="button" class="btn btn-warning btn-xs">Desativar</button>
-                                        <button style="margin-left: 2px; margin-right: : 2px;" type="button" class="btn btn-danger btn-xs">Remover</button>
+                                        <button @click="ativarImagem(image)" style="margin-left: 2px; margin-right: : 2px;" v-if="!image.active" type="button" class="btn btn-primary btn-xs">Ativar</button>
+                                        <button @click="desativarImagem(image)" style="margin-left: 2px; margin-right: : 2px;" v-if="image.active" type="button" class="btn btn-warning btn-xs">Desativar</button>
+                                        <button @click="removerImagem(image)" style="margin-left: 2px; margin-right: : 2px;" type="button" class="btn btn-danger btn-xs">Remover</button>
                                     </span>                                     
                                 </div>
                             </div>
@@ -109,13 +109,88 @@
             }
         },
         methods: {
+            ativarImagem:function(image) {
+                axios({
+                    method: 'put',
+                    url: 'api/images/activate/' + image.id,
+                    headers: {
+                        'Accept' : 'application/json',
+                        'Content-Type' : 'application/json',
+                        'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                    }
+                })
+                .then( ( response ) => {
+                    console.log(response);
+                    
+                    this.getImages();
+                    alert(response.data.message);
+                } )
+                .catch( ( error ) => {
+                    console.log(error.response);
+
+                    alert(error.response.data.message);
+                } );
+            },
+            desativarImagem:function(image) {
+                axios({
+                    method: 'put',
+                    url: 'api/images/desactivate/' + image.id,
+                    headers: {
+                        'Accept' : 'application/json',
+                        'Content-Type' : 'application/json',
+                        'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                    }
+                })
+                .then( ( response ) => {
+                    console.log(response);
+                    
+                    this.getImages();
+                    alert(response.data.message);
+                } )
+                .catch( ( error ) => {
+                    console.log(error.response);
+
+                    alert(error.response.data.message);
+                } );
+            },
+            removerImagem:function(image) {
+                axios.delete( 'api/images/' + image.id)
+                axios({
+                    method: 'delete',
+                    url: 'api/images/' + image.id,
+                    headers: {
+                        'Accept' : 'application/json',
+                        'Content-Type' : 'application/json',
+                        'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                    }
+                })                
+                .then( ( response ) => {
+                    console.log(response);
+                    
+                    this.getImages();
+                    alert("Imagem removida com sucesso!");
+                } )
+                .catch( ( error ) => {
+                    console.log(error.response);
+
+                    alert(error.response.data.message);
+                } );
+            },               
             //$hidden specifies wether the image uploaded is a face or a hidden tile
             sendFile: function($hidden){
                 const formData = new FormData();
                 formData.append( 'image', this.file );
                 formData.append( 'hidden', $hidden );
                 console.log(formData);
-                axios.post( 'api/images', formData )
+                //axios.post( 'api/images', formData )
+                axios({
+                    method: 'post',
+                    url: 'api/images',
+                    headers: {
+                        'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                    },
+                    data: formData,
+                })
                 .then( ( response ) => {
                     console.log("sucesso!")
                     console.log(response);

@@ -60,11 +60,24 @@
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
                     <li v-if="!loggedIn">
-                        <router-link to="/login">
-                            <div>
-                                Login    
-                            </div>
-                        </router-link>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
+                            Autenticação <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <router-link to="/login">
+                                    <div>
+                                        Login    
+                                    </div>
+                                </router-link>
+                                <router-link to="/signup">
+                                    <div>
+                                        Registo   
+                                    </div>
+                                </router-link>
+                            </li>
+                        </ul>
                     </li>
                     <li v-else class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">

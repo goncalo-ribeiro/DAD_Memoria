@@ -27,6 +27,7 @@ Route::middleware('auth:api')->get('/user/admin', function (Request $request) {
 Route::post('login', 'LoginControllerAPI@login');
 Route::post('logout','LoginControllerAPI@logout');
 
+Route::post('users', 'UserControllerAPI@store');
 Route::middleware('auth:api')->get('users', 'UserControllerAPI@getUsers');
 Route::middleware('auth:api')->put('users/block/{id}', 'UserControllerAPI@block');
 Route::middleware('auth:api')->put('users/reactivate/{id}', 'UserControllerAPI@reactivate');
@@ -38,7 +39,10 @@ Route::middleware('auth:api')->post('admin/password/email','ResetPasswordControl
 Route::post('admin/password/reset','ResetPasswordControllerAPI@reset');
 
 Route::get('images','ImageControllerAPI@getImages');
-Route::post('images','ImageControllerAPI@uploadImage');
+Route::middleware('auth:api')->post('images','ImageControllerAPI@uploadImage');
+Route::middleware('auth:api')->put('images/activate/{imageId}','ImageControllerAPI@activate');
+Route::middleware('auth:api')->put('images/desactivate/{imageId}','ImageControllerAPI@desactivate');
+Route::middleware('auth:api')->delete('images/{imageId}', 'ImageControllerAPI@delete');
 
 // o middleware admin:api não funciona porque não consegue fazer retrieve do user logo nao consegue verificar se é admin
 // no entanto os metodos chamados pelas rotas acima verificam se o user logado é admin
