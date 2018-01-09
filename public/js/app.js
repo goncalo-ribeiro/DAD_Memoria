@@ -47626,7 +47626,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         //Retrieves the data for the listTopPlayers component
         axios({ method: 'get',
-            url: '/api/topplayers',
+            url: '/api/statistics/topplayers',
             headers: {
                 'Accept': 'application/json'
                 //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
@@ -47637,7 +47637,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         //Retrieves the data for the totalGames component
         axios({ method: 'get',
-            url: '/api/totalgames',
+            url: '/api/statistics/totalgames',
             headers: {
                 'Accept': 'application/json'
                 //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
@@ -50541,6 +50541,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -50548,24 +50565,55 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             images: [],
 
             getImagesError: false,
-            getImagesErrorMessage: ''
+            getImagesErrorMessage: '',
+
+            postError: [false, false],
+            postErrorMessage: ['', ''],
+            postErrorInfo: [false, false],
+            postErrorInfoMessage: ['', ''],
+
+            file: false
         };
     },
     methods: {
-        sendFile: function sendFile() {
+        //$hidden specifies wether the image uploaded is a face or a hidden tile
+        sendFile: function sendFile($hidden) {
             var _this = this;
 
             var formData = new FormData();
-            formData.append('image', fileInput.files[0]);
-            formData.append('name', this.name);
-            this.axios.post('admin/blog/cover', formData).then(function (response) {
-                _this.message = 'Cover (name: ' + _this.name + ') has been added';
-                _this.name = '';
-                fileInput.value = null;
-                _this.covers.push(response.data);
+            formData.append('image', this.file);
+            formData.append('hidden', $hidden);
+            console.log(formData);
+            axios.post('api/images', formData).then(function (response) {
+                console.log("sucesso!");
+                console.log(response);
+                _this.clearErrors();
+                _this.getImages();
+                alert("Imagem enviada com sucesso");
             }).catch(function (error) {
-                _this.message = error.error;
+                console.log("erro!");
+                console.log(error.response);
+
+                //however $hidden doubles down as the index for the array of errors
+                Vue.set(_this.postError, $hidden, true);
+                Vue.set(_this.postErrorMessage, $hidden, error.response.data.message);
+
+                if (error.response.data.errors != null) {
+                    Vue.set(_this.postErrorInfo, $hidden, true);
+                    Vue.set(_this.postErrorInfoMessage, $hidden, error.response.data.errors.image[0]);
+                }
             });
+        },
+        clearErrors: function clearErrors() {
+            this.postError = [false, false];
+            this.postErrorMessage = ['', ''];
+            this.postErrorInfo = [false, false];
+            this.postErrorInfoMessage = ['', ''];
+        },
+        processFile: function processFile(event) {
+            console.log(event);
+            console.log(event.target.files[0]);
+            this.file = event.target.files[0];
         },
         getImages: function getImages() {
             var _this2 = this;
@@ -50624,7 +50672,7 @@ var render = function() {
       _c("div", { staticClass: "col-lg-10 col-lg-offset-1" }, [
         _c("div", { staticClass: "panel panel-default" }, [
           _c("div", { staticClass: "panel-heading" }, [
-            _vm._v("Gestão das imagens de jogo\n                        "),
+            _vm._v("Gestão das imagens de jogo\n                    "),
             _c("div", { staticClass: "nav navbar-nav navbar-right" }, [
               _c(
                 "a",
@@ -50642,7 +50690,7 @@ var render = function() {
                 },
                 [
                   _vm._v(
-                    "\n                                Atualizar Imagens\n                            "
+                    "\n                            Atualizar Imagens\n                        "
                   )
                 ]
               )
@@ -50652,34 +50700,86 @@ var render = function() {
           _c("div", { staticClass: "panel-body" }, [
             _c("h3", [_vm._v("Imagens das faces das peças")]),
             _vm._v(" "),
-            _c("br"),
-            _vm._v(" "),
-            _c("input", {
-              attrs: { type: "file" },
-              on: {
-                change: function($event) {
-                  _vm.processFile($event)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c("br"),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-primary btn-sm",
-                attrs: { type: "button" },
+            _c("div", [
+              _c("br"),
+              _vm._v(" "),
+              _c("p", [_vm._v("Adicionar Face")]),
+              _vm._v(" "),
+              _c("input", {
+                staticStyle: { display: "inline-block" },
+                attrs: { type: "file" },
                 on: {
-                  click: function($event) {
-                    _vm.sendFile()
+                  change: function($event) {
+                    _vm.processFile($event)
                   }
                 }
-              },
-              [_vm._v("Enviar")]
-            ),
-            _vm._v(" "),
-            _c("br"),
+              }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary btn-sm",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      _vm.sendFile(0)
+                    }
+                  }
+                },
+                [_vm._v("Enviar")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.postError[0] == true,
+                      expression: "postError[0] == true"
+                    }
+                  ]
+                },
+                [
+                  _c("span", { staticClass: "help-block" }, [
+                    _c("strong", [_vm._v(_vm._s(_vm.postErrorMessage[0]))])
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.postErrorInfo[0] == true,
+                      expression: "postErrorInfo[0] == true"
+                    }
+                  ]
+                },
+                [
+                  _c("span", { staticClass: "help-block" }, [
+                    _c("strong", [_vm._v(_vm._s(_vm.postErrorInfoMessage[0]))])
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("br", {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.postError[0] == false,
+                    expression: "postError[0] == false"
+                  }
+                ]
+              }),
+              _vm._v(" "),
+              _c("br")
+            ]),
             _vm._v(" "),
             _c(
               "div",
@@ -50765,70 +50865,166 @@ var render = function() {
             _vm._v(" "),
             _c("hr"),
             _vm._v(" "),
-            _c("h2", [_vm._v("Imagens das faces escondidas")]),
+            _c("h3", [_vm._v("Imagens das faces escondidas")]),
+            _vm._v(" "),
+            _c("div", [
+              _c("br"),
+              _vm._v(" "),
+              _c("p", [_vm._v("Adicionar Face escondida")]),
+              _vm._v(" "),
+              _c("input", {
+                staticStyle: { display: "inline-block" },
+                attrs: { type: "file" },
+                on: {
+                  change: function($event) {
+                    _vm.processFile($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary btn-sm",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      _vm.sendFile(1)
+                    }
+                  }
+                },
+                [_vm._v("Enviar")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.postError[1],
+                      expression: "postError[1]"
+                    }
+                  ]
+                },
+                [
+                  _c("span", { staticClass: "help-block" }, [
+                    _c("strong", [_vm._v(_vm._s(_vm.postErrorMessage[1]))])
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.postErrorInfo[1],
+                      expression: "postErrorInfo[1]"
+                    }
+                  ]
+                },
+                [
+                  _c("span", { staticClass: "help-block" }, [
+                    _c("strong", [_vm._v(_vm._s(_vm.postErrorInfoMessage[1]))])
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("br", {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.postError[0] == false,
+                    expression: "postError[0] == false"
+                  }
+                ]
+              }),
+              _vm._v(" "),
+              _c("br")
+            ]),
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: "board", staticStyle: { "text-align": "center" } },
+              { staticClass: "row" },
               _vm._l(_vm.getHidden(), function(image, key) {
                 return _c(
-                  "span",
-                  {
-                    staticStyle: {
-                      "padding-top": "20px",
-                      "padding-bottom": "20px",
-                      display: "inline-block"
-                    }
-                  },
+                  "div",
+                  { staticClass: "col-sm-3", staticStyle: { padding: "20px" } },
                   [
                     _c("img", {
-                      staticStyle: { width: "40%" },
+                      staticStyle: {
+                        display: "block",
+                        margin: "0 auto",
+                        width: "30%"
+                      },
                       attrs: { src: _vm.imageURL(image) }
                     }),
                     _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticStyle: {
-                          padding: "20px",
-                          display: "inline-block"
-                        }
-                      },
-                      [
-                        _c("p", [_vm._v("Imagem " + _vm._s(image.id))]),
-                        _vm._v(" "),
-                        image.active
-                          ? _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-primary btn-xs",
-                                attrs: { type: "button" }
+                    _c("div", { staticStyle: { padding: "5px" } }, [
+                      _c("p", { staticStyle: { "text-align": "center" } }, [
+                        _vm._v("Imagem " + _vm._s(image.id))
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticStyle: {
+                            display: "flex",
+                            "align-items": "center",
+                            "justify-content": "center"
+                          }
+                        },
+                        [
+                          image.active
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-primary btn-xs",
+                                  staticStyle: {
+                                    "margin-left": "2px",
+                                    "margin-right": ": 2px"
+                                  },
+                                  attrs: { type: "button" }
+                                },
+                                [_vm._v("Ativar")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          !image.active
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-warning btn-xs",
+                                  staticStyle: {
+                                    "margin-left": "2px",
+                                    "margin-right": ": 2px"
+                                  },
+                                  attrs: { type: "button" }
+                                },
+                                [_vm._v("Desativar")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger btn-xs",
+                              staticStyle: {
+                                "margin-left": "2px",
+                                "margin-right": ": 2px"
                               },
-                              [_vm._v("Ativar")]
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        !image.active
-                          ? _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-warning btn-xs",
-                                attrs: { type: "button" }
-                              },
-                              [_vm._v("Desativar")]
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-danger btn-xs",
-                            attrs: { type: "button" }
-                          },
-                          [_vm._v("Remover")]
-                        )
-                      ]
-                    )
+                              attrs: { type: "button" }
+                            },
+                            [_vm._v("Remover")]
+                          )
+                        ]
+                      )
+                    ])
                   ]
                 )
               })
