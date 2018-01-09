@@ -28,8 +28,8 @@
     "use strict";
     import TotalGames from './statistics/totalGames.vue';
     import ListTopPlayers from './statistics/listTopPlayers.vue';
-    import UserGames from './statistics/UserGames.vue';
-    import UserVictorys from './statistics/UserVictorys.vue';
+    import UserGames from './statistics/userGames.vue';
+    import UserVictorys from './statistics/userVictorys.vue';
 
 
     export default {
