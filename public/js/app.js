@@ -50140,31 +50140,106 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     methods: {
+        ativarImagem: function ativarImagem(image) {
+            var _this = this;
+
+            axios({
+                method: 'put',
+                url: 'api/images/activate/' + image.id,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                }
+            }).then(function (response) {
+                console.log(response);
+
+                _this.getImages();
+                alert(response.data.message);
+            }).catch(function (error) {
+                console.log(error.response);
+
+                alert(error.response.data.message);
+            });
+        },
+        desativarImagem: function desativarImagem(image) {
+            var _this2 = this;
+
+            axios({
+                method: 'put',
+                url: 'api/images/desactivate/' + image.id,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                }
+            }).then(function (response) {
+                console.log(response);
+
+                _this2.getImages();
+                alert(response.data.message);
+            }).catch(function (error) {
+                console.log(error.response);
+
+                alert(error.response.data.message);
+            });
+        },
+        removerImagem: function removerImagem(image) {
+            var _this3 = this;
+
+            axios.delete('api/images/' + image.id);
+            axios({
+                method: 'delete',
+                url: 'api/images/' + image.id,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                }
+            }).then(function (response) {
+                console.log(response);
+
+                _this3.getImages();
+                alert("Imagem removida com sucesso!");
+            }).catch(function (error) {
+                console.log(error.response);
+
+                alert(error.response.data.message);
+            });
+        },
         //$hidden specifies wether the image uploaded is a face or a hidden tile
         sendFile: function sendFile($hidden) {
-            var _this = this;
+            var _this4 = this;
 
             var formData = new FormData();
             formData.append('image', this.file);
             formData.append('hidden', $hidden);
             console.log(formData);
-            axios.post('api/images', formData).then(function (response) {
+            //axios.post( 'api/images', formData )
+            axios({
+                method: 'post',
+                url: 'api/images',
+                headers: {
+                    'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                },
+                data: formData
+            }).then(function (response) {
                 console.log("sucesso!");
                 console.log(response);
-                _this.clearErrors();
-                _this.getImages();
+                _this4.clearErrors();
+                _this4.getImages();
                 alert("Imagem enviada com sucesso");
             }).catch(function (error) {
                 console.log("erro!");
                 console.log(error.response);
 
                 //however $hidden doubles down as the index for the array of errors
-                Vue.set(_this.postError, $hidden, true);
-                Vue.set(_this.postErrorMessage, $hidden, error.response.data.message);
+                Vue.set(_this4.postError, $hidden, true);
+                Vue.set(_this4.postErrorMessage, $hidden, error.response.data.message);
 
                 if (error.response.data.errors != null) {
-                    Vue.set(_this.postErrorInfo, $hidden, true);
-                    Vue.set(_this.postErrorInfoMessage, $hidden, error.response.data.errors.image[0]);
+                    Vue.set(_this4.postErrorInfo, $hidden, true);
+                    Vue.set(_this4.postErrorInfoMessage, $hidden, error.response.data.errors.image[0]);
                 }
             });
         },
@@ -50180,7 +50255,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.file = event.target.files[0];
         },
         getImages: function getImages() {
-            var _this2 = this;
+            var _this5 = this;
 
             axios({
                 method: 'get',
@@ -50191,16 +50266,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }).then(function (response) {
                 console.log(response);
-                _this2.images = response.data;
+                _this5.images = response.data;
 
-                _this2.getImagesError = false;
-                _this2.getImagesErrorMessage = '';
+                _this5.getImagesError = false;
+                _this5.getImagesErrorMessage = '';
             }).catch(function (error) {
                 console.log(error);
                 console.log(error.response);
 
-                _this2.getImagesError = true;
-                _this2.getImagesErrorMessage = error.response.data.message;
+                _this5.getImagesError = true;
+                _this5.getImagesErrorMessage = error.response.data.message;
             });
         },
         imageURL: function imageURL(image) {
@@ -50377,7 +50452,7 @@ var render = function() {
                           }
                         },
                         [
-                          image.active
+                          !image.active
                             ? _c(
                                 "button",
                                 {
@@ -50386,13 +50461,18 @@ var render = function() {
                                     "margin-left": "2px",
                                     "margin-right": ": 2px"
                                   },
-                                  attrs: { type: "button" }
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.ativarImagem(image)
+                                    }
+                                  }
                                 },
                                 [_vm._v("Ativar")]
                               )
                             : _vm._e(),
                           _vm._v(" "),
-                          !image.active
+                          image.active
                             ? _c(
                                 "button",
                                 {
@@ -50401,7 +50481,12 @@ var render = function() {
                                     "margin-left": "2px",
                                     "margin-right": ": 2px"
                                   },
-                                  attrs: { type: "button" }
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.desativarImagem(image)
+                                    }
+                                  }
                                 },
                                 [_vm._v("Desativar")]
                               )
@@ -50415,7 +50500,12 @@ var render = function() {
                                 "margin-left": "2px",
                                 "margin-right": ": 2px"
                               },
-                              attrs: { type: "button" }
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  _vm.removerImagem(image)
+                                }
+                              }
                             },
                             [_vm._v("Remover")]
                           )
@@ -50544,7 +50634,7 @@ var render = function() {
                           }
                         },
                         [
-                          image.active
+                          !image.active
                             ? _c(
                                 "button",
                                 {
@@ -50553,13 +50643,18 @@ var render = function() {
                                     "margin-left": "2px",
                                     "margin-right": ": 2px"
                                   },
-                                  attrs: { type: "button" }
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.ativarImagem(image)
+                                    }
+                                  }
                                 },
                                 [_vm._v("Ativar")]
                               )
                             : _vm._e(),
                           _vm._v(" "),
-                          !image.active
+                          image.active
                             ? _c(
                                 "button",
                                 {
@@ -50568,7 +50663,12 @@ var render = function() {
                                     "margin-left": "2px",
                                     "margin-right": ": 2px"
                                   },
-                                  attrs: { type: "button" }
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.desativarImagem(image)
+                                    }
+                                  }
                                 },
                                 [_vm._v("Desativar")]
                               )
@@ -50582,7 +50682,12 @@ var render = function() {
                                 "margin-left": "2px",
                                 "margin-right": ": 2px"
                               },
-                              attrs: { type: "button" }
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  _vm.removerImagem(image)
+                                }
+                              }
                             },
                             [_vm._v("Remover")]
                           )
