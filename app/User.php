@@ -42,4 +42,12 @@ class User extends Authenticatable
         }
         return $user;
     }
+
+
+    /*spublic function games_user()
+    {
+        return $this->hasManyThrough('App\Game');
+        ->withPivot('game_user', 'game_id')
+    }*/
+
 }

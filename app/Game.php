@@ -21,4 +21,9 @@ class Game extends Model
     {
         return $this->belongsTo('App\User', 'winner', 'id');
     }
+
+    public function games_user()//Multiplayer games have 2 entrys the winner and the loser()
+    {
+        return $this->hasManyThrough('App\User', 'game_user');
+    }
 }
