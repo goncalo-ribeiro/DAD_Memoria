@@ -46563,7 +46563,7 @@ exports = module.exports = __webpack_require__(55)(undefined);
 
 
 // module
-exports.push([module.i, "\n.gameseparator[data-v-7c293f89]{\n    border-style: solid;\n    border-width: 2px 0 0 0;\n    border-color: black;\n}\n", ""]);
+exports.push([module.i, "\n.gameseparator[data-v-7c293f89]{\n    border-style: solid;\n    border-width: 2px 0 0 0;\n    border-color: black;\n}\n.inline[data-v-7c293f89]{\n    display: inline-block;\n}\n.slider[data-v-7c293f89] {\n    -webkit-appearance: none;\n    width: 40%;\n    height: 10px;\n    border-radius: 5px;   \n    background: #d3d3d3;\n    outline: none;\n    opacity: 0.7;\n    -webkit-transition: .2s;\n    -webkit-transition: opacity .2s;\n    transition: opacity .2s;\n}\n.slider[data-v-7c293f89]::-webkit-slider-thumb {\n    -webkit-appearance: none;\n    appearance: none;\n    width: 15px;\n    height: 15px;\n    border-radius: 50%; \n    background: #4CAF50;\n    cursor: pointer;\n}\n.slider[data-v-7c293f89]::-moz-range-thumb {\n    width: 15px;\n    height: 15px;\n    border-radius: 50%;\n    background: #4CAF50;\n    cursor: pointer;\n}\n.unit[data-v-7c293f89]{\n    border: none;\n    border-color: transparent;\n    width: 15px;\n}\n", ""]);
 
 // exports
 
@@ -46967,7 +46967,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             alerttype: {},
             currentTime: null,
             interval: null,
-            bot: 1
+            bot: 50
         };
     },
     computed: {
@@ -46978,6 +46978,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        limit: function limit() {
+            if (this.bot < 0) {
+                this.bot = 0;
+            } else if (this.bot > 100) {
+                this.bot = 100;
+            }
+        },
         gameName: function gameName() {
             if (this.game.name !== '') {
                 return '(' + this.game.name + ')';
@@ -46985,7 +46992,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return '';
         },
         addBot: function addBot() {
-            this.$emit('add-bot', this.game.gameID, this.bot);
+            this.$emit('add-bot', this.game.gameID, this.bot / 100);
         },
         canBot: function canBot() {
             var hasBot = false;
@@ -47103,57 +47110,65 @@ var render = function() {
           _vm._v(" "),
           _vm.canBot()
             ? _c("div", [
-                _c("label", { attrs: { for: "bot" } }, [
-                  _vm._v("Bot Dificulty")
+                _c("label", { staticClass: "inline", attrs: { for: "bot" } }, [
+                  _vm._v("Bot Dificulty:")
                 ]),
                 _vm._v(" "),
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.bot,
-                        expression: "bot"
-                      }
-                    ],
-                    attrs: { id: "bot" },
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.bot = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
+                _c("span", [_vm._v("Easy")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.bot,
+                      expression: "bot"
                     }
-                  },
-                  [
-                    _c("option", { attrs: { value: "1" } }, [
-                      _vm._v("Dumb Bot")
-                    ]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "2" } }, [
-                      _vm._v("Medium Bot")
-                    ]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "3" } }, [
-                      _vm._v("Smart Bot")
-                    ])
-                  ]
-                ),
+                  ],
+                  staticClass: "slider inline",
+                  attrs: { type: "range", min: "0", max: "100", id: "bot" },
+                  domProps: { value: _vm.bot },
+                  on: {
+                    __r: function($event) {
+                      _vm.bot = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("span", [_vm._v("Very Hard")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.bot,
+                      expression: "bot"
+                    }
+                  ],
+                  staticClass: "inline",
+                  attrs: { type: "number", min: "0", max: "100" },
+                  domProps: { value: _vm.bot },
+                  on: {
+                    change: _vm.limit,
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.bot = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "inline unit",
+                  attrs: { type: "text", readonly: "", value: "%" }
+                }),
                 _vm._v(" "),
                 _c(
                   "button",
                   {
-                    staticClass: "btn btn-sm btn-success",
+                    staticClass: "btn btn-sm btn-success inline",
                     on: { click: _vm.addBot }
                   },
                   [_vm._v("Add Bot")]
