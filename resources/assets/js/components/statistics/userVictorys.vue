@@ -3,7 +3,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">User Statistics:</div>
         <div class="panel-body">
-            <div id="barchart" style="width: 100%; height: 150px;"></div>
+            <div id="barchartUserVictorys" style="width: 100%; height: 150px;"></div>
         </div>      
     </div>
 </div>
@@ -12,10 +12,9 @@
 <script>
     "use strict";
     export default {
-        props: ['myStatistics'],
             data: function () {
                 return {
-                
+                    nothing:[]
                 }
             },
         methods: {
@@ -28,7 +27,7 @@
                         data.addColumn('string', 'Type');
                         data.addColumn('number', 'Games');
                         
-                        //Adds rows based in the amount given by the parent
+                        //Reads all the data recieved on the property victorys
                         records.forEach(function(record){
                             data.addRow([record.type, record.games]);
                         });
@@ -38,7 +37,7 @@
                             legend: {position: 'none'}
                         };
 
-                        var chart = new google.visualization.ColumnChart(document.getElementById('barchart'));
+                        var chart = new google.visualization.ColumnChart(document.getElementById('barchartUserVictorys'));
                         chart.draw(data, options);
                     });
                 
@@ -46,10 +45,10 @@
             },
         mounted() {
             //Gives no data, because at the time the dad didnt had the data
-            this.callDrawChart(this.myStatistics);
+            this.callDrawChart(this.nothing);
 
             //Everytime the new data is loaded callDrawChart will be called
-            this.$parent.$on('loadUserStatistics', this.callDrawChart);
+            this.$parent.$on('loadUserVictorys', this.callDrawChart);
         }
     }
 </script>

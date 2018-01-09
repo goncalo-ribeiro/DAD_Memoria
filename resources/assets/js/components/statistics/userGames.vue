@@ -1,11 +1,11 @@
-<template>    
+<template>
 <div>
-	<div class="panel panel-default">
-	    <div class="panel-heading">Global Statistics:</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">User Statistics:</div>
         <div class="panel-body">
-        	<div id="donutchart" style="width: 100%; height: 200px"></div>
+            <div id="barchartUserGames" style="width: 100%; height: 150px;"></div>
         </div>      
-	</div>
+    </div>
 </div>
 </template>
 
@@ -17,11 +17,10 @@
                     nothing:[]
                 }
             },
-
-            methods: {
+        methods: {
                 //Opens edit form
                 callDrawChart: function(records){
-                    google.charts.load("current", {packages:["corechart"]});
+                    console.log("HAHHA");
                     google.charts.setOnLoadCallback(()=>{
     
                         var data = new google.visualization.DataTable();
@@ -35,21 +34,24 @@
 
                     
                         var options = {
-                          is3D: true
+                            legend: {position: 'none'},
+                            series: {
+                                0: { color: '#e2431e' }
+                            }
                         };
 
-                        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                        var chart = new google.visualization.BarChart(document.getElementById('barchartUserGames'));
                         chart.draw(data, options);
                     });
                 
                 },
             },
-            mounted() {
-                //Gives no data, becase at the time the dad didnt had the data
-                this.callDrawChart(this.nothing);
+        mounted() {
+            //Gives no data, because at the time the dad didnt had the data
+            this.callDrawChart(this.nothing);
 
-                //Everytime the new data is loaded callDrawChart will be called
-                this.$parent.$on('loadGlobalStatistics', this.callDrawChart);
-            }
+            //Everytime the new data is loaded callDrawChart will be called
+            this.$parent.$on('loadUserGames', this.callDrawChart);
         }
+    }
 </script>

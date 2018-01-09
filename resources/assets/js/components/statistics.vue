@@ -3,15 +3,18 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-sm-6 col-xs-offset-1">
-                        <TotalGames :totalGames="globalStatistics"></TotalGames>
+                        <TotalGames/>
                     </div>
                     <div class="col-sm-4 col-xs-offset-1">
-                        <ListTopPlayers :players="topPlayers"></ListTopPlayers>
+                        <ListTopPlayers :players="globalStatistics.topPlayers"/>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
-                       <UserStatistics :myStatistics="userStatistics"></UserStatistics>
+                     <div class="col-sm-4 col-xs-offset-1">
+                       <UserVictorys></UserVictorys>
+                    </div>
+                    <div class="col-sm-6 col-xs-offset-1">
+                      <UserGames></UserGames>
                     </div>
                 </div>
             </div>
@@ -26,14 +29,14 @@
     import TotalGames from './statistics/TotalGames.vue';
     import ListTopPlayers from './statistics/ListTopPlayers.vue';
 
-    import UserStatistics from './statistics/UserStatistics.vue';
+    import UserGames from './statistics/UserGames.vue';
+    import UserVictorys from './statistics/UserVictorys.vue';
 
     export default {
         data: function(){
             return {
                 globalStatistics: [],
-                topPlayers: [],
-                UserStatistics: []
+                userStatistics: []
             }
         },
         sockets:{
@@ -48,46 +51,36 @@
         components: {
             'TotalGames': TotalGames,
             'ListTopPlayers': ListTopPlayers,
-            'UserStatistics': UserStatistics
+            'UserGames': UserGames,
+            'UserVictorys': UserVictorys
         },
         mounted() {
 
-            //Retrieves the data for the listTopPlayers component
+            //Retrieves all the General Data and distributes it for all the respective components
             axios({method: 'get',
-                    url: '/api/statistics/topplayers',
-                    headers: {
-                        'Accept' : 'application/json',
-                        //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
-                    }
-                }).then(response=>{
-                    this.topPlayers = response.data; 
-                });
-
-
-
-
-            //Retrieves the data for the totalGames component
-            axios({method: 'get',
-                    url: '/api/statistics/totalgames',
+                    url: '/api/statistics/',
                     headers: {
                         'Accept' : 'application/json',
                         //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
                     }
                 }).then(response=>{
                     this.globalStatistics = response.data;
-                    this.$emit('loadGlobalStatistics', response.data);
+                    this.$emit('loadGlobalStatistics', this.globalStatistics.totalGames);
                 });
+
 
             //Retrieves the data for the UserStatistics component
             axios({method: 'get',
-                    url: '/api/statistics/totalgames',
+                    url: '/api/statistics/user/32',
                     headers: {
                         'Accept' : 'application/json',
                         //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
                     }
                 }).then(response=>{
                     this.userStatistics = response.data;
-                    this.$emit('loadUserStatistics', response.data);
+                    this.$emit('loadUserGames', this.userStatistics.victorys);
+                    this.$emit('loadUserVictorys', this.userStatistics.totalGames);
+                    //
                 });           
         }   
     }
