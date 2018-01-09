@@ -20,7 +20,7 @@
         methods: {
                 //Opens edit form
                 callDrawChart: function(records){
-                    console.log("HAHHA");
+                    
                     google.charts.setOnLoadCallback(()=>{
     
                         var data = new google.visualization.DataTable();
