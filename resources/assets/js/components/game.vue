@@ -98,15 +98,14 @@
                 return this.game.gameSize > 1 && this.game.players.length > 1;
             },
             danger(key){
-                return this.game.playerTurn == key+1 && this.game.lastPlay !== null && Math.ceil((this.game.lastPlay+29000 - this.currentTime) / 1000) <= 5;
+                return this.game.playerTurn == key+1 && this.game.lastPlay !== null && Math.ceil((this.game.lastPlay+29000 - this.currentTime) / 1000) <= 5 && !this.game.gameEnded;
             },
             newTime(){
                 this.currentTime=new Date().getTime();
-                if(this.game.lastPlay !== null && this.currentTime !== null && this.game.lastPlay+29000 - this.currentTime < 0  && !this.gameEnded){
+                if(this.game.lastPlay && this.currentTime && !this.game.gameEnded && this.game.lastPlay+29000 - this.currentTime < 0){
                     clearInterval(this.interval);
                     this.interval=null;
                     this.$emit('kick-player', {gameId: this.game.gameID, player: this.game.players[this.game.playerTurn-1]});
-                    console.log(this.game.players[this.game.playerTurn-1]);
                 }
             },
             timeout(key){

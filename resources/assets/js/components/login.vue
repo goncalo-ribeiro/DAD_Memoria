@@ -108,6 +108,7 @@
                         console.log(error.response);
                         this.loginError = true;
                     });
+                    console.log("fail?");
                 }
             },
             logout: function(){
