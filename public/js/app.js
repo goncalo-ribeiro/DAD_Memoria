@@ -1161,6 +1161,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_1_vue_socket_io___default.a, 'http://127.0.0.1
 
 var example = Vue.component('example', __webpack_require__(42));
 var memoria = Vue.component('memoria', __webpack_require__(45));
+var replay = Vue.component('replay', __webpack_require__(106));
 var statistics = Vue.component('statistics', __webpack_require__(61));
 var login = Vue.component('login', __webpack_require__(76));
 var signup = Vue.component('signup', __webpack_require__(79));
@@ -1170,7 +1171,7 @@ var reset = Vue.component('reset', __webpack_require__(88));
 var image = Vue.component('image', __webpack_require__(91));
 var error = Vue.component('error', __webpack_require__(94));
 
-var routes = [{ path: '/', redirect: '/memoria' }, { path: '/example', component: example }, { path: '/statistics', component: statistics }, { path: '/memoria', component: memoria }, { path: '/login', component: login }, { path: '/signup', component: signup }, { path: '/admin', component: admin }, { path: '/users', component: users }, { path: '/reset', component: reset }, { path: '/images', component: image }, { path: '/error', component: error }];
+var routes = [{ path: '/', redirect: '/memoria' }, { path: '/example', component: example }, { path: '/statistics', component: statistics }, { path: '/memoria', component: memoria }, { path: '/replay', component: replay }, { path: '/login', component: login }, { path: '/signup', component: signup }, { path: '/admin', component: admin }, { path: '/users', component: users }, { path: '/reset', component: reset }, { path: '/images', component: image }, { path: '/error', component: error }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
   routes: routes
@@ -46397,15 +46398,9 @@ var render = function() {
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(game.name))]),
                         _vm._v(" "),
-                        _c("td", [
-                          _vm._v(
-                            _vm._s(game.players.length) +
-                              "/" +
-                              _vm._s(game.gameSize)
-                          )
-                        ]),
+                        _c("td", [_vm._v(_vm._s(game.gameSize))]),
                         _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(game.players[0].id))]),
+                        _c("td", [_vm._v(_vm._s(game.player))]),
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(game.created))]),
                         _vm._v(" "),
@@ -51835,6 +51830,781 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(107)
+/* template */
+var __vue_template__ = __webpack_require__(108)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/replayMemoria.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1aa86abc", Component.options)
+  } else {
+    hotAPI.reload("data-v-1aa86abc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 107 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__replayLobby_vue__ = __webpack_require__(109);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__replayLobby_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__replayLobby_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__replayGame_vue__ = __webpack_require__(112);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__replayGame_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__replayGame_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            title: 'Replay de Jogos',
+            lobbyGames: [],
+            activeGames: [],
+            socketId: ""
+        };
+    },
+    sockets: {
+        connect: function connect() {
+            console.log('socket connected');
+            this.socketId = this.$socket.id;
+        },
+        disconnect: function disconnect() {
+            console.log('socket disconnected');
+            this.socketId = "";
+        },
+        replay_lobby_games_changed: function replay_lobby_games_changed(data) {
+            this.lobbyGames = data.lobbyGames;
+        },
+        new_active_replay: function new_active_replay(data) {
+            Vue.set(this.activeGames, this.activeGames.length, data.game);
+        }
+    },
+    methods: {
+        loadLobby: function loadLobby() {
+            this.$socket.emit('get_replay_lobby');
+        },
+        view: function view(data) {
+            this.$socket.emit('watch_game', { gameId: data.gameId });
+        },
+        closeGame: function closeGame(game) {
+            for (var i = 0; i < this.activeGames.length; i++) {
+                if (this.activeGames[i].gameID === game) {
+                    this.activeGames.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    },
+    components: {
+        'lobby': __WEBPACK_IMPORTED_MODULE_0__replayLobby_vue___default.a,
+        'game': __WEBPACK_IMPORTED_MODULE_1__replayGame_vue___default.a
+    },
+    mounted: function mounted() {
+        this.loadLobby();
+    }
+});
+
+/***/ }),
+/* 108 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "container" },
+      [
+        _c("h3", { staticClass: "text-center" }, [_vm._v(_vm._s(_vm.title))]),
+        _vm._v(" "),
+        _c("lobby", {
+          attrs: { games: _vm.lobbyGames },
+          on: { view: _vm.view }
+        }),
+        _vm._v(" "),
+        _vm._l(_vm.activeGames, function(game) {
+          return [
+            _c("game", {
+              attrs: { game: game },
+              on: { "close-game": _vm.closeGame }
+            })
+          ]
+        })
+      ],
+      2
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1aa86abc", module.exports)
+  }
+}
+
+/***/ }),
+/* 109 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(110)
+/* template */
+var __vue_template__ = __webpack_require__(111)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/replayLobby.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5eeb8868", Component.options)
+  } else {
+    hotAPI.reload("data-v-5eeb8868", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 110 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__newGameForm_vue__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__newGameForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__newGameForm_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['games', 'user'],
+    data: function data() {
+        return {
+            form: false
+        };
+    },
+    methods: {
+        showForm: function showForm() {
+            this.form = !this.form;
+        },
+        createGame: function createGame(data) {
+            this.$emit('create-click', data);
+            this.form = false;
+        },
+        view: function view(game) {
+            this.$emit('view', { gameId: game });
+        }
+    },
+    components: {
+        'newGameForm': __WEBPACK_IMPORTED_MODULE_0__newGameForm_vue___default.a
+    },
+    mounted: function mounted() {
+        console.log('Component container mounted.');
+    }
+});
+
+/***/ }),
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "row" }, [
+    _c(
+      "div",
+      { staticClass: "col-md-8 col-md-offset-2" },
+      [
+        _vm.form
+          ? _c("newGameForm", { on: { "create-click": _vm.createGame } })
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-heading" }, [_vm._v("Replay Lobby")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _c(
+              "table",
+              {
+                staticClass: "table table-striped",
+                staticStyle: { "text-align": "center" }
+              },
+              [
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.games, function(game) {
+                    return _c("tr", [
+                      _c("td", [_vm._v(_vm._s(game.gameID))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(game.name))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(game.gameSize))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(game.player))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(game.winner))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(game.created))]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-xs btn-success",
+                            on: {
+                              click: function($event) {
+                                _vm.view(game.gameID)
+                              }
+                            }
+                          },
+                          [_vm._v("View")]
+                        )
+                      ])
+                    ])
+                  })
+                )
+              ]
+            )
+          ])
+        ])
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("th", [_vm._v("ID")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Name")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Players")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Created By")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Winner")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Created At")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5eeb8868", module.exports)
+  }
+}
+
+/***/ }),
+/* 112 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(113)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(115)
+/* template */
+var __vue_template__ = __webpack_require__(116)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-32235950"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/replayGame.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-32235950", Component.options)
+  } else {
+    hotAPI.reload("data-v-32235950", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(114);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(56)("1610f0cf", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-32235950\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./replayGame.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-32235950\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./replayGame.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 114 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(55)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.gameseparator[data-v-32235950]{\n    border-style: solid;\n    border-width: 2px 0 0 0;\n    border-color: black;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 115 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['game'],
+    data: function data() {
+        return {
+            alerttype: {},
+            interval: null,
+            currAction: 0,
+            firstPiece: null,
+            secondPiece: null
+        };
+    },
+    computed: {
+        message: function message() {
+            if (this.game.winner != '') {
+                return 'Winner: ' + this.game.winner;
+            }
+        }
+    },
+    methods: {
+        start: function start() {
+            this.game.gameStarted = true;
+            this.interval = setInterval(this.makeMove, 1000);
+        },
+        gameEnded: function gameEnded() {
+            if (this.game.gameEnded) {
+                clearInterval(this.interval);
+                this.interval = null;
+            }
+            return this.game.gameEnded;
+        },
+        isTurn: function isTurn(key) {
+            return this.game.playerTurn === key + 1;
+        },
+        isTurnString: function isTurnString(key) {
+            return this.game.playerTurn === key + 1 ? 'True' : 'False';
+        },
+        newLine: function newLine(key) {
+            return key % this.game.colunas === 0 && key !== 0;
+        },
+        closeGame: function closeGame() {
+            this.$emit('close-game', this.game.gameID);
+        },
+
+        pieceImageURL: function pieceImageURL(piece) {
+            if (piece.show) {
+                return 'img/' + piece.piece + '.png';
+            } else {
+                return 'img/hidden.png';
+            }
+        },
+        makeMove: function makeMove() {
+            if (this.currAction >= this.game.actions.length) {
+                clearInterval(this.interval);
+                this.interval = null;
+            }
+            if (this.game.actions[this.currAction] === -1) {
+                this.currAction++;
+                this.kickPlayer(this.game.actions[this.currAction]);
+                this.currAction++;
+            } else {
+                this.revealPiece(this.game.actions[this.currAction]);
+                this.currAction++;
+                if (this.revealPiece(this.game.actions[this.currAction]) !== 1) {
+                    setTimeout(this.hidePieces, 1000);
+                }
+                this.currAction++;
+            }
+        },
+        revealPiece: function revealPiece(index) {
+            Vue.set(this.game.board[index], "show", true);
+            if (this.firstPiece === null) {
+                this.firstPiece = index;
+                return 0;
+            } else {
+                if (this.game.board[this.firstPiece].piece === this.game.board[index].piece) {
+                    this.firstPiece = null;
+                    this.game.players[this.game.playerTurn - 1].score++;
+                    if (this.noMorePieces()) {
+                        this.game.gameEnded = true;
+                    }
+                    return 1;
+                }
+                this.secondPiece = index;
+                return -1;
+            }
+        },
+        hidePieces: function hidePieces() {
+            Vue.set(this.game.board[this.firstPiece], "show", false);
+            Vue.set(this.game.board[this.secondPiece], "show", false);
+            this.firstPiece = null;
+            this.secondPiece = null;
+            this.nextPlayer();
+        },
+        nextPlayer: function nextPlayer() {
+            this.game.playerTurn++;
+            if (this.game.playerTurn > this.game.players.length) {
+                this.game.playerTurn = 1;
+            }
+        },
+        noMorePieces: function noMorePieces() {
+            for (var i = 0; i < this.game.board.length; i++) {
+                if (!this.game.board[i].show) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        kickPlayer: function kickPlayer(key) {
+            this.game.players.splice(key, 1);
+            this.game.playerTurn--;
+            if (this.game.players.length == 1) {
+                this.game.gameEnded = true;
+            }
+            this.nextPlayer();
+        }
+    }
+});
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+      _c("div", { staticClass: "panel panel-default" }, [
+        _c("div", { staticClass: "panel-heading" }, [
+          _vm._v(
+            "Game " +
+              _vm._s(_vm.game.gameID) +
+              " (" +
+              _vm._s(_vm.game.name) +
+              ")"
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "panel-body" }, [
+          _c("div", { staticClass: "alert", class: _vm.alerttype }, [
+            !this.game.gameEnded
+              ? _c(
+                  "a",
+                  {
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        _vm.start($event)
+                      }
+                    }
+                  },
+                  [_vm._v("Start")]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            this.game.gameEnded
+              ? _c("strong", [
+                  _vm._v(_vm._s(_vm.message) + "     "),
+                  _c(
+                    "a",
+                    {
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.closeGame($event)
+                        }
+                      }
+                    },
+                    [_vm._v("Close Game")]
+                  )
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c(
+            "table",
+            {
+              staticClass: "table table-striped",
+              staticStyle: { "text-align": "center" }
+            },
+            [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.game.players, function(player, key) {
+                  return _c("tr", { class: { success: _vm.isTurn(key) } }, [
+                    _c("td", [_vm._v(_vm._s(player.id))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(player.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.isTurnString(key)))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(player.score))])
+                  ])
+                })
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "board", staticStyle: { "text-align": "center" } },
+            _vm._l(_vm.game.board, function(piece, key) {
+              return _c("span", [
+                _vm.newLine(key) ? _c("br") : _vm._e(),
+                _vm._v(" "),
+                _c("img", {
+                  staticStyle: { width: "9.5%" },
+                  attrs: { src: _vm.pieceImageURL(piece) }
+                })
+              ])
+            })
+          )
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("th", [_vm._v("ID")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Name")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Turn")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Score")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-32235950", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

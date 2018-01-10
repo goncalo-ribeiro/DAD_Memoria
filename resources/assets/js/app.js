@@ -24,6 +24,7 @@ Vue.use(VueSocketio, 'http://127.0.0.1:8080');
 
 const example = Vue.component('example', require('./components/example.vue'));
 const memoria = Vue.component('memoria', require('./components/memoria.vue'));
+const replay = Vue.component('replay', require('./components/replayMemoria.vue'));
 const statistics = Vue.component('statistics', require('./components/statistics.vue'));
 const login = Vue.component('login', require('./components/login.vue'));
 const signup = Vue.component('signup', require('./components/signup.vue'));
@@ -38,6 +39,7 @@ const routes = [
   { path: '/example', component: example },
   { path: '/statistics', component: statistics },
   { path: '/memoria', component: memoria},
+  { path: '/replay', component: replay },
   { path: '/login', component: login },
   { path: '/signup', component: signup },
   { path: '/admin', component: admin },
