@@ -8,13 +8,13 @@
                         <strong>{{ message }} &nbsp;&nbsp;&nbsp;&nbsp;<a v-on:click.prevent="closeGame">Close Game</a></strong>
                     </div>
                     <div v-if="canBot()">
-                        <label for="bot">Bot Dificulty</label>
-                        <select id="bot" v-model="bot">
-                            <option value="1">Dumb Bot</option>
-                            <option value="2">Medium Bot</option>
-                            <option value="3">Smart Bot</option>
-                        </select>
-                        <button class="btn btn-sm btn-success" v-on:click="addBot">Add Bot</button>
+                        <label class="inline" for="bot">Bot Dificulty:</label>
+                        <span>Easy</span>        
+                        <input type="range" min="0" max="100" class="slider inline" id="bot" v-model="bot">
+                        <span>Very Hard</span>
+                        <input @change="limit" type="number" min="0" max="100" class="inline" v-model="bot">
+                        <input type="text" readonly value="%" class="inline unit"/> 
+                        <button class="btn btn-sm btn-success inline" v-on:click="addBot">Add Bot</button>
                         <br>
                     </div>
                     <table class="table table-striped" style="text-align:center;">
@@ -57,7 +57,7 @@
                 },
                 currentTime: null,
                 interval: null,
-                bot: 1
+                bot: 50
             }
         },
         computed: {
@@ -68,6 +68,13 @@
             },
         },
         methods: {
+            limit(){
+                if(this.bot < 0){
+                    this.bot=0;
+                }else if(this.bot > 100){
+                    this.bot=100;
+                }
+            },
             gameName(){
                 if(this.game.name !== ''){
                     return '(' + this.game.name + ')';
@@ -75,7 +82,7 @@
                 return '';
             },
             addBot(){
-                this.$emit('add-bot', this.game.gameID, this.bot);
+                this.$emit('add-bot', this.game.gameID, this.bot/100);
             },
             canBot(){
                 let hasBot=false;
@@ -153,5 +160,40 @@
     border-style: solid;
     border-width: 2px 0 0 0;
     border-color: black;
+}
+.inline{
+    display: inline-block;
+}
+.slider {
+    -webkit-appearance: none;
+    width: 40%;
+    height: 10px;
+    border-radius: 5px;   
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%; 
+    background: #4CAF50;
+    cursor: pointer;
+}
+.slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+.unit{
+    border: none;
+    border-color: transparent;
+    width: 15px;
 }
 </style>
