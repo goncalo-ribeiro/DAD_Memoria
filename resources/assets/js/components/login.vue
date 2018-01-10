@@ -105,7 +105,7 @@
                         this.setUpLoggedInUser();
                     })
                     .catch(error=>{
-                        console.log(error);
+                        console.log(error.response);
                         this.loginError = true;
                     });
                 }

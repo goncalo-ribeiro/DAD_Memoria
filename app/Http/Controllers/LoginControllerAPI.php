@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 define('YOUR_SERVER_URL', env("APP_URL", "http://memoria.dad"));
 // Check "oauth_clients" table for next 2 values:
 define('CLIENT_ID', '2');
-define('CLIENT_SECRET','Xxe1WcPqyBaMqKoVD3Rc6rHQmYmG5bcHHg3H0yyz');
+define('CLIENT_SECRET', DB::table('oauth_clients')->where('id', '2')->value('secret'));
 class LoginControllerAPI extends Controller
 {
     public function login(Request $request)
