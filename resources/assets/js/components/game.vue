@@ -85,17 +85,18 @@
                 this.$emit('add-bot', this.game.gameID, this.bot/100);
             },
             canBot(){
-                let hasBot=false;
-                for(let i =0; i<this.game.players.length; i++){
-                    if(this.game.players[i].bot){
-                        hasBot=true;
-                        break;
-                    }
-                }
-                return !this.game.gameStarted && !hasBot; //acrescentar condição de dono do jogo
+                return !this.game.gameStarted && !this.game.hasBot; //acrescentar condição de dono do jogo
             },
             canKick(){
-                return this.game.gameSize > 1 && this.game.players.length > 1;
+                return this.game.gameSize > 1 && this.game.players.length > 1 && !this.onlyBots();
+            },
+            onlyBots(){
+                for(let i=1; i<this.game.players.length; i++){
+                    if(!this.game.players[i].bot){
+                        return false;
+                    }
+                }
+                return true;
             },
             danger(key){
                 return this.game.playerTurn == key+1 && this.game.lastPlay !== null && Math.ceil((this.game.lastPlay+29000 - this.currentTime) / 1000) <= 5 && !this.game.gameEnded;
@@ -115,7 +116,7 @@
                 }
                 let time = this.game.playerTurn == key+1 && this.game.lastPlay !== null ? Math.ceil((this.game.lastPlay+29000 - this.currentTime) / 1000) : 30;
                 if(time < 0){
-                    return '0s';
+                    return 'Kicked';
                 }
                 return time + 's';
             },

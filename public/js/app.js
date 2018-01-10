@@ -46533,13 +46533,13 @@ var content = __webpack_require__(54);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(56)("8511c514", content, false);
+var update = __webpack_require__(56)("7715a1fe", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./game.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./game.vue");
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./game.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7c293f89\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./game.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -46989,17 +46989,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$emit('add-bot', this.game.gameID, this.bot / 100);
         },
         canBot: function canBot() {
-            var hasBot = false;
-            for (var i = 0; i < this.game.players.length; i++) {
-                if (this.game.players[i].bot) {
-                    hasBot = true;
-                    break;
-                }
-            }
-            return !this.game.gameStarted && !hasBot; //acrescentar condição de dono do jogo
+            return !this.game.gameStarted && !this.game.hasBot; //acrescentar condição de dono do jogo
         },
         canKick: function canKick() {
-            return this.game.gameSize > 1 && this.game.players.length > 1;
+            return this.game.gameSize > 1 && this.game.players.length > 1 && !this.onlyBots();
+        },
+        onlyBots: function onlyBots() {
+            for (var i = 1; i < this.game.players.length; i++) {
+                if (!this.game.players[i].bot) {
+                    return false;
+                }
+            }
+            return true;
         },
         danger: function danger(key) {
             return this.game.playerTurn == key + 1 && this.game.lastPlay !== null && Math.ceil((this.game.lastPlay + 29000 - this.currentTime) / 1000) <= 5 && !this.game.gameEnded;
@@ -47019,7 +47020,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             var time = this.game.playerTurn == key + 1 && this.game.lastPlay !== null ? Math.ceil((this.game.lastPlay + 29000 - this.currentTime) / 1000) : 30;
             if (time < 0) {
-                return '0s';
+                return 'Kicked';
             }
             return time + 's';
         },
