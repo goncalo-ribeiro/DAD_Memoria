@@ -5,7 +5,7 @@
             <div class="panel panel-default">
                 <div  class="panel-heading">Game Lobby</div>
                 <div class="panel-body">
-                    <div class="col-xs-10">
+                    <div class="col-xs-10" v-bind:class="{'col-xs-12': user==null}">
                         <table class="table table-striped" style="text-align:center;">
                             <thead>
                                 <th>ID</th>
@@ -21,13 +21,13 @@
                                     <td>{{ game.gameSize }}</td>
                                     <td>{{ game.player }}</td>
                                     <td>{{ game.created }}</td>
-                                    <td><button class="btn btn-xs btn-success" v-on:click="joinGame(game.gameID)">Join</button></td>
+                                    <td v-if="user != null"><button class="btn btn-xs btn-success" v-on:click="joinGame(game.gameID)">Join</button></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-xs-2">
-                        <button class="btn btn-success" v-on:click="showForm">Novo Jogo</button>
+                    <div v-if="user != null" class="col-xs-2">
+                        <button  class="btn btn-success" v-on:click="showForm">Novo Jogo</button>
                     </div>
                 </div>
             </div>

@@ -59,12 +59,6 @@
             'lobby': Lobby,
             'game': Game,
         },
-        mounted() {
-            this.loadLobby();
-        },
-        created() {
-            this.loadLobby();
-        },
         updated() {
             this.loadLobby();
         }
