@@ -46012,6 +46012,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         addBot: function addBot(id, bot) {
             this.$socket.emit('add_bot', { id: id, bot: bot });
         },
+        start: function start(id, player) {
+            this.$socket.emit('start', { id: id, player: player });
+        },
         kickPlayer: function kickPlayer(data) {
             this.$socket.emit('kick_player', data);
         },
@@ -46855,6 +46858,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['game', 'user'],
@@ -46891,7 +46895,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$emit('add-bot', this.game.gameID, this.bot / 100);
         },
         canBot: function canBot() {
-            return !this.game.gameStarted && !this.game.hasBot; //acrescentar condição de dono do jogo
+            return !this.game.gameStarted && !this.game.hasBot && this.user.id == this.game.players[0].id;
+        },
+        canStart: function canStart() {
+            return !this.game.gameStarted && this.user.id == this.game.players[0].id;
+        },
+        start: function start() {
+            this.$emit('start', this.game.gameID, this.user.id);
         },
         canKick: function canKick() {
             return this.game.gameSize > 1 && this.game.players.length > 1 && !this.onlyBots();
@@ -46984,6 +46994,21 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "panel-body" }, [
+          _vm.canStart()
+            ? _c(
+                "a",
+                {
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      _vm.start($event)
+                    }
+                  }
+                },
+                [_vm._v("Start Game")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
           this.game.winner
             ? _c("div", { staticClass: "alert", class: _vm.alerttype }, [
                 _c("strong", [
@@ -47182,6 +47207,7 @@ var render = function() {
             _c("game", {
               attrs: { user: _vm.user, game: game },
               on: {
+                start: _vm.start,
                 "piece-click": _vm.play,
                 "close-game": _vm.closeGame,
                 "kick-player": _vm.kickPlayer,
@@ -47715,7 +47741,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (piece.show) {
                 return 'img/' + piece.piece + '.png';
             } else {
-                return 'img/hidden.png';
+                return 'img/' + this.game.hidden + '.png';
             }
         },
         makeMove: function makeMove() {
