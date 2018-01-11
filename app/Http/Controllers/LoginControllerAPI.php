@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-define('YOUR_SERVER_URL', 'http://127.0.0.1:8000');
+define('YOUR_SERVER_URL', env("APP_URL", "http://memoria.dad"));
 // Check "oauth_clients" table for next 2 values:
 define('CLIENT_ID', '2');
-define('CLIENT_SECRET', 'XcTlYPQbh0hH3mmrEH3gKen3HhvhukBQgleKNRQf');
+define('CLIENT_SECRET', DB::table('oauth_clients')->where('id', '2')->value('secret'));
 class LoginControllerAPI extends Controller
 {
     public function login(Request $request)
