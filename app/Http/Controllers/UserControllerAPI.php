@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Jsonable;
 use App\Http\Resources\User as UserResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 use App\User;
 use App\Mail\RegisterUser;
@@ -46,10 +47,13 @@ class UserControllerAPI extends Controller
 
     public function update(Request $request, $id)
     {
+        if (Auth::id() != $id) {
+            return response()->json(['message'=>'Erro, está a tentar editar os dados de outro utilizador'], 400);   
+        }
         $request->validate([
                 'name' => 'required',
-                'email' => 'required|email|unique:users,email,'.$id,
-                'age' => 'integer|between:18,75'
+                'email' => 'required|email|unique:users,email',
+                'nickname' => 'required|unique:users,nickname',
             ]);
         $user = User::findOrFail($id);
         $user->update($request->all());
@@ -58,9 +62,18 @@ class UserControllerAPI extends Controller
 
     public function delete($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-        return response()->json(['message'=>'O utilizador foi removido com sucesso'], 204);
+        $user = Auth::user();
+        if ($user->admin == 1 || $user->id == $id ) {
+            $user = User::findOrFail($id);
+
+            if ($user->admin == 1) {
+                return response()->json(['message'=>'Erro, você não pode apagar um administrador'], 400);
+            }
+
+            $user->delete();
+            return response()->json(['message'=>'O utilizador foi removido com sucesso'], 204);
+        }
+        return response()->json(['message'=>'Não está autorizado a remover este utilizador'], 400);
     }
 
     public function emailAvailable(Request $request)
@@ -89,6 +102,10 @@ class UserControllerAPI extends Controller
         $request->request->add(['blocked' => 1]);
         $request->request->add(['reason_reactivated' => null]);
         $user = User::findOrFail($id);
+
+        if ($user->admin == 1) {
+            return response()->json(['message'=>'Erro, você não pode bloquear um administrador'], 400);
+        }
 
         if ($user->blocked != 0) {
             return response()->json(['message'=>'Erro, o utilizador ja se encontra bloqueado'], 400);   

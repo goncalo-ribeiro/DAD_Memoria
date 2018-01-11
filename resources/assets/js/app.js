@@ -27,9 +27,10 @@ const replay = Vue.component('replay', require('./components/replay/replayMemori
 const statistics = Vue.component('statistics', require('./components/statistics.vue'));
 const login = Vue.component('login', require('./components/login.vue'));
 const signup = Vue.component('signup', require('./components/signup.vue'));
+const edit = Vue.component('edit', require('./components/editUser.vue'));
 const admin = Vue.component('admin', require('./components/admin/adminConfig.vue'));
 const users = Vue.component('users', require('./components/admin/listUsers.vue'));
-const reset = Vue.component('reset', require('./components/admin/resetPassword.vue'));
+const reset = Vue.component('reset', require('./components/resetPassword.vue'));
 const image = Vue.component('image', require('./components/admin/imageManagement.vue'));
 const error = Vue.component('error', require('./components/error.vue'));
 
@@ -40,6 +41,7 @@ const routes = [
   { path: '/replay', component: replay },
   { path: '/login', component: login },
   { path: '/signup', component: signup },
+  { path: '/edit', component: edit },
   { path: '/admin', component: admin },
   { path: '/users', component: users },
   { path: '/reset', component: reset },
@@ -72,14 +74,20 @@ const app = new Vue({
 router.beforeEach((to, from, next) => {
 
   if (to.path == '/admin' ||
-  to.path == '/users' ||
-  to.path == '/reset' ||
-  to.path == '/images') {
-  
-      if (! app.admin) {
-        next('/error');
-      }
-  
+    to.path == '/users' ||
+    to.path == '/images') {
+
+    console.log('pagina de admin');
+    console.log(app.admin);
+
+    if (! app.admin) {
+      console.log('not allowed');
+      next('/error');
+    }
+    else{
+      next();
+    }
+  }else {
+    next();
   }
-  next()
 })
