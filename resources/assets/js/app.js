@@ -56,6 +56,18 @@ const router = new VueRouter({
   }
 })*/
 
+router.beforeEach((to, from, next) => {
+  console.log('to => ');
+  console.log(to);
+  console.log('from => ');
+  console.log(from);
+/*
+  if (to.path  == '/memoria') {
+      if (true) {}
+  }*/
+})
+
+
 const app = new Vue({
     router,
     data:{

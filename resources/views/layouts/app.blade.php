@@ -32,7 +32,7 @@
                     <!--
                     <li v-if="admin" class="dropdown">
                     -->
-                    <li class="dropdown">
+                    <li v-if="admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                             Administração<span class="caret"></span>
                         </a>
