@@ -46582,8 +46582,10 @@ var render = function() {
             _c(
               "div",
               {
-                staticClass: "col-xs-10",
-                class: { "col-xs-12": _vm.user == null }
+                class: {
+                  "col-xs-10": _vm.user != null,
+                  "col-xs-12": _vm.user == null
+                }
               },
               [
                 _c(
