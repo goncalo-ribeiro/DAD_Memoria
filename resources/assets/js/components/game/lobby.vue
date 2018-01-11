@@ -5,7 +5,7 @@
             <div class="panel panel-default">
                 <div  class="panel-heading">Game Lobby</div>
                 <div class="panel-body">
-                    <div class="col-xs-10" v-bind:class="{'col-xs-12': user==null}">
+                    <div v-bind:class="{'col-xs-10': user!=null, 'col-xs-12': user==null}">
                         <table class="table table-striped" style="text-align:center;">
                             <thead>
                                 <th>ID</th>

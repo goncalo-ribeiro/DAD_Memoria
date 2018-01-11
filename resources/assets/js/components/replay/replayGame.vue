@@ -86,7 +86,7 @@
                 if(piece.show){
                     return 'img/' + piece.piece + '.png';
                 }else{
-                    return 'img/hidden.png';
+                    return 'img/' + this.game.hidden + '.png';
                 }
             },
             makeMove(){
