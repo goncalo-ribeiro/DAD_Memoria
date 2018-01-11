@@ -56,17 +56,6 @@ const router = new VueRouter({
   }
 })*/
 
-router.beforeEach((to, from, next) => {
-  console.log('to => ');
-  console.log(to);
-  console.log('from => ');
-  console.log(from);
-/*
-  if (to.path  == '/memoria') {
-      if (true) {}
-  }*/
-})
-
 
 const app = new Vue({
     router,
@@ -79,3 +68,18 @@ const app = new Vue({
         loggedUser: null,
     }
 }).$mount('#app');
+
+router.beforeEach((to, from, next) => {
+
+  if (to.path == '/admin' ||
+  to.path == '/users' ||
+  to.path == '/reset' ||
+  to.path == '/images') {
+  
+      if (! app.admin) {
+        next('/error');
+      }
+  
+  }
+  next()
+})
