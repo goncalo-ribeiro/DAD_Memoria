@@ -7,6 +7,8 @@
 
                     <div class="panel-body">
                         Surgiu um error inesperado, por favor tente outra vez mais tarde.
+                        <br>
+                        Verifique se tem autorização para aceder a esta página
                     </div>
                 </div>
             </div>

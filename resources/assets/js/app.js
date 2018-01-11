@@ -56,6 +56,7 @@ const router = new VueRouter({
   }
 })*/
 
+
 const app = new Vue({
     router,
     data:{
@@ -67,3 +68,18 @@ const app = new Vue({
         loggedUser: null,
     }
 }).$mount('#app');
+
+router.beforeEach((to, from, next) => {
+
+  if (to.path == '/admin' ||
+  to.path == '/users' ||
+  to.path == '/reset' ||
+  to.path == '/images') {
+  
+      if (! app.admin) {
+        next('/error');
+      }
+  
+  }
+  next()
+})

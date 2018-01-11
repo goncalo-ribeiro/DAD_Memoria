@@ -66,7 +66,7 @@ export default {
     methods:{
         submeter(){
             if(this.showError==false){
-                this.$emit('create-click', {name: this.gameName, playerId: user.id, playerName: user.name, size: this.size, linhas: this.linhas, colunas: this.colunas});
+                this.$emit('create-click', {name: this.gameName, playerId: this.user.id, playerName: this.user.name, size: this.size, linhas: this.linhas, colunas: this.colunas});
             }
         },
         changeSize(){

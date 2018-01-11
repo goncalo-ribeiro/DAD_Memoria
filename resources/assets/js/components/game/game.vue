@@ -4,6 +4,7 @@
             <div class="panel panel-default">
                 <div  class="panel-heading">Game {{game.gameID}} {{gameName()}} - {{pending()}}</div>
                 <div class="panel-body">
+                    <a v-if="canStart()" v-on:click.prevent="start">Start Game</a>
                     <div class="alert" :class="alerttype" v-if="this.game.winner">
                         <strong>{{ message }} &nbsp;&nbsp;&nbsp;&nbsp;<a v-on:click.prevent="closeGame">Close Game</a></strong>
                     </div>
@@ -85,7 +86,13 @@
                 this.$emit('add-bot', this.game.gameID, this.bot/100);
             },
             canBot(){
-                return !this.game.gameStarted && !this.game.hasBot; //acrescentar condição de dono do jogo
+                return !this.game.gameStarted && !this.game.hasBot && this.user.id == this.game.players[0].id;
+            },
+            canStart(){
+                return !this.game.gameStarted && this.user.id == this.game.players[0].id;
+            },
+            start(){
+                this.$emit('start', this.game.gameID, this.user.id);
             },
             canKick(){
                 return this.game.gameSize > 1 && this.game.players.length > 1 && !this.onlyBots();
