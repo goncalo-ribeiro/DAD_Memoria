@@ -29,9 +29,6 @@
                     <li>
                         <router-link to="/statistics">Statistics</router-link>
                     </li>
-                    <li>
-                        <router-link to="/example">Example</router-link>
-                    </li>
                     <!--
                     <li v-if="admin" class="dropdown">
                     -->

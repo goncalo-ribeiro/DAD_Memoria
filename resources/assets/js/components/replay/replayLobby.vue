@@ -33,8 +33,6 @@
 </template>
 
 <script>
-import newGameForm from './newGameForm.vue';
-
 export default {
     props: ['games', 'user'],
     data: function(){
