@@ -75,7 +75,7 @@
 
                 axios({
                     method: 'post',
-                    url: '/api/admin/password/reset',
+                    url: '/api/password/reset',
                     headers: {
                         'Accept' : 'application/json',
                         'Content-Type' : 'application/json'

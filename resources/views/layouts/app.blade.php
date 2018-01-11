@@ -86,7 +86,11 @@
 
                         <ul class="dropdown-menu">
                             <li>
-                                <a>Dashboard</a>
+                                <router-link to="/edit">
+                                    <div>
+                                        Dashboard (editar dados)
+                                    </div>
+                                </router-link>
                                 <router-link to="/login">
                                     <div>
                                         Logout    

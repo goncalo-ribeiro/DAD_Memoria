@@ -41,7 +41,7 @@ class AdminControllerAPI extends Controller
         }
 
         $request->validate([
-                'email' => 'required|email'
+                'email' => 'required|email|unique:users,email',
             ]);
 
         if($request->email != $user->email){
