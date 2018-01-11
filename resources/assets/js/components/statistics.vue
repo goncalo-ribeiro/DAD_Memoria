@@ -2,12 +2,6 @@
     <div class="container">
             <div class="panel-body">
                 <div class="row">
-                    <div class="row" v-if="this.$root.$data['loggedIn']">
-                         <div class="col-sm-8 col-xs-offset-1" v-if="this.$root.$data['admin']" >
-                            <p>IM THE ADMIN BITCH!</p>
-                        </div>
-                    </div>
-
                     <div class="col-sm-6 col-xs-offset-1">
                         <TotalGames :games="globalStatistics.totalGames"/>
                     </div>
@@ -16,8 +10,14 @@
                     </div>
                 </div>
 
+                <div class="row" v-if="this.$root.$data['admin']">
+                     <div v-if="this.$root.$data['admin']" >
+                        <ListUsers></ListUsers>
+                    </div>
+                </div>
+
                 <!--Check if user is logged in-->
-                <div class="row" v-if="loggedUser">
+                <div class="row" v-else-if="loggedUser">
                     <div class="col-sm-4 col-xs-offset-1">
                        	<UserVictorys :victorys="userStatistics.victorys"></UserVictorys>
                     </div>
