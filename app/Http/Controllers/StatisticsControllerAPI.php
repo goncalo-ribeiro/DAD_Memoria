@@ -54,8 +54,8 @@ class StatisticsControllerAPI
 
     public function user($id){
         $userStatistics =array (
-            "victorys"  => $this->getUserGames($id),
-            "totalGames" => $this->getUserWins($id)
+            "victorys"  => $this->getUserWins($id),
+            "totalGames" => $this->getUserGames($id)
         );
         return response()->json($userStatistics);
     }
@@ -77,8 +77,9 @@ class StatisticsControllerAPI
             "games" => DB::table('games')->where('status', 'terminated')
                         ->join('game_user', 'game_user.game_id', '=', 'games.id')->where('game_user.user_id', $id)->count()
         );
-        $userTotalGames->push($typeTotal);//Adds the type to game*/    
-      
+
+        if ($typeTotal['games']>0) $userTotalGames->push($typeTotal);//Adds the type to game*/    
+       
         return $userTotalGames;
     }
 
@@ -91,6 +92,7 @@ class StatisticsControllerAPI
                                             ->get();
       
         return $userTotalVictorys;
+
     }
 
 }

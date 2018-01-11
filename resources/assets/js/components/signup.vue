@@ -74,7 +74,7 @@
                         <br><br>
 
                         <div class="form-group">
-                            <label for="email" class="col-md-4 control-label">Password</label>
+                            <label for="email" class="col-md-4 control-label">Email</label>
 
                             <div class="col-md-6">
                                 <input v-model.trim="email" id="email" type="email" class="form-control" name="email" required>

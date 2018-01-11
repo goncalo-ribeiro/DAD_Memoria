@@ -3,7 +3,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">User Statistics:</div>
         <div class="panel-body">
-            <div id="barchartUserGames" style="width: 100%; height: 150px;"></div>
+            <div v-model="games" id="barchartUserGames" style="width: 100%; height: 150px;"></div>
         </div>      
     </div>
 </div>
@@ -12,27 +12,43 @@
 <script>
     "use strict";
     export default {
+        props: ['games'],
             data: function () {
                 return {
                     nothing:[]
                 }
             },
         methods: {
-                //Opens edit form
-                callDrawChart: function(records){
-                    
+            noDataChart: function(){//Adds fancy no Data Message
+                    google.charts.load("current", {packages:["corechart"]});
                     google.charts.setOnLoadCallback(()=>{
     
                         var data = new google.visualization.DataTable();
                         data.addColumn('string', 'Type');
                         data.addColumn('number', 'Games');
+                           
+                        var options = {
+                          is3D: true
+                        };
+
+                        var chart = new google.visualization.PieChart(document.getElementById('barchartUserGames'));
+                        chart.draw(data, options);
+                    });   
+                },
+                
+            populateChart: function(records){//Adds BarChart 
+               google.charts.setOnLoadCallback(()=>{
+    
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'Type');
+                        data.addColumn('number', 'Games');
                         
-                        //Adds rows based in the amount given by the parent
+                        //Adds rows based on games
                         records.forEach(function(record){
                             data.addRow([record.type, record.games]);
                         });
 
-                    
+
                         var options = {
                             legend: {position: 'none'},
                             series: {
@@ -43,15 +59,17 @@
                         var chart = new google.visualization.BarChart(document.getElementById('barchartUserGames'));
                         chart.draw(data, options);
                     });
-                
-                },
+            }
+            
+        },
+        watch: {
+            	games: function(records){
+                    if (records==null || records.length==0) this.noDataChart();
+                    else this.populateChart(records);                   
+                },    
             },
         mounted() {
-            //Gives no data, because at the time the dad didnt had the data
-            this.callDrawChart(this.nothing);
-
-            //Everytime the new data is loaded callDrawChart will be called
-            this.$parent.$on('loadUserGames', this.callDrawChart);
+           
         }
     }
 </script>
