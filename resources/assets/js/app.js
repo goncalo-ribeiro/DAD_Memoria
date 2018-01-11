@@ -22,8 +22,8 @@ Vue.use(VueSocketio, 'http://127.0.0.1:8080');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const example = Vue.component('example', require('./components/example.vue'));
-const memoria = Vue.component('memoria', require('./components/memoria.vue'));
+const memoria = Vue.component('memoria', require('./components/game/memoria.vue'));
+const replay = Vue.component('replay', require('./components/replay/replayMemoria.vue'));
 const statistics = Vue.component('statistics', require('./components/statistics.vue'));
 const login = Vue.component('login', require('./components/login.vue'));
 const signup = Vue.component('signup', require('./components/signup.vue'));
@@ -35,9 +35,9 @@ const error = Vue.component('error', require('./components/error.vue'));
 
 const routes = [
   { path: '/', redirect: '/memoria' },
-  { path: '/example', component: example },
   { path: '/statistics', component: statistics },
   { path: '/memoria', component: memoria},
+  { path: '/replay', component: replay },
   { path: '/login', component: login },
   { path: '/signup', component: signup },
   { path: '/admin', component: admin },
@@ -50,6 +50,11 @@ const routes = [
 const router = new VueRouter({
   routes:routes
 });
+
+/*router.beforeEach((to, from, next) => {
+  if(to.path === '/replay'){
+  }
+})*/
 
 const app = new Vue({
     router,

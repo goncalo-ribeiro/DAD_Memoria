@@ -51,6 +51,7 @@
 import newGameForm from './newGameForm.vue';
 
 export default {
+    props: ['user'],
     data: function(){
         return {
             showError: false,
@@ -65,7 +66,7 @@ export default {
     methods:{
         submeter(){
             if(this.showError==false){
-                this.$emit('create-click', {name: this.gameName, playerId: 1, playerName: 'xQsme', size: this.size, linhas: this.linhas, colunas: this.colunas});
+                this.$emit('create-click', {name: this.gameName, playerId: user.id, playerName: user.name, size: this.size, linhas: this.linhas, colunas: this.colunas});
             }
         },
         changeSize(){

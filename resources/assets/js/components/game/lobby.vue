@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <newGameForm v-if="form" @create-click="createGame"></newGameForm>
+            <newGameForm :user="user" v-if="form" @create-click="createGame"></newGameForm>
             <div class="panel panel-default">
                 <div  class="panel-heading">Game Lobby</div>
                 <div class="panel-body">
@@ -18,8 +18,8 @@
                                 <tr v-for="game in games">
                                     <td>{{ game.gameID }}</td>
                                     <td>{{ game.name }}</td>
-                                    <td>{{ game.players.length }}/{{ game.gameSize }}</td>
-                                    <td>{{ game.players[0].id }}</td>
+                                    <td>{{ game.gameSize }}</td>
+                                    <td>{{ game.player }}</td>
                                     <td>{{ game.created }}</td>
                                     <td><button class="btn btn-xs btn-success" v-on:click="joinGame(game.gameID)">Join</button></td>
                                 </tr>
