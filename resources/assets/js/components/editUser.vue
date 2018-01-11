@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
+                <div v-if="this.$root.$data['loggedIn']" class="panel panel-default">
                     <div class="panel-heading">Editar dados de utilizador</div>
 
                     <div class="panel-body">
@@ -239,7 +239,7 @@
                         console.log(error);
                         console.log(error.response);
 
-                        alert(response.data.message);
+                        alert(error.response.data.message);
                     });
                 })
                 .catch(error=>{
