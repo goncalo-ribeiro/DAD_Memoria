@@ -73,21 +73,20 @@ const app = new Vue({
 
 router.beforeEach((to, from, next) => {
 
-  if (to.path == '/admin' ||
-    to.path == '/users' ||
-    to.path == '/images') {
-
-    console.log('pagina de admin');
-    console.log(app.admin);
-
+  if (to.path == '/admin' || to.path == '/users' || to.path == '/images') {
     if (! app.admin) {
       console.log('not allowed');
-      next('/error');
+      return next('/error');
     }
-    else{
-      next();
-    }
-  }else {
-    next();
   }
+
+  if (to.path == '/edit') {
+    if (! app.loggedIn) {
+      console.log('not allowed');
+      return next('/error');
+    }
+  }  
+
+  return next();
+  
 })

@@ -1574,19 +1574,20 @@ var app = new Vue({
 router.beforeEach(function (to, from, next) {
 
   if (to.path == '/admin' || to.path == '/users' || to.path == '/images') {
-
-    console.log('pagina de admin');
-    console.log(app.admin);
-
     if (!app.admin) {
       console.log('not allowed');
-      next('/error');
-    } else {
-      next();
+      return next('/error');
     }
-  } else {
-    next();
   }
+
+  if (to.path == '/edit') {
+    if (!app.loggedIn) {
+      console.log('not allowed');
+      return next('/error');
+    }
+  }
+
+  return next();
 });
 
 /***/ }),
@@ -46817,8 +46818,10 @@ var render = function() {
             _c(
               "div",
               {
-                staticClass: "col-xs-10",
-                class: { "col-xs-12": _vm.user == null }
+                class: {
+                  "col-xs-10": _vm.user != null,
+                  "col-xs-12": _vm.user == null
+                }
               },
               [
                 _c(
@@ -47980,7 +47983,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (piece.show) {
                 return 'img/' + piece.piece + '.png';
             } else {
-                return 'img/hidden.png';
+                return 'img/' + this.game.hidden + '.png';
             }
         },
         makeMove: function makeMove() {
@@ -48984,6 +48987,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         populateChart: function populateChart(records) {
             //Adds ColumnChart 
+            console.log("I ENTER HERE");
             google.charts.setOnLoadCallback(function () {
 
                 var data = new google.visualization.DataTable();
@@ -49064,16 +49068,6 @@ var render = function() {
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "panel-body" }, [
       _c("div", { staticClass: "row" }, [
-        this.$root.$data["loggedIn"]
-          ? _c("div", { staticClass: "row" }, [
-              this.$root.$data["admin"]
-                ? _c("div", { staticClass: "col-sm-8 col-xs-offset-1" }, [
-                    _c("p", [_vm._v("IM THE ADMIN BITCH!")])
-                  ])
-                : _vm._e()
-            ])
-          : _vm._e(),
-        _vm._v(" "),
         _c(
           "div",
           { staticClass: "col-sm-6 col-xs-offset-1" },
@@ -49097,31 +49091,37 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _vm.loggedUser
+      this.$root.$data["admin"]
         ? _c("div", { staticClass: "row" }, [
-            _c(
-              "div",
-              { staticClass: "col-sm-4 col-xs-offset-1" },
-              [
-                _c("UserVictorys", {
-                  attrs: { victorys: _vm.userStatistics.victorys }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "col-sm-6 col-xs-offset-1" },
-              [
-                _c("UserGames", {
-                  attrs: { games: _vm.userStatistics.totalGames }
-                })
-              ],
-              1
-            )
+            this.$root.$data["admin"]
+              ? _c("div", [_c("ListUsers")], 1)
+              : _vm._e()
           ])
-        : _vm._e()
+        : _vm.loggedUser
+          ? _c("div", { staticClass: "row" }, [
+              _c(
+                "div",
+                { staticClass: "col-sm-4 col-xs-offset-1" },
+                [
+                  _c("UserVictorys", {
+                    attrs: { victorys: _vm.userStatistics.victorys }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "col-sm-6 col-xs-offset-1" },
+                [
+                  _c("UserGames", {
+                    attrs: { games: _vm.userStatistics.totalGames }
+                  })
+                ],
+                1
+              )
+            ])
+          : _vm._e()
     ])
   ])
 }
@@ -52514,56 +52514,10 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__userGames_vue__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__userGames_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__userGames_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__userVictorys_vue__ = __webpack_require__(99);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__userVictorys_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__userVictorys_vue__);
 //
 //
 //
@@ -52652,9 +52606,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
+            selectedUser: [],
             users: [],
             user: null,
             reason_blocked: '',
@@ -52696,7 +52654,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         setUser: function setUser(user) {
-            console.log('setUser ' + user);
+            var _this2 = this;
+
+            console.log(user.id);
+            axios({ method: 'get',
+                url: '/api/statistics/user/' + user.id,
+                headers: {
+                    'Accept': 'application/json'
+                    //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                }
+            }).then(function (response) {
+                _this2.selectedUser = response.data;
+            });
+
             this.user = user;
 
             this.blockError = false;
@@ -52706,7 +52676,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.reactivatedErrorMessage = '';
         },
         blockUser: function blockUser() {
-            var _this2 = this;
+            var _this3 = this;
 
             axios({
                 method: 'put',
@@ -52720,30 +52690,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     reason_blocked: this.reason_blocked
                 }
             }).then(function (response) {
-                _this2.blockError = false;
-                _this2.blockErrorMessage = '';
+                _this3.blockError = false;
+                _this3.blockErrorMessage = '';
 
                 console.log(response);
 
-                _this2.reason_blocked = '';
+                _this3.reason_blocked = '';
 
                 var modalClose = document.getElementById('closeModalBlock');
                 modalClose.click();
 
                 alert(response.data.message);
 
-                _this2.getUsers();
+                _this3.getUsers();
                 //this.$emit('logged', this.accessToken);
             }).catch(function (error) {
                 console.log(error);
                 console.log(error.response);
 
-                _this2.blockError = true;
-                _this2.blockErrorMessage = error.response.data.message;
+                _this3.blockError = true;
+                _this3.blockErrorMessage = error.response.data.message;
             });
         },
         reactivateUser: function reactivateUser() {
-            var _this3 = this;
+            var _this4 = this;
 
             axios({
                 method: 'put',
@@ -52757,30 +52727,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     reason_reactivated: this.reason_reactivated
                 }
             }).then(function (response) {
-                _this3.reactivatedError = false;
-                _this3.reactivatedErrorMessage = '';
+                _this4.reactivatedError = false;
+                _this4.reactivatedErrorMessage = '';
 
                 console.log(response);
 
-                _this3.reason_reactivated = '';
+                _this4.reason_reactivated = '';
 
                 var modalClose = document.getElementById('closeModalReativate');
                 modalClose.click();
 
                 alert(response.data.message);
 
-                _this3.getUsers();
+                _this4.getUsers();
                 //this.$emit('logged', this.accessToken);
             }).catch(function (error) {
                 console.log(error);
                 console.log(error.response);
 
-                _this3.reactivatedError = true;
-                _this3.reactivatedErrorMessage = error.response.data.message;
+                _this4.reactivatedError = true;
+                _this4.reactivatedErrorMessage = error.response.data.message;
             });
         },
         remove: function remove(user) {
-            var _this4 = this;
+            var _this5 = this;
 
             console.log('remove');
             this.setUser(user);
@@ -52796,7 +52766,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(response);
                 alert('O utilizador foi removido com sucesso');
 
-                _this4.getUsers();
+                _this5.getUsers();
                 //this.$emit('logged', this.accessToken);
             }).catch(function (error) {
                 console.log(error);
@@ -52805,6 +52775,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 alert(response.data.message);
             });
         }
+    },
+    components: {
+        'UserGames': __WEBPACK_IMPORTED_MODULE_0__userGames_vue___default.a,
+        'UserVictorys': __WEBPACK_IMPORTED_MODULE_1__userVictorys_vue___default.a
     },
     mounted: function mounted() {
         this.getUsers();
@@ -52856,61 +52830,26 @@ var render = function() {
                   _c("td", [_vm._v(_vm._s(user.nickname))]),
                   _vm._v(" "),
                   _c("td", [
-                    user.admin != 1
-                      ? _c("div", [
-                          user.blocked == 0
-                            ? _c(
-                                "a",
-                                {
-                                  staticClass: "btn btn-xs btn-warning",
-                                  attrs: {
-                                    "data-toggle": "modal",
-                                    "data-target": "#modalBlock"
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      _vm.setUser(user)
-                                    }
-                                  }
-                                },
-                                [_vm._v("Bloquear")]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          user.blocked == 1
-                            ? _c(
-                                "a",
-                                {
-                                  staticClass: "btn btn-xs btn-success",
-                                  attrs: {
-                                    "data-toggle": "modal",
-                                    "data-target": "#modalReactivate"
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      _vm.setUser(user)
-                                    }
-                                  }
-                                },
-                                [_vm._v("Reativar")]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _c(
+                    _c("div", [
+                      user.blocked == 0
+                        ? _c(
                             "a",
                             {
-                              staticClass: "btn btn-xs btn-danger",
+                              staticClass: "btn btn-xs btn-success",
+                              attrs: {
+                                "data-toggle": "modal",
+                                "data-target": "#modalBlock"
+                              },
                               on: {
                                 click: function($event) {
-                                  $event.preventDefault()
-                                  _vm.remove(user)
+                                  _vm.setUser(user)
                                 }
                               }
                             },
-                            [_vm._v("Remover")]
+                            [_vm._v("Detalhes")]
                           )
-                        ])
-                      : _vm._e()
+                        : _vm._e()
+                    ])
                   ])
                 ])
               })
@@ -52930,218 +52869,60 @@ var render = function() {
               }
             },
             [
-              _c("div", { staticClass: "modal-dialog" }, [
-                _c("div", { staticClass: "modal-content" }, [
-                  _vm._m(1, false, false),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "modal-body" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "reason_blocked" } }, [
-                        _vm._v("Razão do bloqueio:")
+              _vm.user != null
+                ? _c("div", { staticClass: "modal-dialog" }, [
+                    _c("div", { staticClass: "modal-content" }, [
+                      _c("div", { staticClass: "modal-header" }, [
+                        _vm._m(1, false, false),
+                        _vm._v(" "),
+                        _c(
+                          "h4",
+                          {
+                            staticClass: "modal-title",
+                            attrs: { id: "myModalLabel" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                            Utilizador: " +
+                                _vm._s(_vm.user.nickname) +
+                                "\n                        "
+                            )
+                          ]
+                        )
                       ]),
                       _vm._v(" "),
-                      _c("textarea", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model.trim",
-                            value: _vm.reason_blocked,
-                            expression: "reason_blocked",
-                            modifiers: { trim: true }
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { rows: "5", id: "reason_blocked" },
-                        domProps: { value: _vm.reason_blocked },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.reason_blocked = $event.target.value.trim()
-                          },
-                          blur: function($event) {
-                            _vm.$forceUpdate()
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.blockError,
-                              expression: "blockError"
-                            }
-                          ]
-                        },
-                        [
-                          _c("span", { staticClass: "help-block" }, [
-                            _c("strong", [
-                              _vm._v(_vm._s(_vm.blockErrorMessage))
-                            ])
+                      _c("div", { staticClass: "modal-body" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("div", { staticClass: "row" }, [
+                            _c(
+                              "div",
+                              { staticClass: "col-sm-4 col-xs-offset-1" },
+                              [
+                                _c("UserVictorys", {
+                                  attrs: { victorys: _vm.selectedUser.victorys }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "col-sm-6 col-xs-offset-1" },
+                              [
+                                _c("UserGames", {
+                                  attrs: { games: _vm.selectedUser.totalGames }
+                                })
+                              ],
+                              1
+                            )
                           ])
-                        ]
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "modal-footer" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-default",
-                        attrs: {
-                          id: "closeModalBlock",
-                          type: "button",
-                          "data-dismiss": "modal"
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            Fechar\n                        "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            _vm.blockUser()
-                          }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            Bloquear\n                        "
-                        )
-                      ]
-                    )
-                  ])
-                ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "modal fade",
-              attrs: {
-                id: "modalReactivate",
-                tabindex: "-1",
-                role: "dialog",
-                "aria-labelledby": "myModalLabel",
-                "aria-hidden": "true"
-              }
-            },
-            [
-              _c("div", { staticClass: "modal-dialog" }, [
-                _c("div", { staticClass: "modal-content" }, [
-                  _vm._m(2, false, false),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "modal-body" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "reason_reactivated" } }, [
-                        _vm._v("Razão da reativação:")
+                        ])
                       ]),
                       _vm._v(" "),
-                      _c("textarea", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model.trim",
-                            value: _vm.reason_reactivated,
-                            expression: "reason_reactivated",
-                            modifiers: { trim: true }
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { rows: "5", id: "reason_reactivated" },
-                        domProps: { value: _vm.reason_reactivated },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.reason_reactivated = $event.target.value.trim()
-                          },
-                          blur: function($event) {
-                            _vm.$forceUpdate()
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.reactivatedError,
-                              expression: "reactivatedError"
-                            }
-                          ]
-                        },
-                        [
-                          _c("span", { staticClass: "help-block" }, [
-                            _c("strong", [
-                              _vm._v(_vm._s(_vm.reactivatedErrorMessage))
-                            ])
-                          ])
-                        ]
-                      )
+                      _vm._m(2, false, false)
                     ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "modal-footer" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-default",
-                        attrs: {
-                          id: "closeModalReativate",
-                          type: "button",
-                          "data-dismiss": "modal"
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            Fechar\n                        "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            _vm.reactivateUser()
-                          }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            Reativar\n                        "
-                        )
-                      ]
-                    )
                   ])
-                ])
-              ])
+                : _vm._e()
             ]
           )
         ])
@@ -53191,50 +52972,40 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [
-          _c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")]),
-          _vm._v(" "),
-          _c("span", { staticClass: "sr-only" }, [_vm._v("Fechar")])
-        ]
-      ),
-      _vm._v(" "),
-      _c("h4", { staticClass: "modal-title", attrs: { id: "myModalLabel" } }, [
-        _vm._v(
-          "\n                            Bloquear utilizador\n                        "
-        )
-      ])
-    ])
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: { type: "button", "data-dismiss": "modal" }
+      },
+      [
+        _c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")]),
+        _vm._v(" "),
+        _c("span", { staticClass: "sr-only" }, [_vm._v("Fechar")])
+      ]
+    )
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
+    return _c("div", { staticClass: "modal-footer" }, [
       _c(
         "button",
         {
-          staticClass: "close",
-          attrs: { type: "button", "data-dismiss": "modal" }
+          staticClass: "btn btn-default",
+          attrs: {
+            id: "closeModalBlock",
+            type: "button",
+            "data-dismiss": "modal"
+          }
         },
         [
-          _c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")]),
-          _vm._v(" "),
-          _c("span", { staticClass: "sr-only" }, [_vm._v("Fechar")])
+          _vm._v(
+            "\n                            Fechar\n                        "
+          )
         ]
-      ),
-      _vm._v(" "),
-      _c("h4", { staticClass: "modal-title", attrs: { id: "myModalLabel" } }, [
-        _vm._v(
-          "\n                            Reativar utilizador\n                        "
-        )
-      ])
+      )
     ])
   }
 ]
