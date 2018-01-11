@@ -1484,6 +1484,17 @@ var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
   }
 })*/
 
+router.beforeEach(function (to, from, next) {
+  console.log('to => ');
+  console.log(to);
+  console.log('from => ');
+  console.log(from);
+  /*
+    if (to.path  == '/memoria') {
+        if (true) {}
+    }*/
+});
+
 var app = new Vue({
   router: router,
   data: (_data = {
