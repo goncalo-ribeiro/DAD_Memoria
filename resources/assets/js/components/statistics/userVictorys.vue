@@ -38,6 +38,7 @@
                 },
                 
             populateChart: function(records){//Adds ColumnChart 
+                console.log("I ENTER HERE");
                 google.charts.setOnLoadCallback(()=>{
     
                         var data = new google.visualization.DataTable();
@@ -67,7 +68,6 @@
                 },
             },
         mounted() {
-          
         }
     }
 </script>

@@ -21,10 +21,8 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.nickname }}</td>
                         <td>
-                            <div v-if="user.admin != 1">
-                                <a v-if="user.blocked == 0" class="btn btn-xs btn-warning" data-toggle="modal" data-target="#modalBlock" v-on:click="setUser(user)">Bloquear</a>
-                                <a v-if="user.blocked == 1" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modalReactivate" v-on:click="setUser(user)">Reativar</a>
-                                <a class="btn btn-xs btn-danger" v-on:click.prevent="remove(user)">Remover</a>                            
+                            <div >
+                                <a v-if="user.blocked == 0" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modalBlock" v-on:click="setUser(user)">Detalhes</a>          
                             </div>
                         </td>
                     </tr>
@@ -34,7 +32,7 @@
             <!-- Modal Block -->
             <div class="modal fade" id="modalBlock" tabindex="-1" role="dialog" 
                  aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div v-if="user!=null" class="modal-dialog">
                     <div class="modal-content">
                         <!-- Modal Header -->
                         <div class="modal-header">
@@ -44,23 +42,22 @@
                                    <span class="sr-only">Fechar</span>
                             </button>
                             <h4 class="modal-title" id="myModalLabel">
-                                Bloquear utilizador
+                                Utilizador: {{user.nickname}}
                             </h4>
                         </div>
                         
                         <!-- Modal Body -->
                         <div class="modal-body">
-
                             <div class="form-group">
-                                <label for="reason_blocked">Razão do bloqueio:</label>
-                                <textarea v-model.trim="reason_blocked" class="form-control" rows="5" id="reason_blocked"></textarea>
-                                <div v-show="blockError">
-                                    <span class="help-block">
-                                        <strong>{{blockErrorMessage}}</strong>
-                                    </span>
-                                </div> 
-                            </div>
-                            
+                                <div class="row">
+                                    <div class="col-sm-4 col-xs-offset-1">
+                                        <UserVictorys :victorys="selectedUser.victorys"></UserVictorys>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-offset-1">
+                                        <UserGames :games="selectedUser.totalGames"></UserGames>  
+                                    </div>
+                                </div>
+                            </div>                          
                         </div>
                         
                         <!-- Modal Footer -->
@@ -69,59 +66,12 @@
                                     data-dismiss="modal">
                                 Fechar
                             </button>
-                            <button type="button" class="btn btn-primary" v-on:click.prevent="blockUser()">
-                                Bloquear
-                            </button>
                         </div>
                     </div>
                 </div>
-            </div>    
+            </div> 
 
-                        <!-- Modal Block -->
-            <div class="modal fade" id="modalReactivate" tabindex="-1" role="dialog" 
-                 aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <button type="button" class="close" 
-                               data-dismiss="modal">
-                                   <span aria-hidden="true">&times;</span>
-                                   <span class="sr-only">Fechar</span>
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel">
-                                Reativar utilizador
-                            </h4>
-                        </div>
-                        
-                        <!-- Modal Body -->
-                        <div class="modal-body">
 
-                            <div class="form-group">
-                                <label for="reason_reactivated">Razão da reativação:</label>
-                                <textarea v-model.trim="reason_reactivated" class="form-control" rows="5" id="reason_reactivated"></textarea>
-                                <div v-show="reactivatedError">
-                                    <span class="help-block">
-                                        <strong>{{reactivatedErrorMessage}}</strong>
-                                    </span>
-                                </div> 
-                            </div>
-                            
-                        </div>
-                        
-                        <!-- Modal Footer -->
-                        <div class="modal-footer">
-                            <button id="closeModalReativate" type="button" class="btn btn-default"
-                                    data-dismiss="modal">
-                                Fechar
-                            </button>
-                            <button type="button" class="btn btn-primary" v-on:click.prevent="reactivateUser()">
-                                Reativar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>         
         </div>
         <div v-else>
             Não foram encontrados utilizadores, certifique-se que está autenticado como administrador e tente outra vez
@@ -136,9 +86,13 @@
 </template>
 
 <script>
+    import UserGames from './userGames.vue';
+    import UserVictorys from './userVictorys.vue';
+
     export default {
         data: function(){
             return { 
+                selectedUser:[],
                 users: [],
                 user: null,
                 reason_blocked: '',
@@ -179,7 +133,17 @@
                 });
             },
             setUser: function (user){
-                console.log('setUser ' + user)
+                console.log(user.id);
+                axios({method: 'get',
+                        url: '/api/statistics/user/'+ user.id,
+                        headers: {
+                            'Accept' : 'application/json',
+                            //'Authorization': 'Bearer ' + this.$root.$data['accessToken']
+                        }
+                    }).then(response=>{
+                        this.selectedUser = response.data;
+                    });
+
                 this.user = user;
 
                 this.blockError = false;
@@ -288,6 +252,10 @@
                     alert(response.data.message);
                 });
             },
+        },
+        components: {
+            'UserGames': UserGames,
+            'UserVictorys': UserVictorys,
         },
         mounted() {
             this.getUsers();
