@@ -53,6 +53,10 @@ const router = new VueRouter({
   routes:routes
 });
 
+router.beforeEach((to, from, next) => {
+  console.log(to);
+})
+
 const app = new Vue({
     router,
     data:{

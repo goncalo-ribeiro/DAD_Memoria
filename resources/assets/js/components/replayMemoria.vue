@@ -37,6 +37,7 @@
             },
             new_active_replay(data){
                 Vue.set(this.activeGames, this.activeGames.length, data.game);
+                console.log(data.game.actions);
             }
         },        
         methods: {

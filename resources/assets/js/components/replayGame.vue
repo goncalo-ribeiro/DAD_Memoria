@@ -101,7 +101,7 @@
                     this.revealPiece(this.game.actions[this.currAction]);
                     this.currAction++;
                     if(this.revealPiece(this.game.actions[this.currAction]) !== 1){
-                        setTimeout(this.hidePieces, 1000);
+                        setTimeout(this.hidePieces, 500);
                     }
                     this.currAction++;
                 }
