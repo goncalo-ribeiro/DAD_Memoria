@@ -37,7 +37,6 @@
             },
             new_active_replay(data){
                 Vue.set(this.activeGames, this.activeGames.length, data.game);
-                console.log(data.game.actions);
             }
         },        
         methods: {
@@ -61,6 +60,12 @@
             'game': Game,
         },
         mounted() {
+            this.loadLobby();
+        },
+        created() {
+            this.loadLobby();
+        },
+        updated() {
             this.loadLobby();
         }
     }

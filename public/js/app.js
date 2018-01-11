@@ -1479,9 +1479,10 @@ var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
   routes: routes
 });
 
-router.beforeEach(function (to, from, next) {
-  console.log(to);
-});
+/*router.beforeEach((to, from, next) => {
+  if(to.path === '/replay'){
+  }
+})*/
 
 var app = new Vue({
   router: router,
@@ -46014,8 +46015,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         join: function join(data) {
             this.$socket.emit('join_game', {
-                playerId: 2,
-                playerName: 'Rick Sanchez',
+                playerId: user.id,
+                playerName: user.nickname,
                 gameId: data.gameId
             });
         },
@@ -46221,6 +46222,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['user'],
     data: function data() {
         return {
             showError: false,
@@ -46235,7 +46237,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         submeter: function submeter() {
             if (this.showError == false) {
-                this.$emit('create-click', { name: this.gameName, playerId: 1, playerName: 'xQsme', size: this.size, linhas: this.linhas, colunas: this.colunas });
+                this.$emit('create-click', { name: this.gameName, playerId: user.id, playerName: user.name, size: this.size, linhas: this.linhas, colunas: this.colunas });
             }
         },
         changeSize: function changeSize() {
@@ -46553,7 +46555,10 @@ var render = function() {
       { staticClass: "col-md-8 col-md-offset-2" },
       [
         _vm.form
-          ? _c("newGameForm", { on: { "create-click": _vm.createGame } })
+          ? _c("newGameForm", {
+              attrs: { user: _vm.user },
+              on: { "create-click": _vm.createGame }
+            })
           : _vm._e(),
         _vm._v(" "),
         _c("div", { staticClass: "panel panel-default" }, [
@@ -47271,7 +47276,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         new_active_replay: function new_active_replay(data) {
             Vue.set(this.activeGames, this.activeGames.length, data.game);
-            console.log(data.game.actions);
         }
     },
     methods: {
@@ -47295,6 +47299,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         'game': __WEBPACK_IMPORTED_MODULE_1__replayGame_vue___default.a
     },
     mounted: function mounted() {
+        this.loadLobby();
+    },
+    created: function created() {
+        this.loadLobby();
+    },
+    updated: function updated() {
         this.loadLobby();
     }
 });
@@ -47385,7 +47395,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['games', 'user'],
@@ -47406,9 +47415,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$emit('view', { gameId: game });
         }
     },
-    components: {
-        'newGameForm': newGameForm
-    },
     mounted: function mounted() {
         console.log('Component container mounted.');
     }
@@ -47423,67 +47429,58 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c(
-      "div",
-      { staticClass: "col-md-8 col-md-offset-2" },
-      [
-        _vm.form
-          ? _c("newGameForm", { on: { "create-click": _vm.createGame } })
-          : _vm._e(),
+    _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+      _c("div", { staticClass: "panel panel-default" }, [
+        _c("div", { staticClass: "panel-heading" }, [_vm._v("Replay Lobby")]),
         _vm._v(" "),
-        _c("div", { staticClass: "panel panel-default" }, [
-          _c("div", { staticClass: "panel-heading" }, [_vm._v("Replay Lobby")]),
-          _vm._v(" "),
-          _c("div", { staticClass: "panel-body" }, [
-            _c(
-              "table",
-              {
-                staticClass: "table table-striped",
-                staticStyle: { "text-align": "center" }
-              },
-              [
-                _vm._m(0),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.games, function(game) {
-                    return _c("tr", [
-                      _c("td", [_vm._v(_vm._s(game.gameID))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(game.name))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(game.gameSize))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(game.player))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(game.winner))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(game.created))]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-xs btn-success",
-                            on: {
-                              click: function($event) {
-                                _vm.view(game.gameID)
-                              }
+        _c("div", { staticClass: "panel-body" }, [
+          _c(
+            "table",
+            {
+              staticClass: "table table-striped",
+              staticStyle: { "text-align": "center" }
+            },
+            [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.games, function(game) {
+                  return _c("tr", [
+                    _c("td", [_vm._v(_vm._s(game.gameID))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(game.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(game.gameSize))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(game.player))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(game.winner))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(game.created))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-xs btn-success",
+                          on: {
+                            click: function($event) {
+                              _vm.view(game.gameID)
                             }
-                          },
-                          [_vm._v("View")]
-                        )
-                      ])
+                          }
+                        },
+                        [_vm._v("View")]
+                      )
                     ])
-                  })
-                )
-              ]
-            )
-          ])
+                  ])
+                })
+              )
+            ]
+          )
         ])
-      ],
-      1
-    )
+      ])
+    ])
   ])
 }
 var staticRenderFns = [
@@ -47656,6 +47653,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             alerttype: {},
+            danger: false,
             interval: null,
             currAction: 0,
             firstPiece: null,
@@ -47708,8 +47706,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             if (this.game.actions[this.currAction] === -1) {
                 this.currAction++;
-                this.kickPlayer(this.game.actions[this.currAction]);
-                this.currAction++;
+                this.danger = true;
+                setTimeout(this.kickPlayer, 750);
             } else {
                 this.revealPiece(this.game.actions[this.currAction]);
                 this.currAction++;
@@ -47758,8 +47756,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             return true;
         },
-        kickPlayer: function kickPlayer(key) {
-            this.game.players.splice(key, 1);
+        kickPlayer: function kickPlayer() {
+            this.game.players.splice(this.game.actions[this.currAction], 1);
+            this.danger = false;
             this.game.playerTurn--;
             if (this.game.players.length == 1) {
                 this.game.gameEnded = true;
@@ -47792,7 +47791,7 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "panel-body" }, [
           _c("div", { staticClass: "alert", class: _vm.alerttype }, [
-            !this.game.gameEnded
+            !this.game.gameStarted
               ? _c(
                   "a",
                   {
@@ -47838,15 +47837,24 @@ var render = function() {
               _c(
                 "tbody",
                 _vm._l(_vm.game.players, function(player, key) {
-                  return _c("tr", { class: { success: _vm.isTurn(key) } }, [
-                    _c("td", [_vm._v(_vm._s(player.id))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(player.name))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(_vm.isTurnString(key)))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(player.score))])
-                  ])
+                  return _c(
+                    "tr",
+                    {
+                      class: {
+                        success: _vm.isTurn(key),
+                        danger: _vm.danger && _vm.isTurn(key)
+                      }
+                    },
+                    [
+                      _c("td", [_vm._v(_vm._s(player.id))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(player.name))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.isTurnString(key)))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(player.score))])
+                    ]
+                  )
                 })
               )
             ]

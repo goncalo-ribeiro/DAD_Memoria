@@ -51,9 +51,10 @@ const router = new VueRouter({
   routes:routes
 });
 
-router.beforeEach((to, from, next) => {
-  console.log(to);
-})
+/*router.beforeEach((to, from, next) => {
+  if(to.path === '/replay'){
+  }
+})*/
 
 const app = new Vue({
     router,

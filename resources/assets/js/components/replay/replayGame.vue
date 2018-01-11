@@ -5,7 +5,7 @@
                 <div  class="panel-heading">Game {{game.gameID}} ({{game.name}})</div>
                 <div class="panel-body">
                     <div class="alert" :class="alerttype">
-                        <a v-if="!this.game.gameEnded" v-on:click.prevent="start">Start</a>
+                        <a v-if="!this.game.gameStarted" v-on:click.prevent="start">Start</a>
                         <strong v-if="this.game.gameEnded">{{ message }} &nbsp;&nbsp;&nbsp;&nbsp;<a v-on:click.prevent="closeGame">Close Game</a></strong>
                     </div>
                     <table class="table table-striped" style="text-align:center;">
@@ -16,7 +16,7 @@
                                 <th>Score</th>
                             </thead>
                             <tbody>
-                                <tr v-bind:class="{ success: isTurn(key) }" v-for="(player, key) in game.players">
+                                <tr v-bind:class="{ success: isTurn(key), danger: danger && isTurn(key) }" v-for="(player, key) in game.players">
                                     <td>{{ player.id }}</td>
                                     <td>{{ player.name }}</td>
                                     <td>{{ isTurnString(key) }}</td>
@@ -44,6 +44,7 @@
                 alerttype:{
                     
                 },
+                danger: false,
                 interval: null,
                 currAction: 0,
                 firstPiece: null,
@@ -95,8 +96,8 @@
                 }
                 if(this.game.actions[this.currAction]===-1){
                     this.currAction++;
-                    this.kickPlayer(this.game.actions[this.currAction]);
-                    this.currAction++;
+                    this.danger=true;
+                    setTimeout(this.kickPlayer, 750);
                 }else{
                     this.revealPiece(this.game.actions[this.currAction]);
                     this.currAction++;
@@ -145,8 +146,9 @@
                 }
                 return true;
             },
-            kickPlayer(key){
-                this.game.players.splice(key, 1);
+            kickPlayer(){
+                this.game.players.splice(this.game.actions[this.currAction], 1);
+                this.danger=false;
                 this.game.playerTurn--;
                 if(this.game.players.length==1){
                     this.game.gameEnded=true;

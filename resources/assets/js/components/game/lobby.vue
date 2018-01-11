@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <newGameForm v-if="form" @create-click="createGame"></newGameForm>
+            <newGameForm :user="user" v-if="form" @create-click="createGame"></newGameForm>
             <div class="panel panel-default">
                 <div  class="panel-heading">Game Lobby</div>
                 <div class="panel-body">

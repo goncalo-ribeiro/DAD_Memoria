@@ -63,8 +63,8 @@
             },
             join(data){
                 this.$socket.emit('join_game', { 
-                    playerId: 2,
-                    playerName: 'Rick Sanchez',
+                    playerId: user.id,
+                    playerName: user.nickname,
                     gameId: data.gameId
                  });
             },

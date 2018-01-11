@@ -1,7 +1,6 @@
 <template>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <newGameForm v-if="form" @create-click="createGame"></newGameForm>
             <div class="panel panel-default">
                 <div  class="panel-heading">Replay Lobby</div>
                 <div class="panel-body">
@@ -51,9 +50,6 @@ export default {
         view(game){
             this.$emit('view', {gameId: game});
         }
-    },
-    components: {
-        'newGameForm': newGameForm,
     },
     mounted() {
         console.log('Component container mounted.')
