@@ -1484,17 +1484,6 @@ var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
   }
 })*/
 
-router.beforeEach(function (to, from, next) {
-  console.log('to => ');
-  console.log(to);
-  console.log('from => ');
-  console.log(from);
-  /*
-    if (to.path  == '/memoria') {
-        if (true) {}
-    }*/
-});
-
 var app = new Vue({
   router: router,
   data: (_data = {
@@ -1503,6 +1492,17 @@ var app = new Vue({
     loggedIn: false
   }, _defineProperty(_data, 'accessToken', ''), _defineProperty(_data, 'resetToken', token), _defineProperty(_data, 'loggedUser', null), _data)
 }).$mount('#app');
+
+router.beforeEach(function (to, from, next) {
+
+  if (to.path == '/admin' || to.path == '/users' || to.path == '/reset' || to.path == '/images') {
+
+    if (!app.admin) {
+      next('/error');
+    }
+  }
+  next();
+});
 
 /***/ }),
 /* 15 */
@@ -53349,6 +53349,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -53383,7 +53385,11 @@ var staticRenderFns = [
             _vm._v(" "),
             _c("div", { staticClass: "panel-body" }, [
               _vm._v(
-                "\n                    Surgiu um error inesperado, por favor tente outra vez mais tarde.\n                "
+                "\n                    Surgiu um error inesperado, por favor tente outra vez mais tarde.\n                    "
+              ),
+              _c("br"),
+              _vm._v(
+                "\n                    Verifique se tem autorização para aceder a esta página\n                "
               )
             ])
           ])
