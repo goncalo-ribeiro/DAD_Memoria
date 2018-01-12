@@ -16,7 +16,7 @@ import VueChatScroll from 'vue-chat-scroll';
 
 Vue.use(VueRouter);
 
-Vue.use(VueSocketio, 'http://54.234.43.42/node:8080');
+Vue.use(VueSocketio, 'http://54.234.43.42:8080');
 
 Vue.use(VueGoodTable);
 
