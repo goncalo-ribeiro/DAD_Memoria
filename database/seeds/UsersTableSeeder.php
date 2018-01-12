@@ -14,8 +14,11 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $faker = Faker\Factory::create('pt_PT');
-
+      
         DB::table('users')->insert($this->fakeUser($faker, true));
+
+        DB::table('users')->insert($this->botAlmeida($faker));
+
 
         for ($i = 0; $i < $this->numberOfUsers; ++$i) {
             DB::table('users')->insert($this->fakeUser($faker, false));
@@ -43,6 +46,21 @@ class UsersTableSeeder extends Seeder
             'created_at' => $createdAt,
             'updated_at' => $updatedAt,
             'remember_token' => str_random(10),
+            'verified' => 1,
+        ];
+    }
+
+    private function botAlmeida(Faker\Generator $faker)
+    {
+        static $password;
+
+        $nickname = 'Bot';
+        
+        return [
+            'name' =>  $nickname,
+            'email' => $nickname,
+            'password' => $password ?: $password = bcrypt('secret'),
+            'nickname' => $nickname,
             'verified' => 1,
         ];
     }
