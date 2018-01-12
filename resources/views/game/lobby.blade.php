@@ -10,7 +10,7 @@
     <transition>
         <keep-alive>
         	
-            <router-view :user="loggedUser"></router-view>
+            <router-view :user="loggedUser" :token="accessToken"></router-view>
             
         </keep-alive>
     </transition>

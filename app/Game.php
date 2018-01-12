@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Game extends Model
 {
 
+    protected $fillable = [
+        'total_players', 'created_by', 'winner',
+    ];
+
     public function users()
     {
         return $this->belongsToMany('App\User');

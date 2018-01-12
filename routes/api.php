@@ -46,6 +46,8 @@ Route::middleware('auth:api')->put('images/activate/{imageId}','ImageControllerA
 Route::middleware('auth:api')->put('images/desactivate/{imageId}','ImageControllerAPI@desactivate');
 Route::middleware('auth:api')->delete('images/{imageId}', 'ImageControllerAPI@delete');
 
+Route::middleware('auth:api')->post('games', 'GameControllerAPI@store');
+
 // o middleware admin:api não funciona porque não consegue fazer retrieve do user logo nao consegue verificar se é admin
 // no entanto os metodos chamados pelas rotas acima verificam se o user logado é admin
 Route::middleware('admin:api')->get('teste', function () {return response()->json(['msg'=>'Só um teste'], 200);});

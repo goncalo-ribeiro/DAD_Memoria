@@ -61,6 +61,9 @@
         },
         updated() {
             this.loadLobby();
+        },
+        mounted() {
+            this.loadLobby();
         }
     }
 </script>
