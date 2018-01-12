@@ -81,8 +81,6 @@
         methods: {
             login: function(){
                 if (this.nickname != "" && this.password != "") {
-                    console.log(this.nickname + "\t" + this.password)
-
                     axios({
                         method: 'post',
                         url: '/api/login',
@@ -96,7 +94,6 @@
                         }
                     }).then(response=>{
                         this.$root.$data['accessToken'] = response.data.access_token;
-                        console.log(response);
                         this.loginError = false;
                         this.password = '';
                         this.$root.$data['loggedIn'] = true;
@@ -107,7 +104,6 @@
                         console.log(error.response);
                         this.loginError = true;
                     });
-                    console.log("fail?");
                 }
             },
             logout: function(){
