@@ -32,8 +32,13 @@
                           is3D: true
                         };
 
-                        var chart = new google.visualization.PieChart(document.getElementById('barchartUserVictorys'));
-                        chart.draw(data, options);
+                        //In the case the chart cound´t find the target div
+                        try{
+                            var chart = new google.visualization.PieChart(document.getElementById('barchartUserVictorys'));
+                            chart.draw(data, options);
+                        }catch(err){
+
+                        }
                     });   
                 },
                 
@@ -55,8 +60,14 @@
                             legend: {position: 'none'}
                         };
 
-                        var chart = new google.visualization.ColumnChart(document.getElementById('barchartUserVictorys'));
-                        chart.draw(data, options);
+
+                        //In the case the chart cound´t find the target div
+                        try{
+                            var chart = new google.visualization.ColumnChart(document.getElementById('barchartUserVictorys'));                       
+                            chart.draw(data, options);
+                        }catch(err){
+
+                        }
                     });
             }
             

@@ -31,8 +31,13 @@
                           is3D: true
                         };
 
-                        var chart = new google.visualization.PieChart(document.getElementById('barchartUserGames'));
-                        chart.draw(data, options);
+                        //In the case the chart cound´t find the target div
+                        try{
+                            var chart = new google.visualization.PieChart(document.getElementById('barchartUserGames'));                       
+                            chart.draw(data, options);
+                        }catch(err){
+
+                        }
                     });   
                 },
                 
@@ -56,8 +61,13 @@
                             }
                         };
 
-                        var chart = new google.visualization.BarChart(document.getElementById('barchartUserGames'));
-                        chart.draw(data, options);
+                        //In the case the chart cound´t find the target div
+                        try{
+                            var chart = new google.visualization.BarChart(document.getElementById('barchartUserGames'));
+                            chart.draw(data, options);
+                        }catch(err){
+
+                        }
                     });
             }
             
