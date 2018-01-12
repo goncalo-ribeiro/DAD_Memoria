@@ -1,9 +1,9 @@
 <template>
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-7 col-md-offset-1">
             <newGameForm :user="user" v-if="form" @create-click="createGame"></newGameForm>
             <div class="panel panel-default">
-                <div  class="panel-heading">Game Lobby</div>
+                <div class="panel-heading">Game Lobby</div>
                 <div class="panel-body">
                     <div v-bind:class="{'col-xs-10': user!=null, 'col-xs-12': user==null}">
                         <table class="table table-striped" style="text-align:center;">
@@ -32,17 +32,21 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-3 col-md-offset-1">
+            <chat :chat="chat" @comment-sent="commentSent"></chat>
+        </div>
     </div>
 </template>
 
 <script>
 import newGameForm from './newGameForm.vue';
+import chat from './chat.vue';
 
 export default {
-    props: ['games', 'user'],
+    props: ['games', 'user', 'chat'],
     data: function(){
         return {
-            form: false,
+            form: false             
         }
     },
     methods:{
@@ -55,10 +59,14 @@ export default {
         },
         joinGame(game){
             this.$emit('join-game', {gameId: game});
+        },
+        commentSent(message){
+            this.$emit('comment-sent', message);
         }
     },
     components: {
         'newGameForm': newGameForm,
+        'chat': chat,
     },
     mounted() {
         console.log('Component container mounted.')

@@ -36,6 +36,7 @@ class RegisterUser extends Mailable
         return $this->view('emails.users.create')->with([
                         'token' => $this->token,
                         'user' => $this->user,
+                        'url' => env("APP_URL", "http://memoria.dad"),
                     ]);
     }
 }

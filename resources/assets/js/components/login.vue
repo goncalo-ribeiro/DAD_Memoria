@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                <div v-if="loggedIn == false" class="panel panel-default">
+                <div v-if="this.$root.$data['loggedIn'] == false" class="panel panel-default">
                     <div class="panel-heading">Login</div>
 
                     <div class="panel-body">
@@ -46,7 +46,7 @@
                     </div>
                 </div>
 
-                <div v-if="loggedIn" class="panel panel-default">
+                <div v-if="this.$root.$data['loggedIn']" class="panel panel-default">
                     <div class="panel-heading">You are logged in</div>
                     <div class="panel-body">
                         
@@ -76,7 +76,6 @@
                 nickname: 'admin',
                 password: '',
                 loginError: false,
-                loggedIn: false
             }
         },
         methods: {
@@ -99,7 +98,7 @@
                         this.$root.$data['accessToken'] = response.data.access_token;
                         console.log(response);
                         this.loginError = false;
-                        this.loggedIn = true;
+                        this.password = '';
                         this.$root.$data['loggedIn'] = true;
 
                         this.setUpLoggedInUser();
@@ -116,7 +115,6 @@
                 this.$root.$data['loggedIn'] = false; 
                 this.$root.$data['admin'] = false;
                 this.$root.$data['loggedUser'] = null;
-                this.loggedIn = false;
                 this.password = '';
             },
             setUpLoggedInUser: function(){

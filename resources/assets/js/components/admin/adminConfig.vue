@@ -220,7 +220,7 @@
                         console.log('reset');
                         axios({
                             method: 'post',
-                            url: '/api/admin/password/email',
+                            url: '/api/password/email',
                             headers: {
                                 'Accept' : 'application/json',
                                 'Content-Type' : 'application/json',

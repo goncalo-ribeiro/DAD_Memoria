@@ -2,14 +2,13 @@
     <div>
         <div class="container">
             <h3 class="text-center">{{ title }}</h3>
-            <lobby :user="user" :games="lobbyGames" @join-game="join" @create-click="createGame"></lobby>
+            <lobby :user="user" :chat="chat" :games="lobbyGames" @join-game="join" @create-click="createGame" @comment-sent="commentSent"></lobby>
             <template v-for="game in activeGames">
                 <game :user="user" :game="game" @start="start" @piece-click="play" @close-game="closeGame" @kick-player="kickPlayer" @add-bot="addBot"></game>
             </template>
         </div>
     </div>
 </template>
-
 <script type="text/javascript">
     import Lobby from './lobby.vue';
     import Game from './game.vue';
@@ -21,6 +20,7 @@
                 lobbyGames: [],
                 activeGames: [],
                 socketId: "",
+                chat:[]
             }
         },
         sockets:{
@@ -43,9 +43,15 @@
             },
             active_games_changed(data){
                 this.activeGames=data.activeGames;
+            },
+            chat_entry(message){
+                this.chat.push(message);
             }
         },        
         methods: {
+            commentSent(message){
+                this.$socket.emit('chat_message', message);
+            },
             addBot(id, bot){
                 this.$socket.emit('add_bot', {id: id, bot: bot});
             },
