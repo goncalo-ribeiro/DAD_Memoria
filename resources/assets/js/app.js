@@ -12,12 +12,15 @@ window.Vue = require('vue');
 import VueRouter from 'vue-router';
 import VueSocketio from 'vue-socket.io';
 import VueGoodTable from 'vue-good-table';
+import VueChatScroll from 'vue-chat-scroll';
 
 Vue.use(VueRouter);
 
 Vue.use(VueSocketio, 'http://127.0.0.1:8080');
 
 Vue.use(VueGoodTable);
+
+Vue.use(VueChatScroll);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
