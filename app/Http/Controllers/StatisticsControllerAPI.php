@@ -25,7 +25,7 @@ class StatisticsControllerAPI
         $games = DB::table('games')->where('status', 'terminated')
                                     ->join('users','users.id','=','winner')
                                     ->groupBy('winner','users.nickname')
-                                    ->selectRaw('winner, users.nickname as nick, count(*) as games')
+                                    ->selectRaw('count(*) as position, users.nickname as nick, winner as games')
                                     ->orderBy('games', 'desc')
                                     ->limit(3)->get();
    

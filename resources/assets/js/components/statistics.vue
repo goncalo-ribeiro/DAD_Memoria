@@ -22,8 +22,7 @@
                     </div>
                     <div class="col-sm-6 col-xs-offset-1">
                        <UserGames :games="userStatistics.totalGames"></UserGames>
-                    </div>
-                    
+                    </div>                  
                 </div>        
             </div>
     </div>
