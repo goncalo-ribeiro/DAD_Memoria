@@ -110,7 +110,11 @@
             },
             newTime(){
                 this.currentTime=new Date().getTime();
-                if(this.game.lastPlay && this.currentTime && !this.game.gameEnded && this.game.lastPlay+29000 - this.currentTime < 0){
+                if(this.game.gameEnded){
+                    clearInterval(this.interval);
+                    this.interval=null;
+                }
+                else if(this.game.lastPlay && this.currentTime && this.game.lastPlay+29000 - this.currentTime < 0){
                     clearInterval(this.interval);
                     this.interval=null;
                     this.$emit('kick-player', {gameId: this.game.gameID, player: this.game.players[this.game.playerTurn-1]});
@@ -121,7 +125,7 @@
                     this.newTime();
                     this.interval=setInterval(this.newTime, 1000);
                 }
-                let time = this.game.playerTurn == key+1 && this.game.lastPlay !== null ? Math.ceil((this.game.lastPlay+29000 - this.currentTime) / 1000) : 30;
+                let time = this.game.playerTurn == key+1 && this.game.lastPlay !== null && !this.game.gameEnded ? Math.ceil((this.game.lastPlay+29000 - this.currentTime) / 1000) : 30;
                 if(time < 0){
                     return 'Kicked';
                 }
@@ -134,10 +138,6 @@
                 return this.game.gameStarted ? 'Started' : 'Waiting Players ' + this.game.players.length + '/' + this.game.gameSize;
             },
             gameEnded(){
-                if(this.game.gameEnded){
-                    clearInterval(this.interval);
-                    this.interval=null;
-                }
                 return this.game.gameEnded;
             },
             isTurn(key){
