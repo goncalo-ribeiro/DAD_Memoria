@@ -49,7 +49,7 @@
                                     <router-link to="/images">Imagens do jogo</router-link>
                                 </li>
                                 <li>
-                                    <router-link to="/example">Estatisticas</router-link>
+                                    <router-link to="/statistics">Estatisticas</router-link>
                                 </li>
                             </li>
                         </ul>
